@@ -1,0 +1,22 @@
+[package]
+name = "fundguard"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99.1"
+description = "Discord-first personal finance and payment awareness"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+tokio = { version = "1.54.1", default-features = false, features = ["macros", "rt"] }
+tracing = { version = "0.1.44", default-features = false, features = ["std"] }
+tracing-subscriber = { version = "0.3.23", default-features = false, features = ["fmt", "std"] }
+thiserror = "2.0.21"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+all = { level = "warn", priority = -1 }

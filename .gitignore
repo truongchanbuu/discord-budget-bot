@@ -1,0 +1,13 @@
+/target/
+.env
+.env.*
+!.env.example
+!/Cargo.lock
+*.log
+*.log.*
+*.rs.bk
+*.swp
+*.swo
+.idea/
+.DS_Store
+Thumbs.db
