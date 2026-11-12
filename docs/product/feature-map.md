@@ -1,10 +1,11 @@
 # Feature roadmap
 
-Only Phase 0 initialization/tooling is implemented. Every business capability below is planned,
-not available. Each future feature requires one authoritative Spec Kit specification.
+Phase 0 and the pure Financial Core library are implemented. Business workflows remain planned
+and unavailable. Each future feature requires one authoritative Spec Kit specification.
 
 | Feature | Intended ownership | State |
 | --- | --- | --- |
+| Financial Core | Exact whole-VND values, virtual previews, supplied-context replay/conflict validation | Implemented; no posting or persistence |
 | Identity | Owner binding, authorization, future user isolation | Not implemented |
 | Funds | Virtual fund definitions/balances and eventual CRUD | Not implemented |
 | Income | Income allocation and salary policy | Not implemented |
@@ -15,9 +16,9 @@ not available. Each future feature requires one authoritative Spec Kit specifica
 
 ## Recommended sequence
 
-1. Specify **Financial Core and its domain invariants**: currency/units, range/overflow/rounding,
-   traceable mutation origins, idempotency, auditability, and virtual versus verified balance types.
-   Resolve ownership and dependencies before any persistence or Discord payment implementation.
+1. Preserve the implemented Financial Core contract: exact whole-VND, no virtual overdraft,
+   traceable candidate origin, replay/conflict rules and honest evidence meanings. It does not
+   establish durable idempotency, actual accounting entries, or verified bank balances.
 2. Specify identity/authorization and persistence boundaries needed by the first real use case.
 3. Add small feature slices with their own Discord presentation and relevant domain tests.
 4. Specify payment awareness and handoff only after foundational financial invariants are proven.

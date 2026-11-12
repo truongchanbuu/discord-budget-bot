@@ -6,7 +6,8 @@ verified bank information.
 
 **Current status:** Phase 0 foundation is complete and locally verified. The executable validates
 logging configuration, initializes diagnostics, and exits. It makes no Discord/database calls.
-No financial business features, payment workflow, reports, reminders, or production deployment exist.
+The library also provides Financial Core values and pure invariant validation. No fund CRUD, ledger,
+payment workflow, reports, reminders, persistence, or production deployment exists.
 
 ## Install and run
 
@@ -51,8 +52,13 @@ For success/failure scenarios, see the [validation guide](specs/001-project-foun
 ## Architecture and development
 
 One Rust package implements a Feature-First Modular Monolith with Clean Architecture boundaries.
-Only meaningful startup/configuration modules exist. Future business logic stays independent of
+Meaningful startup/configuration and Financial Core modules exist. Future business logic stays independent of
 Discord/persistence so other bots, Web, and mobile interfaces can reuse it.
+
+Financial Core exposes exact whole-VND values, nonblank typed references, no-overdraft previews,
+and owner-scoped new/replay/conflict validation through features::financial_core. It uses only std
+and existing thiserror. Results are virtual candidates, not journal receipts or bank proof.
+See the [Financial Core contract](specs/002-financial-core/contracts/financial-core.md).
 
 Current dependencies are Tokio, tracing, tracing-subscriber, and thiserror. Future integrations
 select Poise/Serenity, PostgreSQL/SQLx, and Serde only when required; no unused providers are added.
@@ -65,14 +71,15 @@ authoritative spec per feature. Review the constitution and scope before editing
 checks, inspect the diff, and update verified task progress and handoff. Start sessions with
 [AGENTS.md](AGENTS.md); do not rely only on chat history.
 
-[Active specification](specs/001-project-foundation/spec.md) ·
-[Implementation checklist](specs/001-project-foundation/tasks.md) ·
+[Active specification](specs/002-financial-core/spec.md) ·
+[Implementation checklist](specs/002-financial-core/tasks.md) ·
 [Feature index](docs/ai/FEATURE_INDEX.md) · [Session handoff](docs/ai/SESSION_HANDOFF.md)
 
 ## Roadmap
 
-The next specification should define **Financial Core and domain invariants** before Discord
-payment features. Identity, funds, income, ledger, payments, reporting, and reminders are future
+Financial Core and its invariants are implemented and verified in isolation. The next specification
+should define identity/authorization or persistence and atomic financial-commit boundaries before
+Discord payment features. Identity, funds, income, ledger, payments, reporting, and reminders are future
 work. QR/OCR/AI, banking, payment handoff, financial migrations, and deployment remain outside
 Phase 0. The MVP must not execute direct real-money transfers or collect bank passwords, OTPs,
 PINs, CVVs, or banking-session credentials. See the [product overview](docs/product/overview.md)

@@ -2,7 +2,7 @@
 
 This is a preliminary design baseline, not a production security certification. Phase 0 runs
 locally without external connections or business data. The [constitution](../../.specify/memory/constitution.md)
-and [active specification](../../specs/001-project-foundation/spec.md) govern requirements.
+and [active feature index](../ai/FEATURE_INDEX.md) govern requirements.
 
 ## Assets, actors, and boundaries
 
@@ -30,6 +30,28 @@ identity-to-authorized use case, application-to-provider, and persistence-to-fin
 | Dependency compromise | Registry-to-build | Minimal dependencies/features, reviewed source/release metadata, committed lockfile, controlled upgrades | Lockfile/build reviewed. This is not a vulnerability audit; future upgrades require fresh review |
 | CI compromise | Contribution-to-runner/token | Read-only contents permission, full-SHA official checkout, no persisted credentials, no privileged PR events or deployment secrets | Workflow configured; hosted execution unverified until a real run. Untrusted code still executes in CI |
 | Malformed environment / diagnostic failure | Environment-to-startup | Typed validation; no raw values in errors; scoped ERROR fallback if global logging fails | Unit/integration/collision tests cover current paths; startup failure exits nonzero |
+
+## Financial Core controls and trust limits
+
+Financial Core is a pure library with no logging, environment access, clock, provider, registry,
+journal or persistence. It rejects unsupported money formats/currencies, fractions, negative values,
+zero changes, overflows, blank references and virtual overdraft. Errors retain only categories;
+Debug/pretty/nested formatting redacts financial values and references. Deliberate getters are
+not permission to log payloads. Synthetic tests and external privacy compile probes verify this
+boundary without real accounts or records.
+
+ValidatedChange is constructible only through successful validation, with immutable origin/intent
+and before/proposed snapshots. It proves internal coherence only. OwnerRef is not authentication;
+callers vouch for supplied prior context. Two calls with None can both be eligible. Replay returns
+the supplied prior result before fresh capacity checks; it is not a concurrent exactly-once commit.
+Handoff-only input cannot yield fresh completion; manual confirmation remains explicitly virtual.
+No bank-proof variant, mutable result setter, or unchecked restoration API exists.
+
+Future input adapters must impose justified size/rate limits and bind/authorize owners. Persistence
+must preserve the full 0–18,446,744,073,709,551,615 VND range or revisit its schema explicitly, validate
+restoration, and atomically commit effect/origin/key/audit data. Do not silently narrow to a signed
+column or represent validation candidates as journal receipts. These obligations remain future
+work. See [ADR 0003](../architecture/decisions/0003-financial-core-validation.md).
 
 ## Secrets and integration guidelines
 

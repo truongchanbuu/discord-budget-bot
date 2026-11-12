@@ -1,7 +1,7 @@
 # Architecture
 
-FundGuard is a Feature-First Modular Monolith in one Cargo package. Phase 0 implements local
-initialization only. See the [authoritative plan](../../specs/001-project-foundation/plan.md)
+FundGuard is a Feature-First Modular Monolith in one Cargo package. The executable implements local
+initialization only; the library also provides pure Financial Core validation. See the [authoritative plan](../../specs/001-project-foundation/plan.md)
 and [packaging ADR](decisions/0001-feature-first-modular-monolith.md).
 
 ## Responsibilities and dependencies
@@ -23,11 +23,31 @@ No generic repository framework, event bus, DI container, or provider hierarchy 
 
 ## Current initialization
 
-main owns the Tokio current-thread runtime and process exit. The library exports only run and
-StartupError. bootstrap validates configuration and installs tracing; config privately parses the
+main owns the Tokio current-thread runtime and process exit. The library retains run and
+StartupError and exposes the Financial Core feature facade. bootstrap validates configuration and installs tracing; config privately parses the
 single supported environment setting. Startup returns immediately; no clients, pools, or jobs run.
 A scoped ERROR tracing subscriber reports startup failures independently of global setup.
 See the [runtime contract](../../specs/001-project-foundation/contracts/runtime.md).
+
+## Financial Core (implemented)
+
+The public boundary is fundguard::features::financial_core. It exposes validated whole-đồng VND
+values, typed references, immutable virtual balance previews, intent/evidence vocabulary, and
+validate_intent. Private domain modules depend on std/thiserror; the private application module
+coordinates scope/meaning comparisons before fresh basis and capacity checks. It has no I/O,
+clock, environment, provider, registry, journal or mutable state. Other features use this facade,
+not the internal module paths. Existing bootstrap behavior does not call the financial core.
+
+Money uses the full u64 range as a representation limit, not a business spending cap. New
+candidates own coherent snapshots; matching replay borrows its supplied prior candidate and does
+not re-evaluate current spending capacity. Private candidate fields prevent unchecked construction,
+but caller-supplied context proves no authentication or durable commit. Manual confirmation stays
+virtual; handoff alone is rejected and no bank-proof value can be constructed.
+
+See [ADR 0003](decisions/0003-financial-core-validation.md),
+[feature requirements](../../specs/002-financial-core/spec.md), and the
+[public contract](../../specs/002-financial-core/contracts/financial-core.md).
+Actual financial commits must later atomically preserve origin, effect, idempotency and audit state.
 
 ## Future interface boundary
 

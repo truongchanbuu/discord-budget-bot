@@ -116,10 +116,12 @@ and platform; business rules do not create runtimes. Do not enable Tokio full sp
 
 ## Future domain values and transactions
 
-These are design constraints, not delivered financial code. Use validated value objects for
+Financial Core implements pure validated whole-VND values; transactions remain future work.
+Use validated value objects for
 actual invariants, with explicit currency/units; never floating-point financial amounts. Avoid
-boolean flags that confuse virtual funds with bank verification. Financial Core must define
-range, overflow, currency scale, rounding, and identity before implementation.
+boolean flags that confuse virtual funds with bank verification. Financial Core defines
+range, overflow, currency scale and reference semantics in its authoritative contract; future
+extensions must resolve rounding and identity requirements before implementation.
 
 A future mutation must atomically persist its financial entry, traceable origin, idempotency state,
 and audit information within the owning use case's transaction boundary. A retry/duplicate must

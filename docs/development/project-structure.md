@@ -5,7 +5,7 @@
 | Path | Responsibility |
 | --- | --- |
 | src/main.rs | Tokio runtime, safe structured failure reporting, process exit |
-| src/lib.rs | Private module declarations and narrow startup/error exports |
+| src/lib.rs | Private startup modules and the explicit Financial Core facade |
 | src/bootstrap.rs | Configuration and diagnostics initialization; isolated collision test |
 | src/config.rs | Pure log-level parsing, environment read, colocated unit tests |
 | tests/bootstrap.rs | Executable contract tests under controlled child environments |
@@ -18,9 +18,24 @@ The test harness is included only under cfg(test) in bootstrap, and as an integr
 It creates no runtime abstraction or additional public API. Test expect/unwrap calls represent
 failed test setup/assertions, never runtime-critical error handling.
 
+## Financial Core (implemented)
+
+src/features/financial_core/mod.rs is the public facade; domain and application paths are private.
+Domain files money.rs, balance.rs, references.rs, intent.rs, and error.rs each own one cohesive
+responsibility. application.rs contains the pure replay/fresh-validation workflow and private
+coherent candidate fields. Module files wire only real implemented modules, not future skeletons.
+The facade exports the planned value/input/result/error vocabulary and validate_intent.
+
+tests/financial_core.rs wires money, balance, replay, and evidence public-contract modules under
+tests/financial_core/. support.rs builds synthetic valid fixtures through the public API. These
+fixtures create no store/provider mock. Reference unit tests live beside their domain implementation.
+No application service object, infrastructure or presentation layer is needed for pure validation.
+See the [Financial Core contract](../../specs/002-financial-core/contracts/financial-core.md).
+
 ## Intended future ownership — no placeholder directories
 
-Features are identity, funds, income, payments, ledger, reports, and reminders. When behavior
+Future features are identity, funds, income, payments, ledger, reports, and reminders; Financial Core
+is already implemented. When behavior
 exists, keep it under src/features/<feature> with domain, application, infrastructure, and
 presentation layers only as justified by that feature. Domain models and rules stay together;
 provider-independent use cases coordinate them; adapters implement actual dependencies.
@@ -31,4 +46,4 @@ empty directories, mod files, unused traits, or global repositories/services/han
 
 The [architecture guide](../architecture/overview.md) defines dependency direction. The
 [feature map](../product/feature-map.md) describes intended ownership. Feature requirements and
-implementation progress belong to [Spec Kit](../../specs/001-project-foundation/tasks.md).
+implementation progress belong to [Spec Kit](../../specs/002-financial-core/tasks.md).
