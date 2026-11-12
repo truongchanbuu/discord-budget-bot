@@ -4,7 +4,8 @@
 
 **Created**: 2026-11-12
 
-**Status**: Draft for maintainer review; specification only, no planning or implementation authorized.
+**Status**: Scope accepted for technical planning by the maintainer's $speckit-plan request on
+2026-11-12. Design artifacts generated; implementation remains unauthorized.
 
 **Input**: User description: "$speckit-specify pls continue with next feature".
 The roadmap recommends identity/authorization before financial workflows. This specification selects
