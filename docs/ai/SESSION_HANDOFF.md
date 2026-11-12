@@ -4,43 +4,48 @@ Updated: 2026-11-12
 
 ## Current phase and active feature
 
-002 Financial Core is complete and locally verified under the maintainer's $speckit-implement
-instruction. [Specification](../../specs/002-financial-core/spec.md),
-[plan](../../specs/002-financial-core/plan.md) and constitution 1.1.0 govern the delivered scope.
-The [task checklist](../../specs/002-financial-core/tasks.md) owns all 26 completion records and
-verification evidence. No implementation tasks remain; no current blockers.
+003 Owner Identity and Access Boundaries is in specification review. The maintainer requested
+$speckit-specify to continue with the next feature. The tracked roadmap recommends owner access
+before financial workflows; the drafted [specification](../../specs/003-owner-access/spec.md)
+selects a single-owner policy increment. No plan, task list or implementation exists for 003.
+Constitution 1.1.0 remains unchanged.
 
-## Delivered behavior and decisions
+## Completed work and decisions
 
-A single-package feature facade exports exact whole-đồng VND values (full u64 range), typed
-references, immutable nonnegative virtual previews and pure intent validation. Supplied prior
-context is checked before fresh capacity/evidence; replay borrows the exact prior candidate.
-Candidate construction is private and diagnostics redact sensitive values. Domain/application
-have no Discord, database, clock, environment, logging or mutable-store dependency.
-[ADR 0003](../architecture/decisions/0003-financial-core-validation.md) is accepted.
+Created the specification and its [quality checklist](../../specs/003-owner-access/checklists/requirements.md).
+It defines explicit account-to-owner binding, fail-closed resolution, resource-owner scope checks,
+revocation for subsequent evaluations, safe diagnostics and caller trust obligations. Scope assumes
+pure decisions with supplied trusted inputs; no live authentication, binding loader or resource
+lookup. Maintainer review confirms this feature selection before planning. No ADR is adopted yet;
+concrete architecture choices belong to planning.
+
+Previous work is complete: [Phase 0 tasks](../../specs/001-project-foundation/tasks.md) and
+[Financial Core tasks](../../specs/002-financial-core/tasks.md) retain their authoritative delivery
+records. Only initialization and pure Financial Core are implemented. Financial Core owner
+references still provide scope, not authentication; validation is not a financial commit.
 
 ## Verification and limits
 
-cargo fmt --all -- --check, cargo clippy --all-targets -- -D warnings, cargo test and cargo check
-all passed locally. Targeted Financial Core tests also passed. Total: 27 tests, zero failures or
-ignored cases (15 public-contract cases, two new reference unit tests, ten existing tests).
-Six external rustc probes rejected value/candidate forging, private module imports and a
-nonexistent BankVerified variant. All 13 acceptance scenarios have automated coverage.
+Specification quality review passed all 16 items. The specification contains 13 requirements,
+12 acceptance scenarios and six measurable outcomes; no clarification markers remain.
+Reviewed constitution, architecture, security baseline, current contracts/source and roadmap.
+Validated local links, path-only selector resolution and whitespace. The full prerequisite check
+reported the expected missing plan.md; planning has not been requested. No extension hooks are
+configured.
 
-Manifest, lockfile, toolchain, constitution and generated tooling are unchanged. Existing edits to
-AGENTS.md and bootstrap/main/lib were preserved; src/lib.rs gained the feature export and its
-inherited leading blank was normalized for rustfmt. Source commit: 7e0403a. Documentation closeout
-follows separately. The working tree can remain dirty with the user's pre-existing edits.
-Hosted CI is unverified; no production security or bank-integration assurance is claimed.
+This session changes specification/state documentation only. Cargo checks were not rerun; prior
+27-test/four-gate evidence belongs to Financial Core's completed checklist. Hosted CI remains
+unverified. Existing user edits to AGENTS.md and src/bootstrap.rs, src/lib.rs, src/main.rs are
+preserved. Generated tooling, dependencies and constitution remain unchanged.
 
-## Scope boundaries and next action
+## Pending work, blockers and next action
 
-The executable remains an offline bootstrap. No journal, persistent mutation, authenticated owner,
-bank verification, provider, payment action or deployment is implemented. Manual confirmation is
-virtual evidence only. Repeated calls without prior context can both be eligible; future persistence
-must enforce truthful prior lookup and atomic/idempotent commits while preserving the u64 range.
+No unresolved specification ambiguity is recorded. Scope assumptions require maintainer review,
+not silent implementation. Review the new specification, then invoke $speckit-plan when approved.
+The configured workflow's review-spec gate separates this review from planning. Do not generate
+plan/tasks or product code automatically, and do not interpret checklist completion as approval.
 
-Next: review this completed increment, then specify identity/authorization or persistence and atomic
-journal invariants before payment workflows. Do not infer new implementation authorization. Use
-[FEATURE_INDEX.md](FEATURE_INDEX.md) for tracked feature discovery if the local selector is absent.
-The actual Git branch remains 001-project-foundation; no branch switch was performed.
+Use [FEATURE_INDEX.md](FEATURE_INDEX.md) if the ignored local selector is absent. The selector
+points to specs/003-owner-access; the actual Git branch remains 001-project-foundation.
+Financial persistence, actual resource authorization integration, financial mutations, payment
+workflows, banking and deployment remain future work.

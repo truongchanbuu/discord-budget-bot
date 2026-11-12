@@ -3,6 +3,15 @@
 This log records feature milestones and links to authoritative specifications/tasks. It does not
 replace their requirements, implementation checklists, or verification evidence.
 
+## 2026-11-12 — 003 Owner Identity and Access Boundaries
+
+Status: [specification](specs/003-owner-access/spec.md) drafted; quality checklist passed 16/16.
+Selected the roadmap's single-owner identity/access policy: explicit Discord-account binding,
+fail-closed owner resolution, owner-scoped access and privacy. Provider authentication and
+trusted resource ownership remain caller obligations; live integration and persistence are excluded.
+No product code, dependencies, plan or tasks were added. Next: maintainer scope review, then
+$speckit-plan. Requirement review does not establish implementation or security verification.
+
 ## 2026-11-12 — 002 Financial Core and Domain Invariants
 
 Status: completed and locally verified; all 26 [tasks](specs/002-financial-core/tasks.md) checked.

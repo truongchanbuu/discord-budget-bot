@@ -6,7 +6,7 @@ and unavailable. Each future feature requires one authoritative Spec Kit specifi
 | Feature | Intended ownership | State |
 | --- | --- | --- |
 | Financial Core | Exact whole-VND values, virtual previews, supplied-context replay/conflict validation | Implemented; no posting or persistence |
-| Identity | Owner binding, authorization, future user isolation | Not implemented |
+| Identity | Owner binding, authorization, future user isolation | [Single-owner policy specified](../../specs/003-owner-access/spec.md); not implemented |
 | Funds | Virtual fund definitions/balances and eventual CRUD | Not implemented |
 | Income | Income allocation and salary policy | Not implemented |
 | Payments | Awareness before handoff and explicit completion meanings | Not implemented |
