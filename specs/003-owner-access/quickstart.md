@@ -49,7 +49,7 @@ the future caller obligations in the contract; AC-12 combines behavior tests and
 
 ## Completion evidence
 
-During implementation, record actual results in the future tasks.md and summarize in
+During implementation, record actual results in [tasks.md](tasks.md) and summarize in
 SESSION_HANDOFF.md. Review imports, private fields, public API, secret exposure and full diff.
 Use temporary external rustc probes to confirm invalid construction/privacy boundaries without
 new dependencies. Record failed probes as expected compiler rejection, not runtime tests.

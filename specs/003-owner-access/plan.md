@@ -3,8 +3,8 @@
 **Branch**: `003-owner-access` (feature selector; actual Git branch `001-project-foundation`)
 **Date**: 2026-11-12 | **Spec**: [spec.md](spec.md)
 **Input**: specs/003-owner-access/spec.md
-**Status**: Technical design only. The maintainer's $speckit-plan request accepts the specified
-scope for planning. No task generation or implementation is authorized by this document.
+**Status**: Design accepted as task-generation input by the maintainer's $speckit-tasks request on
+2026-11-12. [tasks.md](tasks.md) is generated; implementation remains unauthorized.
 
 ## Summary
 
@@ -65,7 +65,7 @@ specs/003-owner-access/
 └── quickstart.md
 ```
 
-tasks.md belongs to a separately requested $speckit-tasks step. No task file is generated here.
+[tasks.md](tasks.md) was generated in the separately requested $speckit-tasks step.
 [research.md](research.md) records decisions/alternatives and primary sources; the model owns
 fields/ownership; the contract owns signatures and exact validation/denial semantics.
 

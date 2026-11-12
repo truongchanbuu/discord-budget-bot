@@ -8,11 +8,13 @@ replace their requirements, implementation checklists, or verification evidence.
 Status: [specification](specs/003-owner-access/spec.md) accepted for planning;
 [plan](specs/003-owner-access/plan.md), research/model/contract/validation guide generated.
 Constitution checks pass; ADR 0004 is proposed. Quality checklist passed 16/16.
+The [23-task checklist](specs/003-owner-access/tasks.md) now defines dependencies, verification and
+all acceptance/requirement coverage; every task remains unchecked.
 Selected the roadmap's single-owner identity/access policy: explicit Discord-account binding,
 fail-closed owner resolution, owner-scoped access and privacy. Provider authentication and
 trusted resource ownership remain caller obligations; live integration and persistence are excluded.
-No product code, dependencies or tasks were added. Next: review the plan, then request
-$speckit-tasks. Design review does not establish implementation or security verification.
+No product code or dependencies were added. Next: $speckit-analyze, then explicit implementation
+authorization. Task generation does not establish implementation or security verification.
 
 ## 2026-11-12 — 002 Financial Core and Domain Invariants
 

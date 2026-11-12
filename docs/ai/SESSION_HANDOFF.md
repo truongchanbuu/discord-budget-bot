@@ -4,50 +4,51 @@ Updated: 2026-11-12
 
 ## Current phase and active feature
 
-003 Owner Identity and Access Boundaries has completed technical planning. The maintainer's
-$speckit-plan request accepted the [specification](../../specs/003-owner-access/spec.md) scope for
-planning. [Plan](../../specs/003-owner-access/plan.md), research, data model, public contract and
-quickstart are ready for review. No tasks.md or implementation exists for 003.
-Constitution 1.1.0 is unchanged; no implementation approval is inferred.
+003 Owner Identity and Access Boundaries has completed task generation. The maintainer requested
+$speckit-tasks from the accepted [plan](../../specs/003-owner-access/plan.md).
+The [specification](../../specs/003-owner-access/spec.md) owns requirements; the
+[23-task checklist](../../specs/003-owner-access/tasks.md) owns dependencies, verification criteria
+and future progress. Every task remains unchecked; no identity implementation exists.
+Constitution 1.1.0 is unchanged. No implementation approval is inferred.
 
 ## Completed work and decisions
 
-Planning defines private account/actor values, an application-owned single-owner binding, exact
-reuse of Financial Core OwnerRef through its facade, and borrowed owner results or generic denial.
-Identity domain has no cross-feature imports; Financial Core has no reverse edge. Actor creation
-asserts caller trust without authenticating a provider. No session, grant, registry, provider SDK,
-new dependency, live adapter or configuration loader is planned.
+Generated six phases: baseline/setup, shared error/state vocabulary, US1 owner recognition, US2
+owner-scoped access, US3 privacy/trust obligations, final documentation and verification. Exact
+source/test paths and data-model constraints are recorded. Descriptions remain brief and gerund-led.
+Only disjoint final documentation tasks can run in parallel; shared-file story work is sequential.
 
-[ADR 0004](../architecture/decisions/0004-owner-access-policy.md) records this proposed design;
-it is not adopted yet. Research documents alternatives, existing pinned dependencies and checked
-primary Rust/thiserror references. All research unknowns are resolved.
+The design still reuses Financial Core OwnerRef through identity application only, with independent
+domain values, immutable binding, borrowed owner results and generic denial. No sessions, registry,
+SDK, new dependency or live adapter. [ADR 0004](../architecture/decisions/0004-owner-access-policy.md)
+remains proposed pending reviewed implementation authorization.
 
-Previous delivery remains in [Phase 0 tasks](../../specs/001-project-foundation/tasks.md) and
-[Financial Core tasks](../../specs/002-financial-core/tasks.md); those checklists are not copied here.
-Only initialization and pure Financial Core are implemented, with no financial commits or live auth.
+Previous completion evidence remains in [Phase 0 tasks](../../specs/001-project-foundation/tasks.md)
+and [Financial Core tasks](../../specs/002-financial-core/tasks.md), not duplicated here.
 
 ## Verification and limits
 
-Pre/post-design constitution gates pass without exceptions. The 16-item specification-quality
-checklist remains complete; it is a requirement-quality record, not implementation approval.
-Reviewed all 13 requirements, 12 acceptance scenarios and six outcomes against planned tests/reviews.
-AC-10 requires caller-guidance review; AC-12 combines tests with source/API review. No live-interface
-or production security evidence is claimed. Validated links, selector/prerequisites and whitespace.
-No before/after planning extension hooks are configured.
+Validated all 23 task IDs, checkbox/story/path/gerund formatting, phase counts, dependency order,
+parallel-file separation, all 13 requirements, 12 acceptance scenarios and six outcomes. AC-10 is
+guidance review; AC-12 combines tests and source/API review, not live-interface evidence. Verified
+prerequisite discovery, local documentation links and git diff --check. No task-generation extension
+hooks are configured. The specification-quality checklist remains 16/16; it is not implementation
+approval or passing code evidence.
 
-Planning changed documentation only. Cargo gates/new identity tests were not run; the identity
-target does not exist. Prior 27-test results belong to completed Financial Core, and hosted CI is
-still unverified. User edits to AGENTS.md and src/bootstrap.rs, src/lib.rs, src/main.rs are preserved.
-Manifest/lockfile/toolchain, constitution and generated tooling are unchanged.
+This session changes documentation only. No Cargo checks/new identity tests were run; the new test
+target does not exist. Previous 27-test results belong to completed Financial Core. Hosted CI remains
+unverified. User edits to AGENTS.md and src/bootstrap.rs, src/lib.rs, src/main.rs are preserved;
+manifest/lockfile/toolchain, constitution and generated tooling remain unchanged.
 
 ## Pending work, blockers and next action
 
-No unresolved planning blocker. Review the plan and proposed ADR, then request $speckit-tasks.
-The workflow review-plan gate precedes task generation. Later run $speckit-analyze and explicitly
-authorize implementation. Do not create tasks or product code automatically.
+No task-generation blocker. Next: invoke $speckit-analyze on the complete artifacts, resolve any
+critical/high issue, then explicitly authorize $speckit-implement. Do not start implementation
+merely because the tasks exist. The checklist supplies the MVP, phase gates and exact future checks;
+mark tasks complete only after their recorded verification.
 
-The [feature index](FEATURE_INDEX.md) supports discovery when the ignored selector is absent.
-The selector points to specs/003-owner-access; actual Git branch remains 001-project-foundation.
-Future integration must authenticate actors, load trusted bindings, fetch authoritative resource
-scope and evaluate access before every private use case, including retries/replays. Persistence,
-in-flight revocation, actual resource integration, payment workflows and deployment remain deferred.
+Use [FEATURE_INDEX.md](FEATURE_INDEX.md) if the ignored selector is absent. Active feature directory
+is specs/003-owner-access; actual Git branch remains 001-project-foundation. Future callers must
+authenticate actors, load trusted bindings, obtain authoritative resource scope and re-check access
+before every private use case/replay. Configuration loading, real authentication, storage, financial
+mutations, payment workflows and deployment remain excluded.
