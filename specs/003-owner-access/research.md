@@ -1,6 +1,7 @@
 # Owner Access Research and Decisions
 
-Date: 2026-11-12. Planning only. No source, dependency or lockfile change.
+Date: 2026-11-12. Research record for the now-implemented design. [tasks.md](tasks.md) owns
+verification evidence; research itself made no dependency or lockfile change.
 
 ## 1. Existing owner identity and feature direction
 
@@ -48,8 +49,8 @@ No new async work or feature flags. Existing Tokio 1.54.1, tracing 0.1.44 and tr
 library documentation is 1.99.1 and provides the required nonzero and checked parsing facilities.
 The [versioned thiserror documentation](https://docs.rs/thiserror/2.0.21/thiserror/) supports ordinary
 categorical errors and static Display messages. Nothing here requires a provider or framework upgrade.
-Existing successful builds belong to feature 002; compatibility of new code must be verified during
-implementation. This research is not a dependency vulnerability audit or a new passing test claim.
+Compatibility was subsequently verified during feature 003 implementation; actual results belong
+to tasks.md. Research references are not a vulnerability audit or a substitute for that evidence.
 
 **Alternatives considered**: Poise/Serenity, SQLx, Serde, auth/token libraries and a multi-crate
 workspace all exceed this pure policy increment. Selecting latest versions or enabling optional

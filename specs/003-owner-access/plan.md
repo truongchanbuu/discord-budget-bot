@@ -3,8 +3,8 @@
 **Branch**: `003-owner-access` (feature selector; actual Git branch `001-project-foundation`)
 **Date**: 2026-11-12 | **Spec**: [spec.md](spec.md)
 **Input**: specs/003-owner-access/spec.md
-**Status**: Design accepted as task-generation input by the maintainer's $speckit-tasks request on
-2026-11-12. [tasks.md](tasks.md) is generated; implementation remains unauthorized.
+**Status**: Implemented and verified locally on 2026-11-12 under the maintainer's
+$speckit-implement instruction. This plan records the adopted design; [tasks.md](tasks.md) owns evidence.
 
 ## Summary
 
@@ -46,9 +46,9 @@ Gate evaluated before research and re-evaluated after design: **PASS**, no excep
 | II. Feature-first boundaries | Identity owns access policy | Domain uses std/thiserror; application → Financial Core public facade only; no reverse edge/private imports |
 | III. Financial integrity | Preserve Financial Core | No financial state, amounts, evidence, replay semantics or durable-commit claims changed |
 | IV. Minimal integrations | No live provider needed | Manifest/lockfile unchanged; no SDK, storage, runtime or provider abstraction added |
-| V. Verified delivery | Specification is authoritative | AC/FR coverage below, future tasks own evidence, handoff/index updated; no passing implementation claim |
+| V. Verified delivery | Specification is authoritative | AC/FR coverage below; tasks own verified 37-test/four-gate evidence, handoff/index updated |
 | Security | Deny by default and protect identifiers | No content-as-identity, generic Denied, checked constructors, redacted diagnostics, caller trust obligations |
-| Governance | $speckit-plan explicitly requested | Spec scope accepted for planning; ADR proposed only; later review before tasks/implementation |
+| Governance | $speckit-plan explicitly requested | Spec/plan/tasks reviewed; implementation explicitly authorized; ADR accepted |
 
 ## Project Structure
 
@@ -69,7 +69,7 @@ specs/003-owner-access/
 [research.md](research.md) records decisions/alternatives and primary sources; the model owns
 fields/ownership; the contract owns signatures and exact validation/denial semantics.
 
-### Source Code (planned, not created)
+### Source Code (implemented)
 
 ```text
 src/features/
@@ -158,20 +158,20 @@ Use temporary external rustc probes to confirm raw account construction, private
 binding field modification are rejected. Avoid a permanent compile-test dependency/harness.
 Run cargo fmt --all -- --check, cargo clippy --all-targets -- -D warnings, cargo test and cargo check;
 also run cargo test --test identity after target creation. Existing CI discovers that test target.
-No such new test exists or has passed during planning. Keep lockfile/toolchain unchanged.
+All four gates and the identity target passed locally: 37 tests total, including 10 new identity
+tests. Lockfile/toolchain are unchanged. Five external compiler probes verified private boundaries;
+see tasks.md for exact evidence. Hosted CI remains unverified.
 
 ## Review and Delivery Sequence
 
-After plan review, request tasks, then analyze spec/plan/tasks before authorized implementation.
-Implement account/actor values and safe errors; binding/resolution; scoped authorization; privacy
-and caller obligations; finally verification/doc consistency. Generate gerund-led concise tasks
-with exact files and real dependencies in the next workflow, not in this plan.
+After task generation and read-only analysis, the maintainer authorized implementation. Account/
+actor values, safe errors, binding/resolution, scoped authorization and privacy tests were delivered
+in dependency order. Both minor analysis wording issues were clarified without behavior changes.
 
-On implementation delivery, update README, product overview/feature-map, architecture/structure,
-security baseline, feature index, devlog and handoff; preserve implemented/planned distinctions.
-Adopt [ADR 0004](../../docs/architecture/decisions/0004-owner-access-policy.md) only after design
-review/implementation authorization. Keep tasks as the sole detailed progress checklist. No
-live authentication, configuration loader, storage or financial workflow is authorized by this plan.
+README, product/architecture/structure/security docs, index, devlog and handoff now describe actual
+policy availability and future caller obligations. [ADR 0004](../../docs/architecture/decisions/0004-owner-access-policy.md)
+is accepted. tasks.md owns the detailed verification records. No live authentication, configuration
+loader, storage or financial workflow was added; existing user edits were preserved.
 
 ## Complexity Tracking
 

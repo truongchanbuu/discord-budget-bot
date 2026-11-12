@@ -1,6 +1,7 @@
 # Owner Access Public Contract
 
-Planned library surface: fundguard::features::identity. No code is implemented by this contract.
+Implemented library surface: fundguard::features::identity.
+The contract describes pure policy; live provider/resource integration remains deferred.
 
 ## Exports and type construction
 
@@ -89,7 +90,7 @@ environment access, network, storage, clock, financial action or hidden remember
 
 ## Acceptance coverage
 
-| Scenario | Planned verification |
+| Scenario | Verification obligation |
 | --- | --- |
 | AC-01 | Matching enabled binding returns the same bound owner on repeated calls |
 | AC-02 | One-digit account mismatch returns Denied with no owner payload |

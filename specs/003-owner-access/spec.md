@@ -4,8 +4,8 @@
 
 **Created**: 2026-11-12
 
-**Status**: Scope accepted for technical planning by the maintainer's $speckit-plan request on
-2026-11-12. Design artifacts generated; implementation remains unauthorized.
+**Status**: Implemented and verified locally on 2026-11-12 under the maintainer's
+$speckit-implement instruction. Completion evidence is in [tasks.md](tasks.md).
 
 **Input**: User description: "$speckit-specify pls continue with next feature".
 The roadmap recommends identity/authorization before financial workflows. This specification selects

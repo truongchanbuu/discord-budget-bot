@@ -1,7 +1,7 @@
 # Architecture
 
 FundGuard is a Feature-First Modular Monolith in one Cargo package. The executable implements local
-initialization only; the library also provides pure Financial Core validation. See the [authoritative plan](../../specs/001-project-foundation/plan.md)
+initialization only; the library also provides pure Financial Core validation and single-owner access policy. See the [authoritative plan](../../specs/001-project-foundation/plan.md)
 and [packaging ADR](decisions/0001-feature-first-modular-monolith.md).
 
 ## Responsibilities and dependencies
@@ -49,13 +49,28 @@ See [ADR 0003](decisions/0003-financial-core-validation.md),
 [public contract](../../specs/002-financial-core/contracts/financial-core.md).
 Actual financial commits must later atomically preserve origin, effect, idempotency and audit state.
 
+## Identity owner policy (implemented)
+
+features::identity exposes validated Discord account identifiers, caller-asserted actors, immutable
+owner bindings and resolve_owner/authorize_scope. Its private domain module uses std/thiserror only.
+Identity application owns the binding and imports the existing OwnerRef through Financial Core's
+public facade. Financial Core has no reverse dependency; no financial behavior or owner validator
+is duplicated or moved into shared. Future reverse edges require an explicit ownership review.
+
+Successful policy returns the binding's borrowed OwnerRef; all policy failures use Denied. The
+returned reference is not a permission credential. No actor authentication, binding loading, resource
+lookup, cache, session, in-flight revocation or external action occurs. Future adapters must provide
+trusted actor/configuration/ownership and re-check current policy before each private use case.
+See [ADR 0004](decisions/0004-owner-access-policy.md) and the
+[contract](../../specs/003-owner-access/contracts/owner-access.md).
+
 ## Future interface boundary
 
 Discord is the initial UI. Future feature presentation owns commands and views; platform/discord
 owns client lifecycle and registers commands supplied by the composition root. Serenity Context,
 transport identifiers, and SQLx records stay out of domain/application APIs. Presentation maps
-transport identity to explicit application input only after the identity feature defines binding
-and authorization. No assumption that a Discord sender is the owner is allowed.
+transport identity to explicit application input using the identity feature's explicit binding and scoped-authorization policy, with authenticated
+provider identity and authoritative resource ownership supplied by future integrations. No assumption that a Discord sender is the owner is allowed.
 
 | Future capability | Owning boundary |
 | --- | --- |

@@ -5,16 +5,16 @@ replace their requirements, implementation checklists, or verification evidence.
 
 ## 2026-11-12 — 003 Owner Identity and Access Boundaries
 
-Status: [specification](specs/003-owner-access/spec.md) accepted for planning;
-[plan](specs/003-owner-access/plan.md), research/model/contract/validation guide generated.
-Constitution checks pass; ADR 0004 is proposed. Quality checklist passed 16/16.
-The [23-task checklist](specs/003-owner-access/tasks.md) now defines dependencies, verification and
-all acceptance/requirement coverage; every task remains unchecked.
-Selected the roadmap's single-owner identity/access policy: explicit Discord-account binding,
-fail-closed owner resolution, owner-scoped access and privacy. Provider authentication and
-trusted resource ownership remain caller obligations; live integration and persistence are excluded.
-No product code or dependencies were added. Next: $speckit-analyze, then explicit implementation
-authorization. Task generation does not establish implementation or security verification.
+Status: complete and locally verified; all 23 [tasks](specs/003-owner-access/tasks.md) checked.
+Delivered canonical account values, caller-asserted actors, immutable owner binding, borrowed
+owner resolution and scoped access with uniform denial/redaction. Reused existing OwnerRef through
+the application facade without changing Financial Core. ADR 0004 is accepted.
+All four Cargo gates passed; 37 tests passed, including 10 new identity tests. Five external compiler
+probes verified private construction/import/field boundaries. Both minor analysis wording findings
+were clarified. No dependencies, credentials, live authentication, lookup or deployment were added;
+existing user edits are preserved. Hosted CI remains unverified.
+Next: specify trusted owner configuration and a minimal authenticated interface before financial
+commands, or separately define persistence/atomic commit semantics. Neither is implemented here.
 
 ## 2026-11-12 — 002 Financial Core and Domain Invariants
 

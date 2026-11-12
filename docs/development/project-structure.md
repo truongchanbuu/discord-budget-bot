@@ -5,7 +5,7 @@
 | Path | Responsibility |
 | --- | --- |
 | src/main.rs | Tokio runtime, safe structured failure reporting, process exit |
-| src/lib.rs | Private startup modules and the explicit Financial Core facade |
+| src/lib.rs | Private startup modules and explicit feature facades |
 | src/bootstrap.rs | Configuration and diagnostics initialization; isolated collision test |
 | src/config.rs | Pure log-level parsing, environment read, colocated unit tests |
 | tests/bootstrap.rs | Executable contract tests under controlled child environments |
@@ -32,10 +32,22 @@ fixtures create no store/provider mock. Reference unit tests live beside their d
 No application service object, infrastructure or presentation layer is needed for pure validation.
 See the [Financial Core contract](../../specs/002-financial-core/contracts/financial-core.md).
 
+## Identity (implemented)
+
+src/features/identity/mod.rs exports only account/actor values, BindingState, OwnerBinding,
+AccessError and the two access functions. domain.rs owns validated identity vocabulary;
+application.rs owns immutable binding and policy, with the only cross-feature edge to Financial
+Core's public OwnerRef. The domain/application modules and binding fields remain private.
+
+Tests under tests/identity/ cover accounts, resolution, scoped access and privacy. support.rs uses
+synthetic public constructors; tests/identity.rs wires real test modules. No provider mocks,
+credential fixtures, new infrastructure/presentation layers or speculative modules are needed.
+See the [owner-access contract](../../specs/003-owner-access/contracts/owner-access.md).
+
 ## Intended future ownership — no placeholder directories
 
-Future features are identity, funds, income, payments, ledger, reports, and reminders; Financial Core
-is already implemented. When behavior
+Future feature workflows include funds, income, payments, ledger, reports and reminders; Financial
+Core and pure identity policy are implemented. When behavior
 exists, keep it under src/features/<feature> with domain, application, infrastructure, and
 presentation layers only as justified by that feature. Domain models and rules stay together;
 provider-independent use cases coordinate them; adapters implement actual dependencies.
@@ -46,4 +58,4 @@ empty directories, mod files, unused traits, or global repositories/services/han
 
 The [architecture guide](../architecture/overview.md) defines dependency direction. The
 [feature map](../product/feature-map.md) describes intended ownership. Feature requirements and
-implementation progress belong to [Spec Kit](../../specs/002-financial-core/tasks.md).
+implementation progress belong to [Spec Kit](../../specs/003-owner-access/tasks.md).

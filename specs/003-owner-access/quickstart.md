@@ -1,6 +1,7 @@
 # Owner Access Validation Guide
 
-**Status**: Planned validation, not implementation evidence. No identity source or test target exists yet.
+**Status**: Verified locally on 2026-11-12. Source and the identity test target are implemented;
+[tasks.md](tasks.md) owns actual commands/results and acceptance-review evidence.
 
 ## Prerequisites
 
@@ -8,16 +9,15 @@ Use the existing rust-toolchain.toml (Rust 1.99.1 with rustfmt and Clippy) and C
 No new dependency, token, .env entry, provider account, database or feature flag is needed.
 Toolchain/dependency installation may require the network; policy tests must not.
 
-## Current baseline inspection
+## Before making further changes
 
 From the repository root, inspect git status before work and preserve existing edits. Read
 [spec.md](spec.md), [plan.md](plan.md), [contract](contracts/owner-access.md),
-[model](data-model.md), constitution and session handoff. Existing Financial Core verification
-is historical; it does not prove this planned identity feature works.
+[model](data-model.md), constitution and session handoff. Use current task evidence rather than assuming earlier feature results verify later edits.
 
-## Verification after implementation
+## Verification commands
 
-Run from the repository root once the identity test target exists:
+Run from the repository root:
 
 ```bash
 cargo fmt --all -- --check
@@ -27,8 +27,8 @@ cargo test
 cargo check
 ```
 
-Expected: new public-contract tests and existing foundation/Financial Core tests pass, zero Clippy
-warnings, no services/credentials. Manifest, lockfile and offline startup remain unchanged.
+All commands above passed locally: 10 identity tests and all 27 existing tests (37 total), zero
+Clippy warnings, no services/credentials. Manifest, lockfile and offline startup remain unchanged.
 Existing CI's cargo test discovers the new target; hosted CI needs separate actual-run evidence.
 
 ## Scenario walkthrough
@@ -49,10 +49,10 @@ the future caller obligations in the contract; AC-12 combines behavior tests and
 
 ## Completion evidence
 
-During implementation, record actual results in [tasks.md](tasks.md) and summarize in
-SESSION_HANDOFF.md. Review imports, private fields, public API, secret exposure and full diff.
-Use temporary external rustc probes to confirm invalid construction/privacy boundaries without
-new dependencies. Record failed probes as expected compiler rejection, not runtime tests.
+Actual results are in [tasks.md](tasks.md) and SESSION_HANDOFF.md. Source/API/import review found
+no out-of-scope workflow. Five temporary external rustc probes rejected raw account/actor
+construction, binding field mutation and private module imports. These were expected compiler
+rejections, not runtime tests; no compile-test dependency or repository harness was added.
 
 Keep accounts and money synthetic. Do not add real auth, binding/environment loading, financial
 use cases, provider SDKs, production credentials or deployment to demonstrate policy behavior.

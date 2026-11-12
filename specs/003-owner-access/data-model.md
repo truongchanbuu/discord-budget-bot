@@ -1,11 +1,11 @@
 # Owner Access Data Model
 
-Design only; no accounts, bindings or grants are persisted. The [specification](spec.md) owns
+Implemented in-memory model; no accounts, bindings or grants are persisted. The [specification](spec.md) owns
 requirements and [contract](contracts/owner-access.md) owns exact callable/error semantics.
 
 ## Values and ownership
 
-| Concept / planned type | Fields and ownership | Invariants and visibility |
+| Concept / implemented type | Fields and ownership | Invariants and visibility |
 | --- | --- | --- |
 | DiscordAccountId | Private NonZeroU64 | Canonical positive ASCII decimal, no leading zeros, bounded by u64::MAX; checked parse only; Copy/Eq; redacted Debug |
 | TrustedActor | Private DiscordAccountId | Caller assertion of authenticated external identity; construction does not verify provenance; Copy/Eq; redacted Debug |

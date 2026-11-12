@@ -6,9 +6,9 @@ description: "Owner identity and access implementation checklist"
 
 **Input**: [spec](spec.md), [plan](plan.md), [research](research.md), [model](data-model.md),
 [contract](contracts/owner-access.md), [quickstart](quickstart.md), constitution 1.1.0.
-**Status**: Task generation only, 2026-11-12. All 23 tasks are unchecked; no implementation.
-**Authorization**: The maintainer requested tasks from the plan. Implementation requires its own
-instruction. Preserve existing user edits, generated tooling, dependency resolution and bootstrap.
+**Status**: Complete and locally verified, 2026-11-12; all 23 tasks have recorded evidence below.
+**Authorization**: The maintainer invoked $speckit-implement for this task list. Existing user edits,
+generated tooling, dependency resolution and bootstrap are preserved.
 
 ## Format and Path Conventions
 
@@ -30,8 +30,8 @@ Keep new files cohesive and within AGENTS.md size guidance; no speculative split
 
 Goal: establish the actual baseline and design authority without reinitializing the Rust package.
 
-- [ ] T001 Reviewing instructions, user edits and baseline checks in `AGENTS.md`, `src/`, `Cargo.toml` and `Cargo.lock`.
-- [ ] T002 Recording the reviewed policy decision in `docs/architecture/decisions/0004-owner-access-policy.md` after consistency analysis.
+- [X] T001 Reviewing instructions, user edits and baseline checks in `AGENTS.md`, `src/`, `Cargo.toml` and `Cargo.lock`.
+- [X] T002 Recording the reviewed policy decision in `docs/architecture/decisions/0004-owner-access-policy.md` after consistency analysis.
 
 Checkpoint: source/user-edit baseline captured; spec/plan/contract and design approval reviewed.
 
@@ -39,7 +39,7 @@ Checkpoint: source/user-edit baseline captured; spec/plan/contract and design ap
 
 Goal: shared categorical errors and explicit binding state, ready for account/actor behavior.
 
-- [ ] T003 Defining errors (“static messages, no source payload”) as “InvalidAccountId or Denied” and states as “Enabled or Disabled” in `src/features/identity/domain.rs`, with live exports in `src/features/identity/mod.rs` and `src/features/mod.rs`.
+- [X] T003 Defining errors (“static messages, no source payload”) as “InvalidAccountId or Denied” and states as “Enabled or Disabled” in `src/features/identity/domain.rs`, with live exports in `src/features/identity/mod.rs` and `src/features/mod.rs`.
 
 Checkpoint: only real error/state modules are exported; cargo check --lib passes without new crates.
 
@@ -48,11 +48,11 @@ Checkpoint: only real error/state modules are exported; cargo check --lib passes
 Goal: resolve exactly one explicitly configured enabled owner and deny all absent/unknown actors.
 Independent test: AC-01–04 pass without scope policy, live Discord, stored accounts or resources.
 
-- [ ] T004 [US1] Writing canonical-account and owner-compatibility cases in `tests/identity/accounts.rs`, wiring `tests/identity.rs`.
-- [ ] T005 [US1] Implementing accounts (“Canonical positive ASCII decimal, no leading zeros, bounded by u64::MAX; checked parse only”) and actors (“construction does not verify provenance”) in `src/features/identity/domain.rs`.
-- [ ] T006 [US1] Writing owner-resolution cases in `tests/identity/resolution.rs`, with synthetic fixtures in `tests/identity/support.rs` and wiring in `tests/identity.rs`.
-- [ ] T007 [US1] Implementing binding (“Private account, OwnerRef, BindingState”; “constructor owns owner, values remain immutable”) and borrowed owner resolution in `src/features/identity/application.rs`, exporting through `src/features/identity/mod.rs`.
-- [ ] T008 [US1] Verifying exact binding, denial defaults and AC-01–04 through `tests/identity/accounts.rs` and `tests/identity/resolution.rs`.
+- [X] T004 [US1] Writing canonical-account and owner-compatibility cases in `tests/identity/accounts.rs`, wiring `tests/identity.rs`.
+- [X] T005 [US1] Implementing accounts (“Canonical positive ASCII decimal, no leading zeros, bounded by u64::MAX; checked parse only”) and actors (“construction does not verify provenance”) in `src/features/identity/domain.rs`.
+- [X] T006 [US1] Writing owner-resolution cases in `tests/identity/resolution.rs`, with synthetic fixtures in `tests/identity/support.rs` and wiring in `tests/identity.rs`.
+- [X] T007 [US1] Implementing binding (“Private account, OwnerRef, BindingState”; “constructor owns owner, values remain immutable”) and borrowed owner resolution in `src/features/identity/application.rs`, exporting through `src/features/identity/mod.rs`.
+- [X] T008 [US1] Verifying exact binding, denial defaults and AC-01–04 through `tests/identity/accounts.rs` and `tests/identity/resolution.rs`.
 
 Checkpoint: canonical account/actor values and current binding resolution pass; no inferred owner.
 
@@ -61,9 +61,9 @@ Checkpoint: canonical account/actor values and current binding resolution pass; 
 Goal: allow only the resolved owner's explicit authoritative scope; use current supplied binding.
 Independent test: AC-05–08 pass using the US1 values/resolution, without actual resources or lookup.
 
-- [ ] T009 [US2] Writing matching, foreign, missing and revoked-scope cases in `tests/identity/scope.rs`, wiring `tests/identity.rs`.
-- [ ] T010 [US2] Implementing scoped authorization (“absence denies; no lookup or resource entity”) in `src/features/identity/application.rs`, exporting through `src/features/identity/mod.rs`.
-- [ ] T011 [US2] Verifying owner isolation, current-binding evaluation and AC-05–08 through `tests/identity/scope.rs`.
+- [X] T009 [US2] Writing matching, foreign, missing and revoked-scope cases in `tests/identity/scope.rs`, wiring `tests/identity.rs`.
+- [X] T010 [US2] Implementing scoped authorization (“absence denies; no lookup or resource entity”) in `src/features/identity/application.rs`, exporting through `src/features/identity/mod.rs`.
+- [X] T011 [US2] Verifying owner isolation, current-binding evaluation and AC-05–08 through `tests/identity/scope.rs`.
 
 Checkpoint: no scope claim rescues an unknown actor; disabled/absent binding denies subsequent calls.
 
@@ -72,9 +72,9 @@ Checkpoint: no scope claim rescues an unknown actor; disabled/absent binding den
 Goal: reusable deterministic policy with safe diagnostics and honest caller trust obligations.
 Independent test/review: AC-09–12 pass without a provider, transport dispatch or persistent grant.
 
-- [ ] T012 [US3] Writing diagnostic and channel-independent policy cases in `tests/identity/privacy.rs`, wiring `tests/identity.rs`.
-- [ ] T013 [US3] Ensuring redacted values, results and payload-free errors in `src/features/identity/domain.rs` and `src/features/identity/application.rs`.
-- [ ] T014 [US3] Documenting authenticated-actor, trusted-binding and authoritative-scope obligations in `docs/security/security-baseline.md`, reviewing `specs/003-owner-access/contracts/owner-access.md`.
+- [X] T012 [US3] Writing diagnostic and channel-independent policy cases in `tests/identity/privacy.rs`, wiring `tests/identity.rs`.
+- [X] T013 [US3] Ensuring redacted values, results and payload-free errors in `src/features/identity/domain.rs` and `src/features/identity/application.rs`.
+- [X] T014 [US3] Documenting authenticated-actor, trusted-binding and authoritative-scope obligations in `docs/security/security-baseline.md`, reviewing `specs/003-owner-access/contracts/owner-access.md`.
 
 Checkpoint: full identity target passes; AC-10 guidance review is recorded separately from tests.
 AC-12 requires behavior evidence and source/API review, completed during final verification.
@@ -83,15 +83,15 @@ AC-12 requires behavior evidence and source/API review, completed during final v
 
 Goal: accurate implemented/planned status, all required checks, privacy probes and consistency review.
 
-- [ ] T015 [P] Updating identity ownership and dependency direction in `docs/architecture/overview.md` and `docs/development/project-structure.md`.
-- [ ] T016 [P] Updating policy-only status and development guidance in `README.md`, `docs/product/overview.md` and `docs/product/feature-map.md`.
-- [ ] T017 Running `cargo fmt --all -- --check` against `src/` and `tests/`.
-- [ ] T018 Running `cargo clippy --all-targets -- -D warnings` for `Cargo.toml`.
-- [ ] T019 Running targeted and full `cargo test` checks for `tests/identity.rs`, `tests/financial_core.rs` and `tests/bootstrap.rs`.
-- [ ] T020 Running `cargo check` and checking unchanged `Cargo.toml`, `Cargo.lock`, `rust-toolchain.toml` and `.github/workflows/ci.yml` compatibility.
-- [ ] T021 Verifying private construction and imports for `src/features/identity/` through temporary external compiler probes.
-- [ ] T022 Reviewing requirement coverage, trust limits and scope across `specs/003-owner-access/`, `src/` and the repository diff.
-- [ ] T023 Closing verified progress in `specs/003-owner-access/tasks.md`, `docs/ai/SESSION_HANDOFF.md`, `docs/ai/FEATURE_INDEX.md` and `devlog.md`.
+- [X] T015 [P] Updating identity ownership and dependency direction in `docs/architecture/overview.md` and `docs/development/project-structure.md`.
+- [X] T016 [P] Updating policy-only status and development guidance in `README.md`, `docs/product/overview.md` and `docs/product/feature-map.md`.
+- [X] T017 Running `cargo fmt --all -- --check` against `src/` and `tests/`.
+- [X] T018 Running `cargo clippy --all-targets -- -D warnings` for `Cargo.toml`.
+- [X] T019 Running targeted and full `cargo test` checks for `tests/identity.rs`, `tests/financial_core.rs` and `tests/bootstrap.rs`.
+- [X] T020 Running `cargo check` and checking unchanged `Cargo.toml`, `Cargo.lock`, `rust-toolchain.toml` and `.github/workflows/ci.yml` compatibility.
+- [X] T021 Verifying private construction and imports for `src/features/identity/` through temporary external compiler probes.
+- [X] T022 Reviewing requirement coverage, trust limits and scope across `specs/003-owner-access/`, `src/` and the repository diff.
+- [X] T023 Closing verified progress in `specs/003-owner-access/tasks.md`, `docs/ai/SESSION_HANDOFF.md`, `docs/ai/FEATURE_INDEX.md` and `devlog.md`.
 
 ## Dependencies and Verification Criteria
 
@@ -106,7 +106,7 @@ Commands below describe future implementation evidence. None was executed by tas
 | T004 | T003 | Review public tests for 1, 42, MAX, MAX+1, zero/leading zeros, empty, signs, ASCII/Unicode whitespace, Unicode digits, decimals, exponents, separators, mentions/names and >20-byte input. Existing OwnerRef rejects Unicode blanks and preserves other bytes/case. Confirm expected absent-API failure. FR-002/003/013; AC-04. |
 | T005 | T004 | DiscordAccountId privately wraps NonZeroU64; accepts 1–20 digits, first 1–9, checked u64 bound. TrustedActor privately wraps validated account and exposes construction only publicly; both Copy/Eq and redacted Debug. Narrow crate-visible account accessor only; no raw-number accessor/Display, normalization or credential claim. Account tests pass. FR-002/008/010/011. |
 | T006 | T005 | Tests cover matching enabled mapping, mismatched/absent actor, absent/disabled binding, repeated current inputs and unchanged values. Fixtures use public validated constructors and synthetic identities. Confirm expected missing binding/resolution failure. FR-001/004/006/009/013; AC-01–04. |
-| T007 | T006 | Implement contract signatures exactly: binding owns private account/OwnerRef/state; resolve_owner borrows the bound OwnerRef or returns Denied. Application imports only Financial Core facade, domain imports no feature; no owner re-export/duplicate validation. No binding getters/setters/Clone/serialization, state, I/O or fallback. Targeted resolution tests pass. FR-001/003/004/006/008/009/011. |
+| T007 | T006 | Implement contract signatures exactly: binding owns private account/OwnerRef/state; resolve_owner borrows the bound OwnerRef or returns Denied. Application imports only Financial Core facade, domain imports no feature; no owner re-export/duplicate validation. No binding getters/setters/Clone/serialization, hidden mutable/global state, I/O or fallback. Targeted resolution tests pass. FR-001/003/004/006/008/009/011. |
 | T008 | T007 | cargo test --test identity accounts and resolution filters pass; same owner returned repeatedly, every denial has no payload, exact owner semantics and unchanged inputs retained. Review result lifetime tied only to binding. FR-001–004/006/009/013; AC-01–04; SC-001/003. |
 | T009 | T008 | Write absent/matching/foreign scope and absent/matching/nonmatching actor with absent/enabled/disabled binding matrix. Include correct owner claim from unknown actor and success then changed/disabled/absent binding. Confirm missing authorize_scope failure. FR-005/007/013; AC-05–08. |
 | T010 | T009 | Resolve current owner first, then require Option<&OwnerRef> scope equality. Return bound owner reference, never scope input; all failures Denied. No prior-success input, grant wrapper, cache, lookup or mutations. Targeted scope tests pass. FR-005–009/011. |
@@ -137,7 +137,7 @@ T001 → T002 → T003
 US1 is the smallest independently useful increment. US2 requires its real values/resolution;
 US3 checks the completed policy vocabulary. Each story has independently repeatable verification,
 not an artificial claim that shared source can be implemented concurrently. The critical path is
-the graph above, with either documentation branch required before final checks.
+the graph above, with both documentation branches required before final checks.
 
 ## Parallel Execution Examples
 
@@ -188,3 +188,28 @@ roles, account linking, multi-user administration, hot reload, in-flight revocat
 workflow is included. No financial mutation, ledger, payment, banking, scheduling, reporting,
 QR/OCR/AI, production credentials or deployment belongs to this feature. Policy results never
 prove provider authentication, durable permission, actual financial commit or bank verification.
+
+## Implementation Evidence
+
+| Task | Verified result |
+| --- | --- |
+| T001 | Read current instructions/design/source and captured user edits, dependencies, constitution and tooling under /tmp. All baseline Cargo gates passed; 27 tests passed. Existing Rust ignore rules cover current artifacts/secrets; no extra tooling ignore file needed. |
+| T002 | Reviewed prior read-only analysis: no blocking findings. Clarified no hidden mutable/global state and both documentation prerequisites. Explicit implement request authorizes the task list; ADR 0004 accepted without scope expansion. |
+| T003 | cargo check --lib passed with payload-free InvalidAccountId/Denied errors, explicit binding state and only live facade exports. No dependency or speculative module added. |
+| T004 | Account tests authored first; targeted cargo test failed with expected missing DiscordAccountId/TrustedActor facade imports. Grammar, MAX/MAX+1 and existing owner byte/blank behavior reviewed. |
+| T005 | All three accounts tests pass after implementing private nonzero IDs, strict grammar and caller-asserted actors. Facade exports only validated concepts. Temporary unused accessor warning awaits its real resolution caller in T007; no lint suppression. |
+| T006 | Resolution tests and synthetic fixtures authored before binding/application APIs; targeted test fails on expected missing OwnerBinding and resolve_owner. Covers known, unknown, missing and disabled inputs plus repeated borrowed result. |
+| T007,T008 | Both resolution tests and all three account tests pass with no warnings. Resolution borrows the same private bound owner, uniformly denies all missing/disabled/unknown combinations and preserves inputs. Only application imports Financial Core facade; no owner duplication, hidden mutable state or I/O. |
+| T009 | Scope tests authored first; targeted run fails on expected missing authorize_scope. Covers 27 actor/binding/scope combinations, exact owner case/padding, unknown actor plus matching claim, pointer identity, and fresh changed/disabled/absent binding. |
+| T010,T011 | Both scope tests pass. Complete 27-case matrix allows only enabled matching actor/owner; all other cases are identical Denied. Result borrows bound owner rather than scope input; inputs unchanged, and subsequent evaluations honor changed/disabled/absent bindings. No grant or lookup. |
+| T012 | Privacy cases authored for sensitive numeric/string markers, nested/pretty results, all error/source forms and interaction-labelled calls. All 10 identity tests already pass because earlier value/binding code implements safe diagnostics; no artificial regression. |
+| T013 | Full identity target passes 10 tests. Account/actor/binding custom Debug and existing OwnerRef redact nested formats; both error categories have static messages and no source. Policy exposes no transport input, logging, stored grants or mutation; no extra hardening layer needed. |
+| T014 | Reviewed all six contract caller obligations against updated security baseline. Documented authenticated actor, operator binding, authoritative scope, per-call/replay checks, uniform denial and future interface reuse. AC-10 is guidance review; no live authentication/lookup or in-flight revocation claimed. |
+| T015,T016 | Reviewed architecture/structure and README/product docs against actual public API. Single application-level dependency and independent domain documented; no live auth or financial workflow claim. All local documentation links resolve; executable and dependency behavior unchanged. |
+| T017 | cargo fmt --all -- --check passed after formatting new identity files; existing user source edits and Financial Core remain untouched. |
+| T018 | cargo clippy --all-targets -- -D warnings passed with zero warnings; no lint suppression or configuration weakening. |
+| T019 | Targeted identity and full cargo test passed: 10 new identity tests plus all 27 existing tests, 37 total, zero failures/ignored cases. Synthetic inputs only; AC-10 guidance reviewed separately and AC-12 source/privacy review follows. |
+| T020 | cargo check passed. Exact baseline comparison confirms manifest/lockfile/toolchain/CI, bootstrap/config/main/lib, user instructions, Financial Core and generated tooling unchanged. Existing CI full cargo test with locked dependencies discovers identity; hosted run unverified. |
+| T021 | Five external rustc probes under /tmp rejected raw account/actor construction (E0423), binding field mutation (E0616), and private domain/application imports (E0603). Actual expected error codes checked; no repository harness or dependency added. |
+| T022 | Reviewed all new source/tests, imports, visibility, privacy probes and diff against 13 FR, six SC and 12 AC. All covered; AC-10 is documented caller review and AC-12 combines tests/source review. No critical/high issue, reverse dependency, hidden side effect, real secret or out-of-scope workflow found. File sizes and git diff --check pass; metadata closeout remains. |
+| T023 | Reconciled implemented spec/plan/research/model/contract/quickstart, accepted ADR, index/devlog/handoff and actual 37-test/four-gate/five-probe evidence. All 96 local links resolve; prerequisites and exact baseline preservation verified. No post-implement hooks or implementation blockers; hosted CI remains unverified. |

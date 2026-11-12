@@ -1,13 +1,13 @@
 # ADR 0004: Pure single-owner access policy
 
-Date: 2026-11-12. Status: Proposed — planning recommendation, not implementation approval.
+Date: 2026-11-12. Status: Accepted — implementation authorized on 2026-11-12.
 
 ## Context
 
 Financial Core owner references express scope without authentication. The next increment needs
 explicit owner binding and fail-closed scoped decisions, while live Discord/persistence remain deferred.
 
-## Proposed decision
+## Decision
 
 Keep actor/account values in identity domain. Let identity application compose an immutable binding
 with the existing Financial Core OwnerRef through its public facade. Resolve/authorize using supplied

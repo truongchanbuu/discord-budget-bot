@@ -10,7 +10,9 @@ isolation requirements. A single-owner assumption never makes arbitrary Discord 
 
 Phase 0 implements local configuration, structured diagnostics, initialization, and verification.
 Financial Core now adds pure whole-VND values and domain invariant validation through a library
-facade; it does not apply or store financial changes. There is no connected Discord bot, persistence, fund management, financial ledger, payment
+facade; it does not apply or store financial changes. Identity adds pure configured-owner resolution
+and owner-scope checks; provider authentication, binding loading and actual resource lookup remain
+future integration work. There is no connected Discord bot, persistence, fund management, financial ledger, payment
 workflow, report, or reminder. No banking credentials are collected and no real-money transfers
 are executed. Production deployment is not part of this phase.
 
