@@ -35,6 +35,14 @@ logging. Respect minimal privileges and explicit identity/authorization boundari
     artifacts. Do not rely on chat history as the only project state.
 11. Report completed, partial, blocked, and unverified work distinctly. CI configuration is not a
     hosted passing run. Do not deploy without an explicit task instruction.
+12. Every new features need to be cleared the previous context, and only keep commons knowledge for next feature.
+13. Every features need to be logged in `devlog.md`.
+
+# Coding Styles
+
+14. Only write comment when needed and use TODO tag: TODO, FIXME, BUG, REMIND, ... with format for example: // TODO: comment-content. The comment content must be brief and focus on main function, and I'll review it by the way.
+15. Each files only take 1 responsibility and not be over 200-250 lines (formatting lines can be ignored).
+16. Follow the SOLID styles if available, and always Clean Code.
 
 Phase 0 contains initialization/tooling only. Financial Core invariants must be specified before
 Discord payment features. Read the current handoff for actual implementation status.

@@ -1,7 +1,6 @@
 use crate::config::{Config, ConfigError};
 use thiserror::Error;
 
-/// A redacted startup failure. Input values and underlying subscriber errors are never retained.
 #[derive(Debug, Error)]
 #[error("{kind}")]
 pub struct StartupError {
@@ -16,7 +15,6 @@ enum StartupErrorKind {
     DiagnosticsUnavailable,
 }
 
-/// Initialize local diagnostics and report startup, without opening external connections.
 pub fn run() -> Result<(), StartupError> {
     let config = Config::from_env().map_err(|error| StartupError {
         kind: StartupErrorKind::Configuration(error),

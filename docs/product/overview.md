@@ -19,4 +19,4 @@ are executed. Production deployment is not part of this phase.
 Financial correctness, auditability, security, readable Rust, and maintainability take priority
 over speculative performance optimization. See the [feature roadmap](feature-map.md),
 [architecture](../architecture/overview.md), and [security baseline](../security/security-baseline.md).
-Feature-specific requirements remain authoritative in the [active Spec Kit specification](../../specs/003-owner-access/spec.md).
+Feature-specific requirements remain authoritative in the [active Spec Kit specification](../../specs/004-discord-owner-entry/spec.md).

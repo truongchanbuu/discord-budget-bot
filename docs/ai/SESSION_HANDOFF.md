@@ -4,49 +4,49 @@ Updated: 2026-11-12
 
 ## Current phase and active feature
 
-003 Owner Identity and Access Boundaries is complete and locally verified under the maintainer's
-$speckit-implement instruction. [Specification](../../specs/003-owner-access/spec.md) and
-[plan](../../specs/003-owner-access/plan.md) govern the scope;
-[tasks.md](../../specs/003-owner-access/tasks.md) owns all 23 verified completion records.
-No implementation tasks remain. Constitution 1.1.0 is unchanged.
+004 Trusted Discord Owner Entrypoint is drafted for specification review. The maintainer requested
+$speckit-specify for the next feature; the completed owner-access handoff recommended trusted
+configuration and a first authenticated interface. The [specification](../../specs/004-discord-owner-entry/spec.md)
+selects one opt-in local Discord session and a private /fundguard readiness command in one
+configured server. No plan, tasks or implementation exists for 004; constitution 1.1.0 is unchanged.
 
-## Completed behavior and decisions
+## Completed specification work and assumptions
 
-features::identity provides canonical nonzero account identifiers, caller-asserted actors, immutable
-single-owner bindings, owner resolution and owner-scoped authorization. Missing/unknown actor,
-absent/disabled binding or missing/foreign scope yields identical Denied. Each call uses current
-supplied inputs and returns the binding's borrowed owner, without a session, cache or lasting grant.
-Sensitive Debug/results redact identifiers and errors contain no payload or source.
+Created the spec and its [quality checklist](../../specs/004-discord-owner-entry/checklists/requirements.md).
+Offline startup remains default, independent of ambient Discord settings. Live mode requires a
+complete trusted credential/server/owner binding before provider access. Actual provider events
+supply invoking identity, existing owner resolution makes the decision, and all replies stay private.
+Registration must preserve unrelated commands; lifecycle/errors must not disclose sensitive data.
+Configuration changes apply after restart; no hot reload or in-flight revocation is specified.
 
-Identity domain uses std/thiserror only. Identity application reuses existing OwnerRef through
-Financial Core's public facade; no reverse dependency or duplicated owner validation exists.
-[ADR 0004](../architecture/decisions/0004-owner-access-policy.md) is accepted. The two low-severity
-analysis wording issues were clarified. Source commit: 3b90f89; documentation closeout follows.
+Scope assumes a local developer-controlled application/server, one owner and no financial commands.
+DMs, ordinary messages, attachments, resource lookup, storage and deployment remain excluded.
+Finite external-attempt limits, dependency compatibility, setting names and concrete adapter/lifecycle
+contracts must be resolved during planning. These are explicit planning obligations, not approved
+technical choices. No new ADR is adopted during specification.
 
 ## Verification and limits
 
-cargo fmt --all -- --check, cargo clippy --all-targets -- -D warnings, cargo test and cargo check
-all passed locally. Targeted identity tests also pass. Total: 37 tests, zero failures/ignored cases
-(10 identity tests plus all 27 existing tests). The access matrix covers all 27 actor/binding/scope
-combinations. Five external compiler probes rejected raw account/actor construction, binding field
-mutation and private domain/application imports. All 12 AC have tests/reviews; AC-10 specifically
-reviews future caller guidance, and AC-12 combines behavior and source/API/privacy review.
+Requirement-quality review passed all 16 items: 16 requirements, 14 acceptance scenarios and six
+measurable outcomes. Reviewed constitution, existing runtime/identity code and contracts, architecture,
+security baseline and roadmap. Checked primary Discord documentation for command scope and initial
+response deadlines. Validated local links, path-only selector discovery, file sizes and whitespace.
+No before/after specification extension hooks are configured.
 
-Exact baseline checks preserve dependencies, lockfile/toolchain/CI, existing Financial Core, startup
-code, constitution and generated tooling. User edits to AGENTS.md and src/bootstrap.rs, src/lib.rs,
-src/main.rs remain preserved and unstaged. The working tree can remain dirty with those edits.
-Hosted CI is unverified; no complete production security or live-interface assurance is claimed.
+Documentation-only session: Cargo checks were not run, no real token/account was used and no live
+Discord smoke test occurred. Existing 37-test evidence belongs to completed
+[owner-access tasks](../../specs/003-owner-access/tasks.md); prior task checklists are unchanged.
+Hosted CI remains unverified. User edits to AGENTS.md and src/bootstrap.rs, src/lib.rs, src/main.rs
+are preserved. Product code, dependencies, constitution and generated tooling remain unchanged.
 
-## Scope boundaries, blockers and next action
+## Pending work, blockers and next action
 
-No current blockers. Executable behavior remains offline initialization. Policy construction cannot
-prove provider authentication: future callers must authenticate actors, load operator-controlled
-bindings, fetch authoritative ownership and re-check access before every private use case/replay.
-Binding loading, real authentication, resource lookup, in-flight revocation, persistence, financial
-mutations, bank integration and deployment remain excluded.
+No unresolved specification clarification. Maintainer scope review precedes $speckit-plan; the
+configured workflow's review-spec gate requires this review. Do not generate technical tasks or
+implement automatically. Quality-checklist completion is not implementation authorization.
 
-Next: review this increment, then specify trusted owner configuration and a minimal authenticated
-interface before financial commands. A persistence/atomic-commit slice is another separately scoped
-future feature. Do not infer authorization for either from this completed task list.
-Use [FEATURE_INDEX.md](FEATURE_INDEX.md) if the ignored selector is absent; active feature directory
-is specs/003-owner-access. Actual Git branch remains 001-project-foundation.
+Automated checks must use synthetic inputs and controlled boundaries without real provider calls.
+Later manual smoke tests must be opt-in with local credentials and report owner/second-account,
+privacy and shutdown evidence honestly; their absence prevents a live-verification claim.
+Use [FEATURE_INDEX.md](FEATURE_INDEX.md) when the ignored selector is absent. The active directory
+is specs/004-discord-owner-entry; actual Git branch remains 001-project-foundation.

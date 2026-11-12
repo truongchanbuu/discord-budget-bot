@@ -3,6 +3,15 @@
 This log records feature milestones and links to authoritative specifications/tasks. It does not
 replace their requirements, implementation checklists, or verification evidence.
 
+## 2026-11-12 — 004 Trusted Discord Owner Entrypoint
+
+Status: [specification](specs/004-discord-owner-entry/spec.md) drafted for scope review;
+quality checklist passed 16/16. Defines opt-in local Discord mode, operator-controlled binding,
+one private /fundguard readiness command in one configured server, least privilege and safe
+registration/failure/shutdown. Offline remains the default. No financial/resource operations.
+Automated verification must remain credential-free; real Discord smoke evidence is separate.
+No product code, dependencies, plan or tasks added. Next: review scope, then $speckit-plan.
+
 ## 2026-11-12 — 003 Owner Identity and Access Boundaries
 
 Status: complete and locally verified; all 23 [tasks](specs/003-owner-access/tasks.md) checked.

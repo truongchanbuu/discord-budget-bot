@@ -1,5 +1,3 @@
-//! FundGuard application initialization. Business features are not implemented yet.
-
 mod config;
 
 mod bootstrap;

@@ -7,6 +7,7 @@ and unavailable. Each future feature requires one authoritative Spec Kit specifi
 | --- | --- | --- |
 | Financial Core | Exact whole-VND values, virtual previews, supplied-context replay/conflict validation | Implemented; no posting or persistence |
 | Identity | Owner binding, authorization, future user isolation | [Pure single-owner policy implemented](../../specs/003-owner-access/spec.md); live integration deferred |
+| Discord entrypoint | Opt-in local session, trusted owner configuration and private readiness command | [Specified](../../specs/004-discord-owner-entry/spec.md); not implemented |
 | Funds | Virtual fund definitions/balances and eventual CRUD | Not implemented |
 | Income | Income allocation and salary policy | Not implemented |
 | Payments | Awareness before handoff and explicit completion meanings | Not implemented |
