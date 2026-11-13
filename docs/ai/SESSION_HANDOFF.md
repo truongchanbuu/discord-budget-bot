@@ -49,12 +49,15 @@ Hosted CI and live Discord smoke remain unverified; no token/account/server was 
 
 ## Pending work, blockers and next action
 
-No unresolved task-generation blocker. Run $speckit-analyze against spec/plan/tasks and design artifacts;
-resolve findings before explicit implementation authorization. Do not start code automatically.
+Read-only analysis found A1/C1/I1 (two medium, one low; no critical or constitution conflicts).
+The maintainer authorized planning remediation: T008 now distinguishes padded owner references,
+T016/T027 explicitly cover duplicate acknowledgements and unsupported dispatch, and T033/T034
+consistently follow T032. Focused re-review resolves all three findings; no remaining planning blocker.
+Next: explicit $speckit-implement authorization. Do not start code automatically.
 US1 is an independently testable configuration/dispatch checkpoint; live executable wiring waits until
 US2 privacy and US3 lifecycle/error safeguards exist. All 38 tasks remain unchecked.
 
-Task generation validated format/IDs/dependencies, FR/AC/SC coverage, artifact links, file sizes and
+Task generation and remediation validated format/IDs/dependencies, FR/AC/SC coverage, artifact links, file sizes and
 whitespace. No before/after task hooks are configured. No application checks were rerun for this
 documentation-only step; no new runtime/CI/live passing result is claimed. The task-generation
 session began with a clean tree and changes documentation only.

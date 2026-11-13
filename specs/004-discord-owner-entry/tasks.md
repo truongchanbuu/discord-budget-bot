@@ -42,7 +42,7 @@ and exactly one controlled connector for complete live settings, without constru
 ### Tests
 
 - [ ] T007 [P] [US1] Writing supplied-lookup mode tests beside src/config/runtime.rs: absent/offline ignores all bot fields without reading them, exact discord selects validation, empty/unknown/non-text modes fail; verify failures against contracts/runtime.md (after Phase 2; FR-001/002, AC-01–04).
-- [ ] T008 [P] [US1] Writing live-field tests beside src/config/discord.rs for each missing/empty/padded/non-text field, u64 boundaries, canonical account grammar, exact nonblank owner bytes, enabled/disabled state and nested credential/config redaction; verify categorical errors retain no supplied markers (after Phase 2; FR-002–004, AC-02/03).
+- [ ] T008 [P] [US1] Writing live-field tests beside src/config/discord.rs for missing/empty/non-text required fields, rejected padded tokens/IDs/state, u64 boundaries and canonical account grammar; accept padded nonblank owner references unchanged, reject Unicode-blank owner references, and cover enabled/disabled state plus nested credential/config redaction; verify categorical errors retain no supplied markers (after Phase 2; FR-002–004, AC-02/03).
 
 ### Implementation
 
@@ -64,7 +64,7 @@ owner/denial content, private flags and bounded failure without contacting Disco
 
 - [ ] T014 [US2] Writing mapper/data tests beside src/features/identity/presentation.rs using serenity::json::from_value fixtures; cover owner/nonowner, spoofed names/content, missing/foreign guild, invalid actor, disabled binding, closing gate and repeated requests; verify all denials match and no remembered grant/resource scope exists (after Phase 2 and T010; FR-006–008, AC-05–08).
 - [ ] T015 [US2] Defining command data/decision/error and production mapper in src/features/identity/presentation.rs, wiring crate-visible presentation in src/features/identity/mod.rs; CommandData: “Feature presentation owns Poise data; token absent; Debug redacted; flag gates lifecycle only”; decision: “Private presentation output from current server/actor mapping and existing resolve_owner; no owner payload/grant”; error: “Safe presentation-owned Poise error category, no source payload; setup failure details signaled separately”; verify T014 through existing resolve_owner each request (after T014; FR-006–008/014).
-- [ ] T016 [US2] Writing actual slash/reply-builder and paused-send tests beside src/features/identity/presentation.rs; serialize to_slash_initial_response through serenity::json::to_value; verify zero args, private flags, exact contract text, empty mentions and one send on error/2s timeout with no fallback (after T015; FR-005/008/009/013, AC-05/06/09).
+- [ ] T016 [US2] Writing actual slash/reply-builder and paused-send tests beside src/features/identity/presentation.rs; serialize to_slash_initial_response through serenity::json::to_value; verify zero args, private flags, exact contract text, empty mentions and one send on error/2s timeout with no fallback; include duplicate-ack errors with safe diagnostics, no second send and no state/registration effect from repeated delivery (after T015; FR-005/008/009/013, AC-05/06/09).
 - [ ] T017 [US2] Implementing /fundguard handler/reply builder in src/features/identity/presentation.rs using actual invoking user/guild, lifecycle accepting gate and narrow private send future; reply: “Fixed content, ephemeral=true, empty allowed mentions; no embeds/attachments or public fallback”; definition: “fundguard, slash/chat input, zero arguments; only named target-guild upsert”; verify T016 with immediate dispatch, no auto-defer/owners_only/context precheck bypass, one 2s logical send (after T016; FR-005–009/013).
 - [ ] T018 [US2] Verifying src/features/identity/presentation.rs with targeted unit tests plus tests/identity.rs and tests/financial_core.rs; review SDK-independent domain/application, unchanged existing policy and private adapter visibility; record results in tasks.md (after T017; FR-007/014/015, AC-05–09).
 
@@ -92,7 +92,7 @@ signals and real executable offline/invalid cases verify operation without provi
 
 ### Client and executable integration
 
-- [ ] T027 [US3] Writing client/setup-wiring tests beside src/platform/discord/client.rs using controlled operations; assert empty intents, one shard/command, both owner shortcuts disabled, custom errors, setup once across Ready/reconnect and Failed signal before Err; verify no real builder connection and no false discord_ready (after T020/T022/T026; FR-010–013, AC-10–13).
+- [ ] T027 [US3] Writing client/setup-wiring tests beside src/platform/discord/client.rs using controlled operations; assert empty intents, one shard/command, both owner shortcuts disabled, custom errors, setup once across Ready/reconnect and Failed signal before Err; exercise real framework dispatch with an unsupported command name and assert zero owner-policy calls; verify no real builder connection and no false discord_ready (after T020/T022/T026; FR-010–013, AC-10–13).
 - [ ] T028 [US3] Wiring real SDK framework/client/setup in src/platform/discord/client.rs, narrow session entry in src/platform/discord/mod.rs and src/platform/mod.rs, root declaration in src/lib.rs; one consumed setup registers before signaling readiness, forwards safe failure independently of Client::start, samples real runners and supervises from before builder await; verify T027 and T019–T026 (after T027; FR-010–014).
 - [ ] T029 [US3] Writing tests/discord_entry.rs with tests/support/mod.rs child harness/env_clear for default/explicit offline, malformed ambient bot fields, invalid mode/log level and each incomplete live setting; assert safe exit/events/stdout/no sensitive markers within process deadline; never run valid-live binary configuration (after T028; FR-001–004/012/015, AC-01/03/04/11/14).
 - [ ] T030 [US3] Connecting public async start/ApplicationError exports in src/lib.rs, actual selected connector in src/runtime.rs and awaited start in src/main.rs; preserve synchronous offline run/StartupError, fixed error event names and scoped fallback, no nested runtime; verify T029/T011 and all bootstrap/collision tests (after T029; FR-001/012/014/015).
@@ -105,8 +105,8 @@ signals and real executable offline/invalid cases verify operation without provi
 
 **Goal**: Finish documentation, credential-free CI and evidence-backed delivery.
 
-- [ ] T033 [P] Updating docs/architecture/overview.md, docs/development/project-structure.md and docs/architecture/decisions/0005-trusted-discord-entrypoint.md to reflect actual wiring/directions, retained offline API and reviewed decision status; verify imports/public API match without new abstractions (after T031; FR-014).
-- [ ] T034 [P] Updating docs/security/security-baseline.md threat/control status for live token provisioning/rotation, operator binding, reply privacy, allowlisted logs, safe failures and least privilege; verify no production/security-certification claim or financial authorization shortcut (after T031; FR-003/004/011/016).
+- [ ] T033 [P] Updating docs/architecture/overview.md, docs/development/project-structure.md and docs/architecture/decisions/0005-trusted-discord-entrypoint.md to reflect actual wiring/directions, retained offline API and reviewed decision status; verify imports/public API match without new abstractions (after T032; FR-014).
+- [ ] T034 [P] Updating docs/security/security-baseline.md threat/control status for live token provisioning/rotation, operator binding, reply privacy, allowlisted logs, safe failures and least privilege; verify no production/security-certification claim or financial authorization shortcut (after T032; FR-003/004/011/016).
 - [ ] T035 Updating README.md, docs/product/overview.md and docs/product/feature-map.md with actual offline/opt-in behavior, exact setup/access, executable commands and scope limits; link authoritative contracts/guide rather than duplicate requirements; verify every documented automated command, with manual live commands clearly opt-in (after T032–T034; FR-001/011/016).
 - [ ] T036 Reviewing .github/workflows/ci.yml against full suite and reviewed Cargo.lock; retain locked checks, minimal permissions, no credentials/live startup/provider accounts or needless jobs; change only concrete gaps and verify YAML/commands locally, hosted status separately (after T035; FR-015).
 - [ ] T037 Running cargo fmt --all -- --check, cargo clippy --all-targets -- -D warnings, cargo test and cargo check from repository root, plus FUNDGUARD_MODE=offline cargo run --locked; record actual outcomes in specs/004-discord-owner-entry/tasks.md, retain previous suites and all new cases, report failures honestly (after T036; FR-015, AC-14).
@@ -128,7 +128,7 @@ never mark a test task complete merely because it was written. Verify the paired
 | US1 | T007 + T008 after Phase 2 (different test files); T009 → T010 → T011 → T012; T013 can accompany T011/T012 after T010 |
 | US2 | T014 → T015 → T016 → T017 → T018; one shared presentation file means no safe simultaneous edits |
 | US3 | T019 + T021 + T023 after T018 (separate files); T020 and T022 follow their tests; T024 needs T022/T023; T025 → T026; T027 → T028 → T029 → T030 → T031 → T032 |
-| Polish | T033 + T034 after T031; T035 waits for T032/T033/T034; then T036 → T037 → T038 |
+| Polish | T033 + T034 after T032; T035 waits for T032/T033/T034; then T036 → T037 → T038 |
 
 [P] means safe alongside the examples above once prerequisites are complete, not permission to race
 an implementation with tests editing its file. No delegation or live access is implied by this list.
@@ -179,3 +179,7 @@ actual live failures remain known issues rather than being overruled by simulate
 No implementation tasks completed and no application verification run during task generation.
 Record concise task IDs, commands/results and any blocked/partial work here during implementation;
 link detailed progress from handoff instead of copying this checklist into other documents.
+
+Planning review remediation (2026-11-13): A1 clarified T008 whitespace expectations; C1 made
+T016/T027 duplicate-ack and unsupported-dispatch checks explicit; I1 aligned T033/T034 with the
+completed-US3 phase gate (T032). All implementation tasks remain unchecked.

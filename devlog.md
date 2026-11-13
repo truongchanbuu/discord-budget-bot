@@ -16,7 +16,9 @@ Isolated dependency/framework probe passed on the pinned toolchain; no live prov
 Repository code/dependencies are unchanged. On 2026-11-13, the maintainer requested $speckit-tasks,
 accepting plan review for task generation. [Tasks](specs/004-discord-owner-entry/tasks.md) now contain
 38 unchecked items across six phases, with dependency, acceptance and verification coverage.
-Next: $speckit-analyze, then explicit implementation authorization.
+Analysis found two medium and one low planning issue; authorized remediation clarified whitespace
+semantics, explicit dispatch/duplicate-ack tests, and the Polish phase gate. Focused re-review passed;
+all tasks remain unchecked. Next: explicit implementation authorization.
 
 ## 2026-11-12 — 003 Owner Identity and Access Boundaries
 
