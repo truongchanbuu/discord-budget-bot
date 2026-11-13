@@ -5,8 +5,9 @@ financial intent visible before payment handoff, while distinguishing virtual bu
 
 **Current status:** Offline initialization, pure Financial Core invariants, owner-access policy and
 an opt-in Discord readiness adapter are implemented. The one /fundguard command uses the configured
-owner binding and replies privately. Local tests use controlled boundaries; real Discord authentication,
-registration and delivery remain unverified. No fund CRUD, ledger, persistence, payment workflow,
+owner binding and replies privately. Local tests use controlled boundaries. Live authentication,
+scoped registration and shutdown passed, and the maintainer confirmed a private owner readiness reply.
+Other-account/disabled denial and network recovery remain unverified. No fund CRUD, ledger, persistence, payment workflow,
 reports, reminders or production deployment exists.
 
 ## Install and run
@@ -60,7 +61,7 @@ cargo check
 
 Unit tests use real SDK fixtures/builders and controlled I/O futures; executable tests isolate child
 environments. They never create a live SDK client or require Discord/PostgreSQL. CI runs locked checks
-with minimal permissions and no credentials. Hosted CI and optional live smoke need separate evidence.
+with minimal permissions and no credentials. Hosted CI and remaining manual denial/recovery checks need separate evidence.
 On constrained machines, CARGO_BUILD_JOBS=1 and CARGO_PROFILE_DEV_DEBUG=0/CARGO_PROFILE_TEST_DEBUG=0
 reduce build resource use without changing runtime behavior.
 

@@ -209,3 +209,11 @@ callbacks. T021/T027 use categorical tests, the real framework command table and
 source review instead of a fake full dispatcher or live client. See ADR 0005. Actual authentication,
 registration preservation, private delivery, reconnect and Ctrl-C delivery remain unverified live.
 A1/C1/I1 remediation is retained. No blocked/partial implementation task or financial/deployment work.
+
+Live smoke follow-up (2026-11-13, explicitly requested by maintainer): bot authentication, gateway
+readiness (~1.46s), named guild-command readback (zero args), unchanged unrelated guild/global command
+snapshots and Ctrl-C cleanup passed (0.457s, exit 0, no forced kill). Stdout remained empty; configured
+sensitive values were absent from captured output. User-supplied .env.local remained ignored/untracked
+and unchanged. The session is stopped. The maintainer confirmed a private owner readiness reply, providing live
+owner-policy/reply/privacy evidence. Second-account/disabled denial and real network recovery remain
+unverified; hosted CI unchanged. See quickstart.md's status table.

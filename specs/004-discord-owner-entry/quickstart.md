@@ -1,7 +1,9 @@
 # Discord Entrypoint Validation Guide
 
 **Status**: Implemented; local automated evidence is recorded in [tasks.md](tasks.md).
-Live provider authentication, registration and delivery are unverified.
+Live authentication, scoped registration/preservation and Ctrl-C shutdown passed on 2026-11-13.
+The maintainer confirmed a private owner readiness reply. Other-account/disabled denial and
+reconnect-under-failure checks remain unverified.
 
 ## Prerequisites
 
@@ -90,12 +92,23 @@ Hosted CI status also needs an actual run. No deployment or financial/banking op
 
 | Live check | Status |
 | --- | --- |
-| Guild registration/preservation | Unverified — not run |
-| Configured owner readiness | Unverified — not run |
+| Bot authentication / gateway readiness | Passed — live, command-ready in about 1.46s |
+| Guild registration/preservation | Passed — one no-argument command; unrelated guild/global definitions unchanged |
+| Configured owner readiness | Passed — maintainer confirmed the live readiness reply |
 | Second-account denial / disabled binding | Unverified — not run |
-| Provider-delivered reply privacy | Unverified — not run |
-| Live reconnect and Ctrl-C cleanup | Unverified — not run |
+| Provider-delivered reply privacy | Passed — maintainer confirmed the owner reply was private |
+| Ctrl-C cleanup | Passed — 0.457s, exit 0, no forced kill |
+| Recovery during a real network interruption | Unverified — not induced |
 | Hosted GitHub Actions | Unverified — no run observed |
 
 Local gates use one build job and disabled development/test debug info to limit SDK build resource
 use. These build-time environment settings do not enable a fake runtime or alter authentication.
+
+Live smoke on 2026-11-13 used the maintainer-provided ignored .env.local through a temporary local
+harness; the application still does not auto-load env files. The harness selected Discord/INFO only
+for that process. Read-only provider snapshots before/after startup verified command preservation;
+no extra test commands were created. The session ran for about three minutes, then stopped. Captured
+output had empty stdout and no configured credential/identity values. The maintainer subsequently confirmed a private readiness reply from /fundguard. Owner reply/privacy
+therefore have user-confirmed live evidence; no second-account/disabled denial or recovery result
+is inferred from connection success.
+No identifying provider payloads or secrets are retained in repository evidence.

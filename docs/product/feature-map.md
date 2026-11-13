@@ -6,8 +6,8 @@ and unavailable. Each future feature requires one authoritative Spec Kit specifi
 | Feature | Intended ownership | State |
 | --- | --- | --- |
 | Financial Core | Exact whole-VND values, virtual previews, supplied-context replay/conflict validation | Implemented; no posting or persistence |
-| Identity | Owner binding, authorization, future user isolation | [Pure single-owner policy implemented](../../specs/003-owner-access/spec.md); trusted environment binding and readiness adapter implemented; live smoke unverified |
-| Discord entrypoint | Opt-in local session, trusted owner configuration and private readiness command | [Implemented](../../specs/004-discord-owner-entry/spec.md); local automated verification, live smoke unverified |
+| Identity | Owner binding, authorization, future user isolation | [Pure single-owner policy implemented](../../specs/003-owner-access/spec.md); trusted environment binding and readiness adapter implemented; live private owner reply confirmed; other-account/disabled denial pending |
+| Discord entrypoint | Opt-in local session, trusted owner configuration and private readiness command | [Implemented](../../specs/004-discord-owner-entry/spec.md); local tests and live auth/registration/shutdown verified; owner reply confirmed; denial/recovery checks pending |
 | Funds | Virtual fund definitions/balances and eventual CRUD | Not implemented |
 | Income | Income allocation and salary policy | Not implemented |
 | Payments | Awareness before handoff and explicit completion meanings | Not implemented |
@@ -22,7 +22,7 @@ and unavailable. Each future feature requires one authoritative Spec Kit specifi
    establish durable idempotency, actual accounting entries, or verified bank balances.
 2. Preserve the owner policy and opt-in adapter. Next specify persistence/atomic commit boundaries,
    authoritative resource ownership, audit origins, concurrency and durable idempotency. The adapter
-   does not prove financial resource ownership; real provider smoke evidence remains separate.
+   does not prove financial resource ownership; remaining live denial/recovery evidence remains separate.
 3. Add small feature slices with their own Discord presentation and relevant domain tests.
 4. Specify payment awareness and handoff only after foundational financial invariants are proven.
 

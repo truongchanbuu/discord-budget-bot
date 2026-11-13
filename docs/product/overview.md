@@ -12,8 +12,9 @@ Phase 0 implements local configuration, structured diagnostics, initialization, 
 Financial Core now adds pure whole-VND values and domain invariant validation through a library
 facade; it does not apply or store financial changes. Identity adds pure configured-owner resolution
 and owner-scope checks. The opt-in Discord adapter loads trusted environment bindings and maps SDK
-actors to a single private readiness command; real provider authentication/delivery remain unverified
-until local smoke testing. Authoritative resource lookup, persistence, fund management, financial
+actors to a single private readiness command. Live authentication/registration/shutdown passed smoke
+testing, and the maintainer confirmed a private owner readiness reply. Other-account/disabled denial
+and network recovery remain unverified. Authoritative resource lookup, persistence, fund management, financial
 ledger, payment workflows, reports and reminders remain future work. No banking credentials are collected and no real-money transfers
 are executed. Production deployment is not part of this phase.
 

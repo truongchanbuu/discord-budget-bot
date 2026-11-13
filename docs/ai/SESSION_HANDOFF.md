@@ -41,23 +41,30 @@ client is constructed by automated tests; no credentials/provider sockets/databa
 
 Reviewed final diff, module visibility/direction, minimal resolved features, secret markers, .env ignores,
 source size and local documentation links. Existing CI already runs locked gates with read-only
-permissions and no credentials; retained after review. Generated tooling is unchanged. The session
+permissions and no credentials; retained after review. Generated tooling is unchanged. The implementation session
 began from clean HEAD 422305c; no unrelated work was overwritten.
 
 Full Poise dispatch/error callbacks require SDK runner context. Offline tests use the real command
-table/builders and source review rather than a fabricated dispatcher. Real authentication, registration
-preservation, private delivery, reconnect and live Ctrl-C cleanup remain unverified; the guide has
-individual unverified smoke rows. Hosted CI is unverified. No complete security audit/panic-payload
+table/builders and source review rather than a fabricated dispatcher. Live follow-up requested by the maintainer verified bot authentication, gateway readiness (~1.46s),
+named guild registration, unchanged unrelated guild/global command definitions and Ctrl-C cleanup
+(0.457s, exit 0, no forced kill). Stdout was empty and configured sensitive values were absent from
+captured output. Ignored/untracked .env.local was loaded only by a temporary harness, never printed
+or changed; application auto-loading remains absent. The bot is stopped. The maintainer confirmed a private owner readiness
+reply: live owner-policy/response/privacy are user-confirmed. Second-account/disabled denial and
+real network recovery remain unverified. The guide has individual result rows. Hosted CI is unverified. No complete security audit/panic-payload
 containment or memory-zeroization claim. Local tests are not provider integration evidence.
 
 ## Pending work, blockers and next action
 
-No partial or blocked implementation tasks. Optional live smoke remains opt-in with locally supplied
+No partial or blocked implementation tasks. Remaining manual denial/recovery smoke remains opt-in with locally supplied
 credentials; never ask for tokens in chat or commit identifying payloads. No deployment was performed.
 Next recommended specification: persistence and atomic financial-commit boundaries, including
 trusted resource ownership, origin/audit retention, concurrency and durable idempotency. Do not begin
 financial commits/payments or add SQLx until separately specified and authorized.
 
 Use [FEATURE_INDEX.md](FEATURE_INDEX.md) if the ignored selector is absent. Delivered active directory
-is specs/004-discord-owner-entry; actual Git branch remains 001-project-foundation. Read current source
+is specs/004-discord-owner-entry; the current Git branch is main (confirmed during live follow-up). Read current source
 and tasks at the next session; do not rely solely on this summary or conversation history.
+
+This follow-up changed verification documentation only; cargo build --locked passed for the live run.
+Rust gates were not rerun because source is unchanged; the 69-test result above is prior implementation evidence.

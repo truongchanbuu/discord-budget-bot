@@ -26,6 +26,11 @@ was caught and fixed by the actual-framework test. Full SDK dispatch/error conte
 live smoke/hosted CI remain unverified. No financial feature or deployment. Next: persistence/atomic
 financial-commit specification, including authoritative resource scope and durable idempotency.
 
+Live follow-up (2026-11-13, maintainer-provided ignored local environment): authentication/gateway,
+named guild registration and preservation readback passed; Ctrl-C stopped cleanly in 0.457s (exit 0).
+No sensitive configured values appeared in captured output. Bot is stopped. The maintainer confirmed the private owner readiness reply. Other-account/disabled
+denial, network recovery and hosted CI remain unverified.
+
 ## 2026-11-12 — 003 Owner Identity and Access Boundaries
 
 Status: complete and locally verified; all 23 [tasks](specs/003-owner-access/tasks.md) checked.
