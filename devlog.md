@@ -3,6 +3,14 @@
 This log records feature milestones and links to authoritative specifications/tasks. It does not
 replace their requirements, implementation checklists, or verification evidence.
 
+## 2026-11-13 — 005 Conversational Personal Finance
+
+Maintainer authorized full Spec Kit workflow for private conversational income/expenses, categories,
+virtual funds/reserves and monthly totals. [Spec](specs/005-conversational-finance/spec.md) quality16/16;
+[plan](specs/005-conversational-finance/plan.md), contracts/model/research and
+[32 tasks](specs/005-conversational-finance/tasks.md) generated; cross-artifact review passed.
+Implementation in progress. No production/environment credentials used; no deployment authorized.
+
 ## 2026-11-12 — 004 Trusted Discord Owner Entrypoint
 
 Status: [specification](specs/004-discord-owner-entry/spec.md) accepted for planning on 2026-11-13.
