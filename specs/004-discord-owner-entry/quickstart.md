@@ -1,20 +1,19 @@
 # Discord Entrypoint Validation Guide
 
-**Status**: Planned guide. Feature 004 is not implemented; no new application passing-test claim.
+**Status**: Implemented; local automated evidence is recorded in [tasks.md](tasks.md).
+Live provider authentication, registration and delivery are unverified.
 
 ## Prerequisites
 
-Use existing Rust 1.99.1/Edition 2024 and rustfmt/Clippy. During authorized implementation, add the
-reviewed SDK/features and commit the resolved Cargo.lock described in [research](research.md).
+Use existing Rust 1.99.1/Edition 2024 and rustfmt/Clippy. The reviewed SDK/features and committed
+Cargo.lock follow [research](research.md).
 Dependency downloads may use the network; automated tests must not contact Discord or a database.
 Read [runtime](contracts/runtime.md) and [command](contracts/command.md) contracts for exact inputs.
 
 ## Safe baseline and automated checks
 
-Preserve the actual current Git state before edits. This planning session began with a clean tree;
-previously committed instruction/source edits must not be reverted. Follow [tasks.md](tasks.md)
-only after implementation authorization.
-After implementation, from repository root:
+Preserve the actual current Git state before edits. This implementation session began with a clean tree;
+previously committed instruction/source edits must not be reverted. Follow [tasks.md](tasks.md) for verified progress. From repository root:
 
 ```bash
 cargo fmt --all -- --check
@@ -25,7 +24,7 @@ cargo check
 FUNDGUARD_MODE=offline cargo run --locked
 ```
 
-The discord_entry target is planned, not present. It covers real executable offline/invalid inputs;
+The discord_entry target covers real executable offline/invalid inputs;
 private config/mapper/registration/supervisor unit tests run under the full suite. The default run
 must initialize offline, log safely and exit without credentials/provider calls. Existing CI keeps
 locked checks and no credentials. Prior 37-test evidence is historical, not proof of this new code.
@@ -40,8 +39,10 @@ Automated scenario groups:
 3. Construct actual SDK interaction fixtures with forged display names and distinct invoking IDs;
    invoke the production mapper and existing policy for owner/nonowner, disabled, wrong/missing
    server and missing actor cases. Serialize the real reply builder; assert private flags/text.
-4. Capture named upsert scope/builder and finite attempts; preserve unrelated commands and register
-   once across reconnect signals. Review production SDK method selection, not just fake call counts.
+4. Capture named upsert scope/builder and finite attempts; review the real named SDK method and
+   Poise consumed FnOnce setup for preservation/reconnect semantics. Assert final framework options
+   disable owner discovery and exclude unsupported commands. Full SDK dispatch/error contexts are
+   source-reviewed because they require runner context; they are not fabricated in offline tests.
 5. With paused Tokio time, test startup builder/setup deadlines, setup Err while client remains
    pending, registration timeout, response error/timeout with no fallback, observed-loss recovery,
    unexpected task completion and bounded interrupt cleanup. Do not wait real 30s in ordinary tests.
@@ -51,7 +52,7 @@ Automated scenario groups:
 
 This is controlled-boundary verification, not a real Discord end-to-end/authentication certificate.
 
-## Optional live smoke after implementation
+## Optional live smoke
 
 Use a dedicated developer-owned Discord application and server. Installation permissions/scopes
 are in the command contract: bot plus applications.commands, permissions=0, privileged intents off.
@@ -84,3 +85,17 @@ checks must be operator-owned and cleaned up narrowly; never bulk-delete command
 If credentials/access are unavailable, mark live smoke unverified and still complete honest automated
 work. Live failure is a real known issue to investigate, not something that simulated tests override.
 Hosted CI status also needs an actual run. No deployment or financial/banking operation is authorized.
+
+## Current external verification status
+
+| Live check | Status |
+| --- | --- |
+| Guild registration/preservation | Unverified — not run |
+| Configured owner readiness | Unverified — not run |
+| Second-account denial / disabled binding | Unverified — not run |
+| Provider-delivered reply privacy | Unverified — not run |
+| Live reconnect and Ctrl-C cleanup | Unverified — not run |
+| Hosted GitHub Actions | Unverified — no run observed |
+
+Local gates use one build job and disabled development/test debug info to limit SDK build resource
+use. These build-time environment settings do not enable a fake runtime or alter authentication.

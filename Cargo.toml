@@ -10,10 +10,15 @@ publish = false
 path = "src/lib.rs"
 
 [dependencies]
-tokio = { version = "1.54.1", default-features = false, features = ["macros", "rt"] }
+poise = { version = "0.7.1", default-features = false }
+serenity = { version = "0.12.5", default-features = false, features = ["rustls_backend"] }
+tokio = { version = "1.54.1", default-features = false, features = ["macros", "rt", "signal", "sync", "time"] }
 tracing = { version = "0.1.44", default-features = false, features = ["std"] }
 tracing-subscriber = { version = "0.3.23", default-features = false, features = ["fmt", "std"] }
 thiserror = "2.0.21"
+
+[dev-dependencies]
+tokio = { version = "1.54.1", default-features = false, features = ["test-util"] }
 
 [lints.rust]
 unsafe_code = "forbid"

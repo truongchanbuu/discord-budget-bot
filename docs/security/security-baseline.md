@@ -7,14 +7,14 @@ and [active feature index](../ai/FEATURE_INDEX.md) govern requirements.
 ## Assets, actors, and boundaries
 
 Current assets: source integrity, Cargo.lock, dependency provenance, local process configuration,
-structured diagnostic integrity, and CI permissions. Future assets: Discord tokens, owner bindings,
+structured diagnostic integrity, CI permissions, opt-in Discord tokens and operator owner bindings. Future assets:
 financial records, attachments, idempotency records, and audit trails. Do not create sample personal
 financial records for foundation tests.
 
 Actors include the owner, future other users/untrusted Discord senders, malicious attachment or
 provider-response authors, dependency maintainers/compromised packages, and contributors who can
-change CI. Current entry points are process environment and repository/CI inputs. Future Discord
-interactions, messages, attachments, scheduled execution, and provider responses are untrusted.
+change CI. Current entry points are process environment, repository/CI inputs and opt-in Discord command
+interactions/provider responses. Future messages, attachments and scheduled execution are untrusted.
 Trust boundaries include environment-to-parser, repository-to-CI runner, Discord-to-presentation,
 identity-to-authorized use case, application-to-provider, and persistence-to-financial state.
 
@@ -22,10 +22,10 @@ identity-to-authorized use case, application-to-provider, and persistence-to-fin
 
 | Threat | Boundary / asset | Initial mitigation | Current state and future owner / residual risk |
 | --- | --- | --- | --- |
-| Token/secret exposure | Environment/repository/logs | No hardcoded secrets; ignore real .env; safe example only; no raw input retained in errors | Implemented for supported config. Discord integration must secure token provisioning/rotation; no token support exists yet |
+| Token/secret exposure | Environment/repository/logs | No hardcoded secrets; ignore real .env; safe example only; no raw input retained in errors | Implemented for supported config. Opt-in token validation/redaction implemented; operator owns secure provisioning/rotation and process environment access |
 | Sensitive financial logging | Provider/application diagnostics | Structured events with safe categories; review Display and Debug; never dump config, requests, attachments, or amounts | Startup redaction tested. Every future feature must review its own diagnostic fields |
 | Malicious messages/images | Discord-to-presentation | Validate type, length, size, parsing limits and authorization before use cases; least privilege | No Discord/attachment processing yet. Future presentation/infrastructure must address denial of service and untrusted content |
-| Wrong-owner access | Identity-to-application | Explicit owner binding and fail-closed authorization; do not trust all senders in personal-use mode | Pure owner policy implemented; no authenticated adapter or authoritative resource lookup. Live integrations must enforce every caller obligation below |
+| Wrong-owner access | Identity-to-application | Explicit owner binding and fail-closed authorization; do not trust all senders in personal-use mode | Pure policy and trusted-config Discord readiness adapter implemented; live smoke unverified and authoritative resource lookup absent. Future financial use cases must enforce every caller obligation below |
 | Forged or replayed completion | External/manual signal-to-ledger | Distinguish handoff/manual confirmation/bank verification; atomically persist idempotency and audit origin | No payments/ledger yet. Financial Core/payment specs own concurrency and verification semantics |
 | Dependency compromise | Registry-to-build | Minimal dependencies/features, reviewed source/release metadata, committed lockfile, controlled upgrades | Lockfile/build reviewed. This is not a vulnerability audit; future upgrades require fresh review |
 | CI compromise | Contribution-to-runner/token | Read-only contents permission, full-SHA official checkout, no persisted credentials, no privileged PR events or deployment secrets | Workflow configured; hosted execution unverified until a real run. Untrusted code still executes in CI |
@@ -72,8 +72,9 @@ This is policy, not live authentication or proof of resource ownership. Future i
 6. Apply the same boundary to future commands, messages, components and additional interfaces.
 
 Public TrustedActor construction asserts the caller's trust; it cannot verify provider provenance.
-The policy takes supplied owner scope without looking up a resource. Binding loading, real
-integration, in-flight revocation and transactional enforcement remain deferred. No claim of
+The policy takes supplied owner scope without looking up a resource. The readiness adapter now loads bindings from trusted environment and maps SDK interaction identity.
+Real provider behavior is unverified; in-flight revocation, resource ownership and transactional
+enforcement remain deferred. No claim of
 constant-time denial, durable permission or complete production security is made. See the
 [contract](../../specs/003-owner-access/contracts/owner-access.md) and
 [ADR 0004](../architecture/decisions/0004-owner-access-policy.md).
@@ -81,7 +82,7 @@ constant-time denial, durable permission or complete production security is made
 ## Secrets and integration guidelines
 
 Never commit real tokens, banking credentials, personal records, or secret .env files. .env.example
-contains only the supported non-secret log setting and is not automatically loaded. Do not pass
+documents offline defaults and commented live settings and is not automatically loaded. Do not pass
 real secrets in commands or use them in tests. Future token provisioning must use deployment
 secret facilities or a justified secret store with restricted access. If exposed, revoke/rotate
 at the provider and follow a scoped incident cleanup; Git ignore is not access control.
@@ -101,7 +102,27 @@ auditable history, and atomic idempotency so duplicate completion creates no dup
 Awareness must occur before handoff. Handoff is not payment confirmation or successful transfer;
 manual confirmation is not bank verification. Minimize and protect sensitive financial data.
 
-Trusted binding loading, retention/deletion, encryption at rest, in-flight revocation, recovery, multi-user
+Retention/deletion, encryption at rest, in-flight revocation, persistent recovery, multi-user
 isolation, transaction concurrency, provider verification, and deployment hardening remain open
 for their owning future specifications. There is no financial persistence or bank connection now.
 Passing foundation tests proves neither financial correctness nor complete production security.
+
+## Opt-in Discord controls and residual risk
+
+All live settings validate before SDK construction. Nonblank owner-reference bytes remain exact;
+credentials/aggregate Debug and root/provider failures are redacted. Offline ignores all bot settings.
+The genuine SDK invoking user/guild feeds existing owner policy on every command; no submitted owner,
+role, application owner, remembered grant or fake resource scope authorizes access.
+
+Only /fundguard is named-upserted to the configured guild. Intents are empty; install uses bot plus
+applications.commands with permissions=0. Framework owner discovery/bypass and built-in errors are
+disabled. Fixed ephemeral builders and one two-second send prohibit public/DM/followup fallback.
+Both subscribers suppress all SDK targets at every log level; never dump inputs or raw errors.
+Setup results, current runner sampling and absolute deadlines bound startup/recovery/shutdown.
+
+Local environment confidentiality and token rotation remain operator obligations; no memory erasure,
+complete panic-payload containment or production security audit is claimed. Unit tests do not prove
+provider authentication/delivery. Full SDK dispatch/error contexts are source-reviewed; live smoke
+and hosted CI remain unverified. Financial operations still need authoritative resource scope and
+atomic audit/idempotency independently of readiness. See the
+[adapter contract](../../specs/004-discord-owner-entry/contracts/command.md).

@@ -1,7 +1,7 @@
 # Private Owner Readiness Command Contract
 
-Planned Discord adapter surface; no financial/resource operation or provider verification is delivered
-by writing this contract. Existing identity and Financial Core public contracts remain unchanged.
+Implemented Discord adapter surface. Verification and limits are recorded in [tasks.md](../tasks.md);
+no financial/resource operation is delivered. Existing identity and Financial Core contracts remain unchanged.
 
 ## Command definition and registration
 

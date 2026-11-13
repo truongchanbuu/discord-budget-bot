@@ -6,7 +6,8 @@
 
 **Status**: Scope accepted for technical planning by the maintainer's $speckit-plan request on
 2026-11-13. Plan review accepted for task generation by the subsequent $speckit-tasks request.
-Design and task artifacts generated; implementation remains unauthorized.
+Implementation authorized by $speckit-implement on 2026-11-13 and delivered with local verification.
+Live Discord smoke and hosted CI remain unverified; see tasks.md for evidence.
 
 **Input**: User description: "$speckit-specify next faeture pls".
 The completed owner-access feature recommends trusted owner configuration and a minimal authenticated

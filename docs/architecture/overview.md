@@ -1,7 +1,8 @@
 # Architecture
 
-FundGuard is a Feature-First Modular Monolith in one Cargo package. The executable implements local
-initialization only; the library also provides pure Financial Core validation and single-owner access policy. See the [authoritative plan](../../specs/001-project-foundation/plan.md)
+FundGuard is a Feature-First Modular Monolith in one Cargo package. The executable defaults to local
+initialization and supports explicitly selected Discord readiness. The library retains pure Financial Core
+validation and single-owner access policy, independent of the adapter. See the [authoritative plan](../../specs/001-project-foundation/plan.md)
 and [packaging ADR](decisions/0001-feature-first-modular-monolith.md).
 
 ## Responsibilities and dependencies
@@ -12,7 +13,7 @@ and [packaging ADR](decisions/0001-feature-first-modular-monolith.md).
 | Application | Use cases, workflows, ports when needed | Own domain and explicit application APIs | Concrete providers, framework/transport types |
 | Infrastructure | Persistence and external adapters | Own application/domain and provider libraries | Presentation and unrelated feature internals |
 | Presentation | Map validated transport input/output | Own application APIs and transport framework | Direct financial persistence or cross-feature internals |
-| Platform | Client, pool, scheduler lifecycle | Provider libraries and neutral configuration | Financial policy and feature orchestration |
+| Platform | Client, pool, scheduler lifecycle | Provider libraries, supplied command definitions and validated configuration | Financial policy and feature orchestration |
 | Composition root | Construct and connect actual dependencies | Components it wires | Business policy |
 | Shared | Cohesive domain-neutral concepts used by multiple features | Pure, justified dependencies | Feature internals and framework convenience APIs |
 
@@ -23,11 +24,33 @@ No generic repository framework, event bus, DI container, or provider hierarchy 
 
 ## Current initialization
 
-main owns the Tokio current-thread runtime and process exit. The library retains run and
-StartupError and exposes the Financial Core feature facade. bootstrap validates configuration and installs tracing; config privately parses the
-single supported environment setting. Startup returns immediately; no clients, pools, or jobs run.
-A scoped ERROR tracing subscriber reports startup failures independently of global setup.
-See the [runtime contract](../../specs/001-project-foundation/contracts/runtime.md).
+main owns the current-thread runtime and process exit. Async start selects validated offline/Discord
+configuration, then calls existing offline run initialization before any provider access. Synchronous
+run/StartupError remain compatible and never connect. ApplicationError adds safe root reporting.
+Both primary and fallback diagnostics allow only application targets, suppressing SDK payloads even
+at trace/debug. No pools or persistent jobs run. See the
+[runtime contract](../../specs/004-discord-owner-entry/contracts/runtime.md).
+
+## Discord readiness adapter (implemented, live smoke unverified)
+
+Identity presentation owns the real slash definition, SDK actor/guild mapping, existing owner-policy
+call, fixed private builders and one bounded send. It never imports platform. Platform composes the
+framework/client, named guild upsert and a concrete supervisor. It does not implement owner policy.
+Credentials stay in validated root configuration/SDK construction, absent from command data.
+Financial Core and identity domain/application remain unchanged; no reverse feature dependency.
+
+Disable gateway intents and framework owner discovery/bypass. Named upsert occurs once in consumed
+setup, with a separate Ready/Failed signal because setup Err does not terminate Client::start.
+The builder itself must disable initialize_owners; it overwrites the corresponding options field.
+Startup/registration/reply budgets are 30/10/2 seconds. Sample current runner stage every second;
+30 seconds of observed loss fails. Stop acceptance before closing, limit SDK shutdown to eight seconds
+and total close/cancel/join to ten. SDK internal retries remain inside logical operation deadlines.
+No outer reconnect loop, public fallback, resource lookup, persistent grant or financial use case.
+
+Tests use real builders and controlled operation futures. Poise dispatch internals require SDK context;
+unknown-command exclusion is verified from the real table plus published source, not by constructing
+a fake full dispatcher. Live provider claims require separate optional smoke evidence. See
+[ADR 0005](decisions/0005-trusted-discord-entrypoint.md).
 
 ## Financial Core (implemented)
 

@@ -1,3 +1,6 @@
+pub(crate) mod discord;
+pub(crate) mod runtime;
+
 use std::ffi::OsString;
 use thiserror::Error;
 use tracing::Level;

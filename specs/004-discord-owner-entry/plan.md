@@ -3,8 +3,8 @@
 **Branch**: `004-discord-owner-entry` (feature selector; actual Git branch `001-project-foundation`)
 **Date**: 2026-11-13 | **Spec**: [spec.md](spec.md)
 **Input**: specs/004-discord-owner-entry/spec.md
-**Status**: Design generated under the maintainer's $speckit-plan request. Scope accepted for planning;
-Subsequent $speckit-tasks request accepts plan review for task generation; implementation is not authorized.
+**Status**: Implemented under the maintainer's $speckit-implement request on 2026-11-13.
+[Tasks](tasks.md) record verified delivery; live provider smoke and hosted CI remain unverified.
 
 ## Summary
 
@@ -52,7 +52,7 @@ Pre-research and post-design gates: **PASS**; no exception or constitution amend
 | IV. Minimal dependencies | Real interface justifies SDK | Defaults disabled, checked versions/features, zero gateway intents, no DB/scheduler/AI SDK |
 | V. Verified delivery | Spec and evidence separated | FR/AC mapping below; future tasks own execution evidence; proposed ADR and handoff maintain state |
 | Security | Least privilege, safe inputs/output | Explicit opt-in, complete trusted binding, private responses, log target allowlist and custom framework errors |
-| Workflow | Planning explicitly requested | No code/tasks/live calls; spec scope accepted for design, plan review precedes task generation |
+| Workflow | Planning explicitly requested | Design/tasks reviewed; implementation explicitly authorized; no live calls or deployment |
 
 Phase 0 itself stays offline; this is a new opt-in post-Phase-0 interface. Default executable behavior
 and the offline run API remain compatible. Credential-free tests and no-production-deployment rule hold.
@@ -78,7 +78,7 @@ specs/004-discord-owner-entry/
 settings/budgets/root behavior; command
 contract owns transport mapping, privacy/registration and test seams; model owns fields/invariants.
 
-### Source Code (planned, not created)
+### Source Code (implemented; private test siblings added as needed)
 
 ```text
 src/
@@ -205,8 +205,8 @@ The future task list must sequence test-first cases and all operation limits wit
 
 On delivery update README, .env.example, architecture/structure/security docs, feature map/index,
 devlog and handoff. Keep offline API, live adapter implementation, simulated checks and real smoke/CI
-status distinct. Proposed [ADR 0005](../../docs/architecture/decisions/0005-trusted-discord-entrypoint.md)
-records consequential adapter choices; adoption requires reviewed implementation authorization.
+status distinct. Accepted [ADR 0005](../../docs/architecture/decisions/0005-trusted-discord-entrypoint.md)
+records consequential adapter choices; adoption followed the maintainer's implementation authorization.
 
 ## Complexity Tracking
 

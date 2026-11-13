@@ -1,6 +1,6 @@
 # ADR 0005: Opt-in Discord owner entrypoint with bounded lifecycle
 
-Date: 2026-11-13. Status: Proposed — planning recommendation, not implementation approval.
+Date: 2026-11-13. Status: Accepted — implementation authorized and implemented on 2026-11-13.
 
 ## Context
 
@@ -8,7 +8,7 @@ The completed identity policy trusts callers to provide authenticated actors and
 Feature 004 connects those inputs for one private local readiness command, with no financial data.
 Existing offline initialization and business APIs must remain usable without credentials/services.
 
-## Proposed decision
+## Decision
 
 Use defaults-disabled Poise/Serenity with rustls and zero gateway intents. Enable the client only
 through explicit runtime selection after full environment validation. Retain synchronous offline
@@ -46,3 +46,15 @@ See [plan](../../../specs/004-discord-owner-entry/plan.md),
 [research](../../../specs/004-discord-owner-entry/research.md),
 [runtime contract](../../../specs/004-discord-owner-entry/contracts/runtime.md) and
 [command contract](../../../specs/004-discord-owner-entry/contracts/command.md).
+
+## Implementation evidence and limits
+
+Real-framework tests caught FrameworkBuilder overwriting options.initialize_owners. Set
+FrameworkBuilder::initialize_owners(false) explicitly; assert the final built options.
+Poise consumes its FnOnce setup once; a separate tested result channel prevents failed setup hangs.
+Private captured-upsert/send futures and paused supervisor tests remain the smallest I/O test seams.
+
+Serenity Context requires an SDK runner, so full Poise dispatch/error-context execution is not fabricated
+in offline tests. Review the published dispatcher and complete static error mapping; assert the real
+framework table excludes unsupported commands. Actual authentication, registration, private delivery,
+reconnect and Ctrl-C provider cleanup remain optional live-smoke items, all currently unverified.

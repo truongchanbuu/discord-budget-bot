@@ -1,5 +1,6 @@
 mod application;
 mod domain;
+pub(crate) mod presentation;
 
 pub use domain::{AccessError, BindingState, DiscordAccountId, TrustedActor};
 

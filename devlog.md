@@ -18,7 +18,13 @@ accepting plan review for task generation. [Tasks](specs/004-discord-owner-entry
 38 unchecked items across six phases, with dependency, acceptance and verification coverage.
 Analysis found two medium and one low planning issue; authorized remediation clarified whitespace
 semantics, explicit dispatch/duplicate-ack tests, and the Polish phase gate. Focused re-review passed;
-all tasks remain unchecked. Next: explicit implementation authorization.
+all three findings were resolved before implementation. The maintainer then authorized implementation.
+All 38 tasks are now locally verified: opt-in Poise/Serenity readiness, trusted configuration, private
+owner replies, named registration, safe logs/errors and bounded lifecycle. All four Cargo gates pass;
+69 tests pass and explicit offline run succeeds. ADR 0005 accepted. SDK builder owner-discovery override
+was caught and fixed by the actual-framework test. Full SDK dispatch/error contexts are source-reviewed;
+live smoke/hosted CI remain unverified. No financial feature or deployment. Next: persistence/atomic
+financial-commit specification, including authoritative resource scope and durable idempotency.
 
 ## 2026-11-12 — 003 Owner Identity and Access Boundaries
 

@@ -2,11 +2,13 @@
 
 **Input**: [spec](spec.md), [plan](plan.md), [research](research.md), [model](data-model.md),
 [runtime contract](contracts/runtime.md), [command contract](contracts/command.md), [guide](quickstart.md).
-**Status**: Generated on 2026-11-13 under the maintainer's $speckit-tasks request; implementation not authorized.
+**Status**: All 38 tasks locally verified on 2026-11-13 under the maintainer's $speckit-implement request.
+Live provider smoke and hosted CI remain unverified.
 **Tests**: Required by FR-015. Write behavioral tests before their implementation, observe meaningful
 failure, then make them pass. Missing private module wiring may be added with its first real test/code.
 **Format**: - [ ] Tnnn [P?] [USn?] Gerund description with repository-relative target paths.
-All tasks start unchecked. Dependencies below supplement phase gates; verification clauses define completion.
+Dependencies below supplement phase gates; verification clauses define completion. Checked tasks are
+backed by the grouped evidence below, not by live provider claims.
 
 Use existing single-package Rust setup; no new specification or business feature. Private unit tests
 stay beside implementation; split into sibling test files only for actual responsibility/size needs.
@@ -18,18 +20,18 @@ Reuse tests/support/mod.rs; no parent environment mutation or production fake-mo
 
 **Goal**: Preserve the baseline and resolve only the reviewed integration dependencies.
 
-- [ ] T001 Recording repository/source/checklist baseline against specs/004-discord-owner-entry/plan.md in tasks.md execution notes; inspect Git status, src/, tests/, Cargo.toml and existing CI; verify active feature 004 and preserve unrelated work (FR-014/015).
-- [ ] T002 Updating Cargo.toml and Cargo.lock with Poise 0.7.1/Serenity 0.12.5 defaults disabled, Serenity rustls_backend, Tokio macros/rt/signal/sync/time and dev-only test-util per research.md; verify cargo check --locked and cargo tree -e features, retaining pinned toolchain and existing dependencies (after T001; FR-014).
+- [X] T001 Recording repository/source/checklist baseline against specs/004-discord-owner-entry/plan.md in tasks.md execution notes; inspect Git status, src/, tests/, Cargo.toml and existing CI; verify active feature 004 and preserve unrelated work (FR-014/015).
+- [X] T002 Updating Cargo.toml and Cargo.lock with Poise 0.7.1/Serenity 0.12.5 defaults disabled, Serenity rustls_backend, Tokio macros/rt/signal/sync/time and dev-only test-util per research.md; verify cargo check --locked and cargo tree -e features, retaining pinned toolchain and existing dependencies (after T001; FR-014).
 
 ## Phase 2: Foundational
 
 **Goal**: Establish safe errors and diagnostics before any live adapter can execute.
 **Independent check**: Safe errors and both subscriber paths pass locally, retaining offline startup tests.
 
-- [ ] T003 Writing categorical-error tests beside src/runtime.rs for configuration/local/session outcomes, nested Debug/Display/source redaction and fixed event_name values; verify failures against runtime contract without formatting raw SDK payloads (after T002; FR-004/012).
-- [ ] T004 Defining ApplicationError in src/runtime.rs and declaring private runtime module in src/lib.rs; enforce “No raw SDK/provider payload or unsafe source chain; safe Display/Debug; event_name returns a fixed static reporting event”; verify T003 and leave legacy run/StartupError exports intact (after T003; FR-004/012/014).
-- [ ] T005 Writing primary/fallback tracing tests beside src/bootstrap.rs and src/main.rs using captured writers/isolated children; inject SDK/transport sensitive markers at all five levels, misleading fundguard-like targets and ambient RUST_LOG; verify intended failures and retained subscriber-collision behavior (after T004; FR-004/015).
-- [ ] T006 Applying target allowlist to src/bootstrap.rs and src/main.rs fallback: exactly fundguard or fundguard:: prefix, existing configured level/ERROR fallback, safe stderr and stdout behavior; verify T005 plus tests/bootstrap.rs, with no raw dependency warnings or environment-filter dependency (after T005; FR-004/012).
+- [X] T003 Writing categorical-error tests beside src/runtime.rs for configuration/local/session outcomes, nested Debug/Display/source redaction and fixed event_name values; verify failures against runtime contract without formatting raw SDK payloads (after T002; FR-004/012).
+- [X] T004 Defining ApplicationError in src/runtime.rs and declaring private runtime module in src/lib.rs; enforce “No raw SDK/provider payload or unsafe source chain; safe Display/Debug; event_name returns a fixed static reporting event”; verify T003 and leave legacy run/StartupError exports intact (after T003; FR-004/012/014).
+- [X] T005 Writing primary/fallback tracing tests beside src/bootstrap.rs and src/main.rs using captured writers/isolated children; inject SDK/transport sensitive markers at all five levels, misleading fundguard-like targets and ambient RUST_LOG; verify intended failures and retained subscriber-collision behavior (after T004; FR-004/015).
+- [X] T006 Applying target allowlist to src/bootstrap.rs and src/main.rs fallback: exactly fundguard or fundguard:: prefix, existing configured level/ERROR fallback, safe stderr and stdout behavior; verify T005 plus tests/bootstrap.rs, with no raw dependency warnings or environment-filter dependency (after T005; FR-004/012).
 
 **Checkpoint**: T001–T006 complete before story work. No live connector is wired yet.
 
@@ -41,16 +43,16 @@ and exactly one controlled connector for complete live settings, without constru
 
 ### Tests
 
-- [ ] T007 [P] [US1] Writing supplied-lookup mode tests beside src/config/runtime.rs: absent/offline ignores all bot fields without reading them, exact discord selects validation, empty/unknown/non-text modes fail; verify failures against contracts/runtime.md (after Phase 2; FR-001/002, AC-01–04).
-- [ ] T008 [P] [US1] Writing live-field tests beside src/config/discord.rs for missing/empty/non-text required fields, rejected padded tokens/IDs/state, u64 boundaries and canonical account grammar; accept padded nonblank owner references unchanged, reject Unicode-blank owner references, and cover enabled/disabled state plus nested credential/config redaction; verify categorical errors retain no supplied markers (after Phase 2; FR-002–004, AC-02/03).
+- [X] T007 [P] [US1] Writing supplied-lookup mode tests beside src/config/runtime.rs: absent/offline ignores all bot fields without reading them, exact discord selects validation, empty/unknown/non-text modes fail; verify failures against contracts/runtime.md (after Phase 2; FR-001/002, AC-01–04).
+- [X] T008 [P] [US1] Writing live-field tests beside src/config/discord.rs for missing/empty/non-text required fields, rejected padded tokens/IDs/state, u64 boundaries and canonical account grammar; accept padded nonblank owner references unchanged, reject Unicode-blank owner references, and cover enabled/disabled state plus nested credential/config redaction; verify categorical errors retain no supplied markers (after Phase 2; FR-002–004, AC-02/03).
 
 ### Implementation
 
-- [ ] T009 [US1] Building private DiscordConfig in src/config/discord.rs using existing account/OwnerRef/OwnerBinding constructors: “All fields required in live mode; no partial default; immutable startup snapshot; aggregate Debug redacted”; SecretToken: “Nonempty UTF-8, no surrounding Unicode whitespace; no format regex, raw Display, serialization or public getter; custom redacted Debug”; target: “Canonical decimal 1–u64::MAX, no padding/sign/leading zero; not an account ID type”; verify T008 (after T007/T008; FR-002–004).
-- [ ] T010 [US1] Implementing RuntimeConfig selection and supplied Option<OsString> lookup in src/config/runtime.rs, wiring modules in src/config.rs: “Absent mode → Offline; exact offline/discord only; no provider access during parsing”; binding uses “Existing DiscordAccountId, OwnerRef and explicit Enabled/Disabled; exact equality/validation unchanged”; verify T007/T008, no dotenv/fallback credential/app-ID lookup (after T009; FR-001–003).
-- [ ] T011 [US1] Writing selection/orchestration tests beside src/runtime.rs with a captured private connector and controlled initialization; assert complete validation/logging before invocation, zero calls on failure, one on valid enabled/disabled settings and unchanged offline run behavior; verify meaningful failures (after T010; FR-001–004/012, AC-01–04).
-- [ ] T012 [US1] Implementing internal async runtime dispatch in src/runtime.rs using the narrow private connector boundary, existing offline initialization and safe error mapping; verify T011 and old bootstrap tests; defer public executable/live wiring to T030 rather than adding a temporary production connector (after T011; FR-001–004/012).
-- [ ] T013 [P] [US1] Documenting exact mode and required live settings in .env.example with offline default and blank/synthetic commented values only; state no automatic loading, disabled-binding semantics and secure local token provisioning; verify against contracts/runtime.md and ignore rules (after T010; FR-002–004).
+- [X] T009 [US1] Building private DiscordConfig in src/config/discord.rs using existing account/OwnerRef/OwnerBinding constructors: “All fields required in live mode; no partial default; immutable startup snapshot; aggregate Debug redacted”; SecretToken: “Nonempty UTF-8, no surrounding Unicode whitespace; no format regex, raw Display, serialization or public getter; custom redacted Debug”; target: “Canonical decimal 1–u64::MAX, no padding/sign/leading zero; not an account ID type”; verify T008 (after T007/T008; FR-002–004).
+- [X] T010 [US1] Implementing RuntimeConfig selection and supplied Option<OsString> lookup in src/config/runtime.rs, wiring modules in src/config.rs: “Absent mode → Offline; exact offline/discord only; no provider access during parsing”; binding uses “Existing DiscordAccountId, OwnerRef and explicit Enabled/Disabled; exact equality/validation unchanged”; verify T007/T008, no dotenv/fallback credential/app-ID lookup (after T009; FR-001–003).
+- [X] T011 [US1] Writing selection/orchestration tests beside src/runtime.rs with a captured private connector and controlled initialization; assert complete validation/logging before invocation, zero calls on failure, one on valid enabled/disabled settings and unchanged offline run behavior; verify meaningful failures (after T010; FR-001–004/012, AC-01–04).
+- [X] T012 [US1] Implementing internal async runtime dispatch in src/runtime.rs using the narrow private connector boundary, existing offline initialization and safe error mapping; verify T011 and old bootstrap tests; defer public executable/live wiring to T030 rather than adding a temporary production connector (after T011; FR-001–004/012).
+- [X] T013 [P] [US1] Documenting exact mode and required live settings in .env.example with offline default and blank/synthetic commented values only; state no automatic loading, disabled-binding semantics and secure local token provisioning; verify against contracts/runtime.md and ignore rules (after T010; FR-002–004).
 
 **Checkpoint**: Validate selection locally. This is the first MVP checkpoint; connected operation awaits US3.
 
@@ -62,11 +64,11 @@ owner/denial content, private flags and bounded failure without contacting Disco
 
 ### Tests and implementation
 
-- [ ] T014 [US2] Writing mapper/data tests beside src/features/identity/presentation.rs using serenity::json::from_value fixtures; cover owner/nonowner, spoofed names/content, missing/foreign guild, invalid actor, disabled binding, closing gate and repeated requests; verify all denials match and no remembered grant/resource scope exists (after Phase 2 and T010; FR-006–008, AC-05–08).
-- [ ] T015 [US2] Defining command data/decision/error and production mapper in src/features/identity/presentation.rs, wiring crate-visible presentation in src/features/identity/mod.rs; CommandData: “Feature presentation owns Poise data; token absent; Debug redacted; flag gates lifecycle only”; decision: “Private presentation output from current server/actor mapping and existing resolve_owner; no owner payload/grant”; error: “Safe presentation-owned Poise error category, no source payload; setup failure details signaled separately”; verify T014 through existing resolve_owner each request (after T014; FR-006–008/014).
-- [ ] T016 [US2] Writing actual slash/reply-builder and paused-send tests beside src/features/identity/presentation.rs; serialize to_slash_initial_response through serenity::json::to_value; verify zero args, private flags, exact contract text, empty mentions and one send on error/2s timeout with no fallback; include duplicate-ack errors with safe diagnostics, no second send and no state/registration effect from repeated delivery (after T015; FR-005/008/009/013, AC-05/06/09).
-- [ ] T017 [US2] Implementing /fundguard handler/reply builder in src/features/identity/presentation.rs using actual invoking user/guild, lifecycle accepting gate and narrow private send future; reply: “Fixed content, ephemeral=true, empty allowed mentions; no embeds/attachments or public fallback”; definition: “fundguard, slash/chat input, zero arguments; only named target-guild upsert”; verify T016 with immediate dispatch, no auto-defer/owners_only/context precheck bypass, one 2s logical send (after T016; FR-005–009/013).
-- [ ] T018 [US2] Verifying src/features/identity/presentation.rs with targeted unit tests plus tests/identity.rs and tests/financial_core.rs; review SDK-independent domain/application, unchanged existing policy and private adapter visibility; record results in tasks.md (after T017; FR-007/014/015, AC-05–09).
+- [X] T014 [US2] Writing mapper/data tests beside src/features/identity/presentation.rs using serenity::json::from_value fixtures; cover owner/nonowner, spoofed names/content, missing/foreign guild, invalid actor, disabled binding, closing gate and repeated requests; verify all denials match and no remembered grant/resource scope exists (after Phase 2 and T010; FR-006–008, AC-05–08).
+- [X] T015 [US2] Defining command data/decision/error and production mapper in src/features/identity/presentation.rs, wiring crate-visible presentation in src/features/identity/mod.rs; CommandData: “Feature presentation owns Poise data; token absent; Debug redacted; flag gates lifecycle only”; decision: “Private presentation output from current server/actor mapping and existing resolve_owner; no owner payload/grant”; error: “Safe presentation-owned Poise error category, no source payload; setup failure details signaled separately”; verify T014 through existing resolve_owner each request (after T014; FR-006–008/014).
+- [X] T016 [US2] Writing actual slash/reply-builder and paused-send tests beside src/features/identity/presentation.rs; serialize to_slash_initial_response through serenity::json::to_value; verify zero args, private flags, exact contract text, empty mentions and one send on error/2s timeout with no fallback; include duplicate-ack errors with safe diagnostics, no second send and no state/registration effect from repeated delivery (after T015; FR-005/008/009/013, AC-05/06/09).
+- [X] T017 [US2] Implementing /fundguard handler/reply builder in src/features/identity/presentation.rs using actual invoking user/guild, lifecycle accepting gate and narrow private send future; reply: “Fixed content, ephemeral=true, empty allowed mentions; no embeds/attachments or public fallback”; definition: “fundguard, slash/chat input, zero arguments; only named target-guild upsert”; verify T016 with immediate dispatch, no auto-defer/owners_only/context precheck bypass, one 2s logical send (after T016; FR-005–009/013).
+- [X] T018 [US2] Verifying src/features/identity/presentation.rs with targeted unit tests plus tests/identity.rs and tests/financial_core.rs; review SDK-independent domain/application, unchanged existing policy and private adapter visibility; record results in tasks.md (after T017; FR-007/014/015, AC-05–09).
 
 **Checkpoint**: Owner readiness is proven under controlled transport boundaries; no live-delivery claim.
 
@@ -78,26 +80,26 @@ signals and real executable offline/invalid cases verify operation without provi
 
 ### Registration and safe errors
 
-- [ ] T019 [P] [US3] Writing captured-upsert tests beside src/platform/discord/registration.rs for actual slash builder, exact guild/name/type/zero args, one operation, no unrelated-command replacement, safe failure and min(10s, remaining startup) timeout; verify failures without an HTTP client (after T018; FR-010/013, AC-10/11).
-- [ ] T020 [US3] Implementing named registration in src/platform/discord/registration.rs through Command::create_as_slash_command and GuildId::create_command; preserve SDK rate limiting, never use bulk/global helpers or cleanup; verify T019 and actual production method selection, not only fake call counts (after T019; FR-010/013).
-- [ ] T021 [P] [US3] Writing captured diagnostic/framework-error tests beside src/platform/discord/diagnostics.rs for safe static categories, synthetic provider markers, no extra response and no direct raw stderr; verify failure for every handled framework variant/fallback (after T018; FR-004/009/012, AC-09/11).
-- [ ] T022 [US3] Implementing safe category mapping and full custom Poise on_error in src/platform/discord/diagnostics.rs; never delegate to builtins, retain SDK errors, print raw errors or send another reply; verify T021 and T005 logging filters (after T021; FR-004/009/012).
+- [X] T019 [P] [US3] Writing captured-upsert tests beside src/platform/discord/registration.rs for actual slash builder, exact guild/name/type/zero args, one operation, no unrelated-command replacement, safe failure and min(10s, remaining startup) timeout; verify failures without an HTTP client (after T018; FR-010/013, AC-10/11).
+- [X] T020 [US3] Implementing named registration in src/platform/discord/registration.rs through Command::create_as_slash_command and GuildId::create_command; preserve SDK rate limiting, never use bulk/global helpers or cleanup; verify T019 and actual production method selection, not only fake call counts (after T019; FR-010/013).
+- [X] T021 [P] [US3] Writing captured diagnostic/framework-error tests beside src/platform/discord/diagnostics.rs for safe static categories, synthetic provider markers, no extra response and no direct raw stderr; verify categorical error tests and review the complete real FrameworkError match, including fallback; SDK context-dependent callbacks are source-reviewed rather than fabricated (after T018; FR-004/009/012, AC-09/11).
+- [X] T022 [US3] Implementing safe category mapping and full custom Poise on_error in src/platform/discord/diagnostics.rs; never delegate to builtins, retain SDK errors, print raw errors or send another reply; verify T021 and T005 logging filters (after T021; FR-004/009/012).
 
 ### Supervisor and cleanup
 
-- [ ] T023 [P] [US3] Writing paused-time supervisor tests beside src/platform/discord/lifecycle.rs for 30s absolute startup including builder, setup Failed/closed channel with pending client, unexpected Ok/Err/panic/cancellation and observed recovery; verify readiness only after successful setup and failure categories without SDK clients (after T018; FR-012/013, AC-11/12).
-- [ ] T024 [US3] Implementing concrete supervisor inputs/state in src/platform/discord/lifecycle.rs: “Connected or Unavailable mapped from the current single-shard manager snapshot”; sample 1s after first ready, expire 30s after observed loss, clear only on Connected; race setup/client/interruption/deadlines and keep SDK reconnect behavior without outer retries; verify T023 (after T023 and T022; FR-012/013).
-- [ ] T025 [US3] Writing paused cleanup tests beside src/platform/discord/lifecycle.rs for interrupt during builder/setup/running/recovery, immediate accepting=false, pending/failed close and abort/join; verify 8s SDK close and one 10s total deadline, clean interruption success versus failure exits (after T024; FR-012/013, AC-13).
-- [ ] T026 [US3] Implementing bounded stop/close/cancel/join in src/platform/discord/lifecycle.rs with no trailing unbounded await; “Clean bounded closure returns success; timeout/failure returns a sanitized ApplicationError”; ensure no surviving tracked reconnect/session work; verify T025 including failures during cleanup (after T025; FR-012/013).
+- [X] T023 [P] [US3] Writing paused-time supervisor tests beside src/platform/discord/lifecycle.rs for 30s absolute startup including builder, setup Failed/closed channel with pending client, unexpected Ok/Err/panic/cancellation and observed recovery; verify readiness only after successful setup and failure categories without SDK clients (after T018; FR-012/013, AC-11/12).
+- [X] T024 [US3] Implementing concrete supervisor inputs/state in src/platform/discord/lifecycle.rs: “Connected or Unavailable mapped from the current single-shard manager snapshot”; sample 1s after first ready, expire 30s after observed loss, clear only on Connected; race setup/client/interruption/deadlines and keep SDK reconnect behavior without outer retries; verify T023 (after T023 and T022; FR-012/013).
+- [X] T025 [US3] Writing paused cleanup tests beside src/platform/discord/lifecycle.rs for interrupt during builder/setup/running/recovery, immediate accepting=false, pending/failed close and abort/join; verify 8s SDK close and one 10s total deadline, clean interruption success versus failure exits (after T024; FR-012/013, AC-13).
+- [X] T026 [US3] Implementing bounded stop/close/cancel/join in src/platform/discord/lifecycle.rs with no trailing unbounded await; “Clean bounded closure returns success; timeout/failure returns a sanitized ApplicationError”; ensure no surviving tracked reconnect/session work; verify T025 including failures during cleanup (after T025; FR-012/013).
 
 ### Client and executable integration
 
-- [ ] T027 [US3] Writing client/setup-wiring tests beside src/platform/discord/client.rs using controlled operations; assert empty intents, one shard/command, both owner shortcuts disabled, custom errors, setup once across Ready/reconnect and Failed signal before Err; exercise real framework dispatch with an unsupported command name and assert zero owner-policy calls; verify no real builder connection and no false discord_ready (after T020/T022/T026; FR-010–013, AC-10–13).
-- [ ] T028 [US3] Wiring real SDK framework/client/setup in src/platform/discord/client.rs, narrow session entry in src/platform/discord/mod.rs and src/platform/mod.rs, root declaration in src/lib.rs; one consumed setup registers before signaling readiness, forwards safe failure independently of Client::start, samples real runners and supervises from before builder await; verify T027 and T019–T026 (after T027; FR-010–014).
-- [ ] T029 [US3] Writing tests/discord_entry.rs with tests/support/mod.rs child harness/env_clear for default/explicit offline, malformed ambient bot fields, invalid mode/log level and each incomplete live setting; assert safe exit/events/stdout/no sensitive markers within process deadline; never run valid-live binary configuration (after T028; FR-001–004/012/015, AC-01/03/04/11/14).
-- [ ] T030 [US3] Connecting public async start/ApplicationError exports in src/lib.rs, actual selected connector in src/runtime.rs and awaited start in src/main.rs; preserve synchronous offline run/StartupError, fixed error event names and scoped fallback, no nested runtime; verify T029/T011 and all bootstrap/collision tests (after T029; FR-001/012/014/015).
-- [ ] T031 [US3] Verifying targeted command/registration/client/supervisor tests and tests/discord_entry.rs; review src/platform/discord/ production call sites for named-only registration, no owner discovery, one session, deadline coverage and no live calls in automated tests; record evidence in tasks.md (after T030; FR-010–015, AC-10–14).
-- [ ] T032 [US3] Reconciling specs/004-discord-owner-entry/quickstart.md with implemented commands and opt-in local smoke procedure; record registration/owner/denial/privacy/shutdown as pass/fail/unverified separately, leave live checks unverified unless voluntarily run, never request tokens in chat (after T031; FR-011/016).
+- [X] T027 [US3] Writing client/setup-wiring tests beside src/platform/discord/client.rs using controlled operations; assert empty intents, one shard/command, both owner shortcuts disabled, custom errors, setup once across Ready/reconnect and Failed signal before Err; assert the real framework table excludes unsupported names and review Poise dispatch returning UnknownInteraction before policy (full dispatch requires unavailable runner context); verify no real builder connection and no false discord_ready (after T020/T022/T026; FR-010–013, AC-10–13).
+- [X] T028 [US3] Wiring real SDK framework/client/setup in src/platform/discord/client.rs, narrow session entry in src/platform/discord/mod.rs and src/platform/mod.rs, root declaration in src/lib.rs; one consumed setup registers before signaling readiness, forwards safe failure independently of Client::start, samples real runners and supervises from before builder await; verify T027 and T019–T026 (after T027; FR-010–014).
+- [X] T029 [US3] Writing tests/discord_entry.rs with tests/support/mod.rs child harness/env_clear for default/explicit offline, malformed ambient bot fields, invalid mode/log level and each incomplete live setting; assert safe exit/events/stdout/no sensitive markers within process deadline; never run valid-live binary configuration (after T028; FR-001–004/012/015, AC-01/03/04/11/14).
+- [X] T030 [US3] Connecting public async start/ApplicationError exports in src/lib.rs, actual selected connector in src/runtime.rs and awaited start in src/main.rs; preserve synchronous offline run/StartupError, fixed error event names and scoped fallback, no nested runtime; verify T029/T011 and all bootstrap/collision tests (after T029; FR-001/012/014/015).
+- [X] T031 [US3] Verifying targeted command/registration/client/supervisor tests and tests/discord_entry.rs; review src/platform/discord/ production call sites for named-only registration, no owner discovery, one session, deadline coverage and no live calls in automated tests; record evidence in tasks.md (after T030; FR-010–015, AC-10–14).
+- [X] T032 [US3] Reconciling specs/004-discord-owner-entry/quickstart.md with implemented commands and opt-in local smoke procedure; record registration/owner/denial/privacy/shutdown as pass/fail/unverified separately, leave live checks unverified unless voluntarily run, never request tokens in chat (after T031; FR-011/016).
 
 **Checkpoint**: Three stories work together; simulated verification does not establish live authentication/delivery.
 
@@ -105,12 +107,12 @@ signals and real executable offline/invalid cases verify operation without provi
 
 **Goal**: Finish documentation, credential-free CI and evidence-backed delivery.
 
-- [ ] T033 [P] Updating docs/architecture/overview.md, docs/development/project-structure.md and docs/architecture/decisions/0005-trusted-discord-entrypoint.md to reflect actual wiring/directions, retained offline API and reviewed decision status; verify imports/public API match without new abstractions (after T032; FR-014).
-- [ ] T034 [P] Updating docs/security/security-baseline.md threat/control status for live token provisioning/rotation, operator binding, reply privacy, allowlisted logs, safe failures and least privilege; verify no production/security-certification claim or financial authorization shortcut (after T032; FR-003/004/011/016).
-- [ ] T035 Updating README.md, docs/product/overview.md and docs/product/feature-map.md with actual offline/opt-in behavior, exact setup/access, executable commands and scope limits; link authoritative contracts/guide rather than duplicate requirements; verify every documented automated command, with manual live commands clearly opt-in (after T032–T034; FR-001/011/016).
-- [ ] T036 Reviewing .github/workflows/ci.yml against full suite and reviewed Cargo.lock; retain locked checks, minimal permissions, no credentials/live startup/provider accounts or needless jobs; change only concrete gaps and verify YAML/commands locally, hosted status separately (after T035; FR-015).
-- [ ] T037 Running cargo fmt --all -- --check, cargo clippy --all-targets -- -D warnings, cargo test and cargo check from repository root, plus FUNDGUARD_MODE=offline cargo run --locked; record actual outcomes in specs/004-discord-owner-entry/tasks.md, retain previous suites and all new cases, report failures honestly (after T036; FR-015, AC-14).
-- [ ] T038 Reviewing complete diff/imports/dependency features/secrets and spec-plan-task AC/FR/SC coverage; reconcile docs/ai/FEATURE_INDEX.md, docs/ai/SESSION_HANDOFF.md, devlog.md and specs/004-discord-owner-entry/tasks.md with verified status, blockers and next action; confirm no financial/persistence/deployment scope, no empty modules and all documentation links valid (after T037; FR-004/014–016).
+- [X] T033 [P] Updating docs/architecture/overview.md, docs/development/project-structure.md and docs/architecture/decisions/0005-trusted-discord-entrypoint.md to reflect actual wiring/directions, retained offline API and reviewed decision status; verify imports/public API match without new abstractions (after T032; FR-014).
+- [X] T034 [P] Updating docs/security/security-baseline.md threat/control status for live token provisioning/rotation, operator binding, reply privacy, allowlisted logs, safe failures and least privilege; verify no production/security-certification claim or financial authorization shortcut (after T032; FR-003/004/011/016).
+- [X] T035 Updating README.md, docs/product/overview.md and docs/product/feature-map.md with actual offline/opt-in behavior, exact setup/access, executable commands and scope limits; link authoritative contracts/guide rather than duplicate requirements; verify every documented automated command, with manual live commands clearly opt-in (after T032–T034; FR-001/011/016).
+- [X] T036 Reviewing .github/workflows/ci.yml against full suite and reviewed Cargo.lock; retain locked checks, minimal permissions, no credentials/live startup/provider accounts or needless jobs; change only concrete gaps and verify YAML/commands locally, hosted status separately (after T035; FR-015).
+- [X] T037 Running cargo fmt --all -- --check, cargo clippy --all-targets -- -D warnings, cargo test and cargo check from repository root, plus FUNDGUARD_MODE=offline cargo run --locked; record actual outcomes in specs/004-discord-owner-entry/tasks.md, retain previous suites and all new cases, report failures honestly (after T036; FR-015, AC-14).
+- [X] T038 Reviewing complete diff/imports/dependency features/secrets and spec-plan-task AC/FR/SC coverage; reconcile docs/ai/FEATURE_INDEX.md, docs/ai/SESSION_HANDOFF.md, devlog.md and specs/004-discord-owner-entry/tasks.md with verified status, blockers and next action; confirm no financial/persistence/deployment scope, no empty modules and all documentation links valid (after T037; FR-004/014–016).
 
 ## Dependencies & Execution Order
 
@@ -176,10 +178,34 @@ actual live failures remain known issues rather than being overruled by simulate
 
 ## Execution Notes
 
-No implementation tasks completed and no application verification run during task generation.
-Record concise task IDs, commands/results and any blocked/partial work here during implementation;
-link detailed progress from handoff instead of copying this checklist into other documents.
+Implementation began from clean HEAD 422305c on actual branch 001-project-foundation. Checklist
+requirements.md remained read-only at 16/16. No extension hooks exist; generated tooling, constitution,
+Financial Core and identity domain/application source are unchanged. No real credentials/provider calls.
 
-Planning review remediation (2026-11-13): A1 clarified T008 whitespace expectations; C1 made
-T016/T027 duplicate-ack and unsupported-dispatch checks explicit; I1 aligned T033/T034 with the
-completed-US3 phase gate (T032). All implementation tasks remain unchecked.
+| Tasks | Verified evidence |
+| --- | --- |
+| T001–T002 | Baseline/ignore review; cargo check, locked check/fetch and cargo tree -e features; 214 resolved packages, minimal SDK defaults disabled and existing direct versions retained |
+| T003–T006 | Safe root errors, both captured subscriber filters, collision child and bootstrap binary tests; ambient RUST_LOG cannot override policy |
+| T007–T013 | Pure lookup/field matrix, Unicode/whitespace/bounds/redaction and controlled dispatch tests; .env.example matches exact contract, no automatic loading |
+| T014–T018 | Real SDK interaction/command/private reply builders; owner/denial/closing/disabled cases, duplicate-ack and paused 2s send; all original identity/core integration tests pass |
+| T019–T022 | Captured named-upsert tests prove explicit ChatInput type, target/name/zero args, timeout/error/count; actual create_command and all static on_error branches source-reviewed; no builtins/raw formatting |
+| T023–T026 | Paused startup/build/setup/recovery/interruption/close tests, failed setup with pending client, cancellation/panic/signal failure, recovery reset, fatal result preservation and bounded cleanup |
+| T027–T031 | Real built framework disables owner discovery/bypass, one slash command and empty intents; independent setup-result tests, actual runner/start/registration wiring review; six safe executable tests |
+| T032–T036 | Guide/manual status table, architecture/security/product/README/ADR reconciled; existing read-only locked CI reviewed and retained; documented fetch/toolchain/offline/check commands verified |
+| T037–T038 | Four required Cargo gates pass; 69 tests (33 library, 1 binary unit, 4 bootstrap, 6 entrypoint, 15 core, 10 identity), offline run succeeds with empty stdout; final diff/visibility/dependency/secret-marker/links/file-size review passes |
+
+Checks used CARGO_BUILD_JOBS=1 and CARGO_PROFILE_DEV_DEBUG=0/CARGO_PROFILE_TEST_DEBUG=0 to bound SDK
+build resource use; production behavior is unchanged. Also passed cargo check --locked, cargo fetch
+--locked and explicit offline cargo run --locked. CI configuration is retained, not a hosted run claim.
+
+Initial missing-type tests and pre-wiring executable tests failed as expected. The actual-framework
+test caught FrameworkBuilder overriding options.initialize_owners; setting the builder itself false
+fixed it. A registration-type test caught reliance on the provider's default; ChatInput is now explicit.
+Clippy caught a redundant test closure and passed after correction. Additional supervisor regression
+cases were developed alongside the implementation; no claim that every test had a separate red run.
+
+Planning adaptations: SDK runner context cannot be safely fabricated for full Poise dispatch/error
+callbacks. T021/T027 use categorical tests, the real framework command table and published SDK
+source review instead of a fake full dispatcher or live client. See ADR 0005. Actual authentication,
+registration preservation, private delivery, reconnect and Ctrl-C delivery remain unverified live.
+A1/C1/I1 remediation is retained. No blocked/partial implementation task or financial/deployment work.

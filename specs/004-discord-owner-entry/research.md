@@ -149,3 +149,11 @@ tests is unsafe; a second executable or HTTP server adds lifecycle and security 
 
 All planning unknowns are resolved. Limits and SDK-specific caveats are explicit contract inputs;
 manual live smoke and hosted CI remain unverified until separately executed.
+
+## Implementation findings (2026-11-13)
+
+The real-framework regression test caught FrameworkBuilder overriding options.initialize_owners.
+Explicitly call FrameworkBuilder::initialize_owners(false), then assert the final built options.
+Serenity Context cannot be safely constructed without runner context under these SDK features.
+Offline coverage therefore uses real command-table assertions plus published dispatch/error-path
+review; it does not invent a parallel dispatcher or construct a live client. See ADR 0005.

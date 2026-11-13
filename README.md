@@ -1,40 +1,53 @@
 # FundGuard
 
-FundGuard is a Discord-first personal finance and payment-awareness application. The vision is to
-make financial intent visible before payment handoff while keeping virtual budgets distinct from
-verified bank information.
+FundGuard is a Discord-first personal finance and payment-awareness application. It aims to make
+financial intent visible before payment handoff, while distinguishing virtual budgets from bank evidence.
 
-**Current status:** Phase 0 foundation is complete and locally verified. The executable validates
-logging configuration, initializes diagnostics, and exits. It makes no Discord/database calls.
-The library also provides Financial Core values, pure invariant validation and single-owner access
-policy. Live authentication and resource authorization integration are not connected. No fund CRUD, ledger,
-payment workflow, reports, reminders, persistence, or production deployment exists.
+**Current status:** Offline initialization, pure Financial Core invariants, owner-access policy and
+an opt-in Discord readiness adapter are implemented. The one /fundguard command uses the configured
+owner binding and replies privately. Local tests use controlled boundaries; real Discord authentication,
+registration and delivery remain unverified. No fund CRUD, ledger, persistence, payment workflow,
+reports, reminders or production deployment exists.
 
 ## Install and run
 
-Install rustup using the [official Rust instructions](https://www.rust-lang.org/tools/install),
-then run from the repository root in a POSIX shell:
+Install rustup using the [official Rust instructions](https://www.rust-lang.org/tools/install).
+From the repository root in a POSIX shell:
 
 ```bash
 rustup show
 cargo fetch --locked
-cargo run --locked
+FUNDGUARD_MODE=offline cargo run --locked
 ```
 
-The committed toolchain selects Rust 1.99.1, rustfmt, and Clippy; first use can download them.
-Cargo.lock fixes dependency resolution. No Discord token, PostgreSQL server, banking access, or
-production credentials are needed. The application itself and tests make no service calls.
+The committed toolchain selects Rust 1.99.1 with rustfmt and Clippy. Cargo.lock fixes dependency
+resolution. Downloads need registry access; offline execution and automated tests need no credentials
+or running services. The first SDK build is substantially larger than the original offline foundation.
 
-Optional configuration:
+Absent FUNDGUARD_MODE defaults to offline. Exact offline/discord values are supported; invalid modes
+fail. Discord settings are ignored offline. FUNDGUARD_LOG_LEVEL accepts trace/debug/info/warn/error
+and defaults to info. Diagnostics use stderr, stdout stays empty, and warn/error suppress INFO events.
+.env.example is a reference only: .env files are not loaded automatically.
+
+## Optional Discord setup
+
+Use a dedicated developer application/server, bot plus applications.commands installation scopes,
+permissions=0 and no privileged gateway intents. Provide all required settings from trusted operator
+environment configuration; provision the token through a secure local prompt/secret facility, never
+chat, committed files or shell command history. Disabled binding is valid and denies all commands.
+
+The [runtime contract](specs/004-discord-owner-entry/contracts/runtime.md) owns exact setting names,
+validation and deadlines. The [validation guide](specs/004-discord-owner-entry/quickstart.md) explains
+opt-in startup, owner/second-account checks and cleanup. Only after that local configuration is ready:
 
 ```bash
-FUNDGUARD_LOG_LEVEL=debug cargo run --locked
+FUNDGUARD_MODE=discord cargo run --locked
 ```
 
-Exact values: trace, debug, info, warn, error. Default: info. `.env.example` documents this single
-non-secret setting; `.env` is not loaded automatically. Startup events go to stderr, stdout stays
-empty, and warn/error suppress the INFO success event. Invalid settings fail with a structured,
-redacted ERROR event. See the [runtime contract](specs/001-project-foundation/contracts/runtime.md).
+/fundguard has no arguments. It sends private readiness or generic denial in the configured server;
+it exposes no financial data. Registration upserts only this command and preserves unrelated commands.
+Configuration changes require restart. Ctrl-C stops the session with bounded cleanup; terminal
+failures exit unsuccessfully. Local initialization is distinct from discord_ready.
 
 ## Verify
 
@@ -45,50 +58,40 @@ cargo test
 cargo check
 ```
 
-Unit and executable tests run without real credentials or services. Child processes have bounded
-waits, drained output, and isolated environments. CI runs the same checks with locked dependency
-resolution. The workflow is configured; hosted CI is unverified until a real run is available.
-For success/failure scenarios, see the [validation guide](specs/001-project-foundation/quickstart.md).
+Unit tests use real SDK fixtures/builders and controlled I/O futures; executable tests isolate child
+environments. They never create a live SDK client or require Discord/PostgreSQL. CI runs locked checks
+with minimal permissions and no credentials. Hosted CI and optional live smoke need separate evidence.
+On constrained machines, CARGO_BUILD_JOBS=1 and CARGO_PROFILE_DEV_DEBUG=0/CARGO_PROFILE_TEST_DEBUG=0
+reduce build resource use without changing runtime behavior.
 
 ## Architecture and development
 
-One Rust package implements a Feature-First Modular Monolith with Clean Architecture boundaries.
-Meaningful startup/configuration, Financial Core and identity modules exist. Future business logic stays independent of
-Discord/persistence so other bots, Web, and mobile interfaces can reuse it.
+One Rust package implements a Feature-First Modular Monolith. Domain/application rules remain
+independent of Discord and persistence. Identity presentation maps invoking SDK identity into the
+existing policy; platform owns client lifecycle and the root selects/configures execution.
+Synchronous fundguard::run() stays offline; async fundguard::start() selects the executable runtime.
 
-Financial Core exposes exact whole-VND values, nonblank typed references, no-overdraft previews,
-and owner-scoped new/replay/conflict validation through features::financial_core. It uses only std
-and existing thiserror. Results are virtual candidates, not journal receipts or bank proof.
-See the [Financial Core contract](specs/002-financial-core/contracts/financial-core.md).
+Financial Core provides exact whole-VND values and pure virtual invariant validation. Candidates
+are not journal receipts or bank proof. Identity provides owner resolution and scoped authorization;
+future financial use cases still need authoritative resource ownership and fresh access checks.
+Dependencies are Tokio, Poise/Serenity, tracing, tracing-subscriber and thiserror. SQLx/PostgreSQL,
+serialization and other providers wait for a feature requiring them.
 
-Identity resolves an explicit enabled account-to-owner binding and authorizes matching owner scope
-through features::identity. Unknown/missing actors, disabled/missing bindings and foreign/missing
-scope deny access. Callers must supply authenticated identity and authoritative ownership; local
-policy is not provider authentication or a reusable permission grant. See the
-[owner-access contract](specs/003-owner-access/contracts/owner-access.md) and
-[validation guide](specs/003-owner-access/quickstart.md).
+Read [architecture](docs/architecture/overview.md), [structure](docs/development/project-structure.md),
+[coding standards](docs/development/coding-standards.md), [security](docs/security/security-baseline.md)
+and [AGENTS.md](AGENTS.md). Use Spec Kit: constitution → specify → clarify when needed → plan →
+review → tasks → analyze → approved implementation. Keep one authoritative specification per feature,
+preserve generated tooling, verify progress and update tasks/handoff rather than relying on chat.
 
-Current dependencies are Tokio, tracing, tracing-subscriber, and thiserror. Future integrations
-select Poise/Serenity, PostgreSQL/SQLx, and Serde only when required; no unused providers are added.
-See [architecture](docs/architecture/overview.md), [structure](docs/development/project-structure.md),
-[coding standards](docs/development/coding-standards.md), and [security](docs/security/security-baseline.md).
-
-Use the installed Spec Kit skills: constitution → specify → clarify when necessary → plan →
-review → tasks → analyze → approved implementation. Preserve generated tooling and keep one
-authoritative spec per feature. Review the constitution and scope before editing, run focused
-checks, inspect the diff, and update verified task progress and handoff. Start sessions with
-[AGENTS.md](AGENTS.md); do not rely only on chat history.
-
-[Active specification](specs/003-owner-access/spec.md) ·
-[Implementation checklist](specs/003-owner-access/tasks.md) ·
+[Active specification](specs/004-discord-owner-entry/spec.md) ·
+[Implementation checklist](specs/004-discord-owner-entry/tasks.md) ·
 [Feature index](docs/ai/FEATURE_INDEX.md) · [Session handoff](docs/ai/SESSION_HANDOFF.md)
 
 ## Roadmap
 
-Financial Core and pure owner-access policy are implemented in isolation. The next specification
-should define trusted binding loading and a first authenticated interface, or persistence and atomic
-financial-commit boundaries, before payment features. Live identity integration, funds, income,
-ledger, payments, reporting and reminders remain future work. QR/OCR/AI, banking, payment handoff, financial migrations, and deployment remain outside
-Phase 0. The MVP must not execute direct real-money transfers or collect bank passwords, OTPs,
-PINs, CVVs, or banking-session credentials. See the [product overview](docs/product/overview.md)
-and [feature map](docs/product/feature-map.md) for planned ownership and sequencing.
+Next define persistence and atomic financial-commit boundaries, including authoritative owner scope,
+audit origins, concurrency and durable idempotency, before payment features. Funds, income, ledger,
+payments, reports, reminders and additional interfaces remain future work. QR/OCR/AI, banking and
+deployment need separate specifications. The MVP must not directly transfer money or collect bank
+passwords, OTPs, PINs, CVVs or banking-session credentials. See the
+[product overview](docs/product/overview.md) and [feature map](docs/product/feature-map.md).

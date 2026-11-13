@@ -5,7 +5,12 @@
 | Path | Responsibility |
 | --- | --- |
 | src/main.rs | Tokio runtime, safe structured failure reporting, process exit |
-| src/lib.rs | Private startup modules and explicit feature facades |
+| src/lib.rs | Private startup/platform modules, explicit feature facades and run/start root APIs |
+| src/runtime.rs | Runtime selection/composition and safe ApplicationError |
+| src/config/runtime.rs / discord.rs | Supplied-value mode parsing and redacted live configuration |
+| src/features/identity/presentation.rs | Real slash command, actor mapping, private replies |
+| src/platform/discord/ | Client/setup wiring, registration, diagnostics and bounded lifecycle |
+| tests/discord_entry.rs | Credential-free executable selection/failure checks |
 | src/bootstrap.rs | Configuration and diagnostics initialization; isolated collision test |
 | src/config.rs | Pure log-level parsing, environment read, colocated unit tests |
 | tests/bootstrap.rs | Executable contract tests under controlled child environments |
@@ -41,7 +46,8 @@ Core's public OwnerRef. The domain/application modules and binding fields remain
 
 Tests under tests/identity/ cover accounts, resolution, scoped access and privacy. support.rs uses
 synthetic public constructors; tests/identity.rs wires real test modules. No provider mocks,
-credential fixtures, new infrastructure/presentation layers or speculative modules are needed.
+real credential fixtures or speculative modules are needed. Identity now also has a crate-private
+presentation module for the real SDK command; private boundary tests live under presentation/.
 See the [owner-access contract](../../specs/003-owner-access/contracts/owner-access.md).
 
 ## Intended future ownership — no placeholder directories
@@ -52,7 +58,8 @@ exists, keep it under src/features/<feature> with domain, application, infrastru
 presentation layers only as justified by that feature. Domain models and rules stay together;
 provider-independent use cases coordinate them; adapters implement actual dependencies.
 
-Future src/platform/discord, database, and scheduling modules own shared integration lifecycle.
+src/platform/discord now owns client lifecycle. Future database and scheduling modules will own
+their respective integration lifecycle.
 Create src/shared only for cohesive concepts actually used by multiple features. Do not create
 empty directories, mod files, unused traits, or global repositories/services/handlers/models trees.
 

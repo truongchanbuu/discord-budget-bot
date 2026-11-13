@@ -1,6 +1,6 @@
 # Discord Entrypoint Data Model
 
-Design only. No database schema, identity registry, financial resource or persisted permission exists.
+Implemented transient model. No database schema, identity registry, financial resource or persisted permission exists.
 [Runtime contract](contracts/runtime.md) owns setting/lifecycle rules; [command contract](contracts/command.md)
 owns external mapping, response and registration semantics.
 

@@ -1,6 +1,6 @@
 # Runtime and Configuration Contract
 
-Planned behavior, not implemented or verified by this document. The specification owns scope.
+Implemented behavior; [tasks.md](../tasks.md) records verification and limits. The specification owns scope.
 
 ## Executable and compatibility
 
@@ -47,7 +47,8 @@ Only the narrow adapter may borrow the credential for SDK construction. No zeroi
 ## Session and readiness
 
 One client and one shard, GatewayIntents::empty(). Poise defaults disabled; configure
-initialize_owners=false, skip_checks_for_owners=false, custom categorical on_error and no auto-defer.
+FrameworkBuilder::initialize_owners(false), skip_checks_for_owners=false, custom categorical on_error
+and no auto-defer. The builder overwrites the corresponding options field; test the built framework.
 No application-owner lookup. Ready-derived application identity supports the HTTP registration call.
 
 The setup closure registers the named command once, sends a payload-free setup result, and returns

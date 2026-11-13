@@ -1,5 +1,6 @@
 use crate::config::{Config, ConfigError};
 use thiserror::Error;
+use tracing_subscriber::{Layer, layer::SubscriberExt, util::SubscriberInitExt};
 
 #[derive(Debug, Error)]
 #[error("{kind}")]
@@ -19,15 +20,29 @@ pub fn run() -> Result<(), StartupError> {
     let config = Config::from_env().map_err(|error| StartupError {
         kind: StartupErrorKind::Configuration(error),
     })?;
-    tracing_subscriber::fmt()
-        .with_max_level(config.log_level)
-        .with_writer(std::io::stderr)
+    subscriber(config.log_level, std::io::stderr)
         .try_init()
         .map_err(|_| StartupError {
             kind: StartupErrorKind::DiagnosticsUnavailable,
         })?;
     tracing::info!(event = "application_initialized");
     Ok(())
+}
+
+fn subscriber<W>(level: tracing::Level, writer: W) -> impl tracing::Subscriber + Send + Sync
+where
+    W: for<'a> tracing_subscriber::fmt::MakeWriter<'a> + Send + Sync + 'static,
+{
+    tracing_subscriber::registry().with(
+        tracing_subscriber::fmt::layer()
+            .with_ansi(false)
+            .with_writer(writer)
+            .with_filter(tracing_subscriber::filter::filter_fn(move |metadata| {
+                *metadata.level() <= level
+                    && (metadata.target() == "fundguard"
+                        || metadata.target().starts_with("fundguard::"))
+            })),
+    )
 }
 
 #[cfg(test)]
@@ -86,3 +101,7 @@ mod tests {
         );
     }
 }
+
+#[cfg(test)]
+#[path = "bootstrap/logging_tests.rs"]
+mod logging_tests;
