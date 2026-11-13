@@ -12,7 +12,8 @@ Read [runtime](contracts/runtime.md) and [command](contracts/command.md) contrac
 ## Safe baseline and automated checks
 
 Preserve the actual current Git state before edits. This planning session began with a clean tree;
-previously committed instruction/source edits must not be reverted. No feature-004 tasks exist yet.
+previously committed instruction/source edits must not be reverted. Follow [tasks.md](tasks.md)
+only after implementation authorization.
 After implementation, from repository root:
 
 ```bash

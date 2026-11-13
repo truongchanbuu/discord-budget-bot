@@ -5,7 +5,8 @@
 **Created**: 2026-11-12
 
 **Status**: Scope accepted for technical planning by the maintainer's $speckit-plan request on
-2026-11-13. Design artifacts generated; no task generation or implementation authorized.
+2026-11-13. Plan review accepted for task generation by the subsequent $speckit-tasks request.
+Design and task artifacts generated; implementation remains unauthorized.
 
 **Input**: User description: "$speckit-specify next faeture pls".
 The completed owner-access feature recommends trusted owner configuration and a minimal authenticated

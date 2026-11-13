@@ -4,11 +4,12 @@ Updated: 2026-11-13
 
 ## Current phase and active feature
 
-004 Trusted Discord Owner Entrypoint has completed technical planning under the maintainer's
-$speckit-plan request. [Specification](../../specs/004-discord-owner-entry/spec.md) scope is accepted
-for planning; [plan](../../specs/004-discord-owner-entry/plan.md), research, data model, runtime/
-command contracts and quickstart are ready for review. No tasks.md or feature-004 implementation
-exists. Constitution 1.1.0 is unchanged; no implementation approval is inferred.
+004 Trusted Discord Owner Entrypoint has completed task generation under the maintainer's
+$speckit-tasks request, which accepts plan review for this step. [Specification](../../specs/004-discord-owner-entry/spec.md),
+[plan](../../specs/004-discord-owner-entry/plan.md) and design artifacts remain authoritative.
+[Tasks](../../specs/004-discord-owner-entry/tasks.md) has 38 unchecked items across Setup, Foundational,
+US1 runtime selection, US2 private command, US3 safe integration, and Polish. Detailed dependency and
+acceptance coverage live there. No feature-004 implementation exists; constitution 1.1.0 is unchanged.
 
 ## Planned design and decisions
 
@@ -48,12 +49,18 @@ Hosted CI and live Discord smoke remain unverified; no token/account/server was 
 
 ## Pending work, blockers and next action
 
-No unresolved planning blocker. Review the plan/contracts and proposed ADR, then request
-$speckit-tasks. The review-plan gate precedes task generation. Later analyze all artifacts and
-explicitly authorize implementation; do not start code or generate tasks automatically.
+No unresolved task-generation blocker. Run $speckit-analyze against spec/plan/tasks and design artifacts;
+resolve findings before explicit implementation authorization. Do not start code automatically.
+US1 is an independently testable configuration/dispatch checkpoint; live executable wiring waits until
+US2 privacy and US3 lifecycle/error safeguards exist. All 38 tasks remain unchecked.
+
+Task generation validated format/IDs/dependencies, FR/AC/SC coverage, artifact links, file sizes and
+whitespace. No before/after task hooks are configured. No application checks were rerun for this
+documentation-only step; no new runtime/CI/live passing result is claimed. The task-generation
+session began with a clean tree and changes documentation only.
 
 Manual live smoke is opt-in and uses locally supplied credentials only. Report it separately from
-simulated coverage; no live integration assurance follows from the dependency probe. No financial
-operations, resource lookup, persistence, privileged intents, message handling or deployment.
+simulated coverage; no live integration assurance follows from the earlier dependency probe.
+No financial operations, resource lookup, persistence, privileged intents or deployment are included.
 Use [FEATURE_INDEX.md](FEATURE_INDEX.md) when the ignored selector is absent. Active directory is
 specs/004-discord-owner-entry; actual Git branch remains 001-project-foundation.

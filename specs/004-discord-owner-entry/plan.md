@@ -4,7 +4,7 @@
 **Date**: 2026-11-13 | **Spec**: [spec.md](spec.md)
 **Input**: specs/004-discord-owner-entry/spec.md
 **Status**: Design generated under the maintainer's $speckit-plan request. Scope accepted for planning;
-no tasks or implementation authorized by this document.
+Subsequent $speckit-tasks request accepts plan review for task generation; implementation is not authorized.
 
 ## Summary
 
@@ -74,7 +74,8 @@ specs/004-discord-owner-entry/
 └── quickstart.md
 ```
 
-No tasks.md is generated here. The runtime contract owns settings/budgets/root behavior; command
+[tasks.md](tasks.md) was generated in the subsequent task phase. The runtime contract owns
+settings/budgets/root behavior; command
 contract owns transport mapping, privacy/registration and test seams; model owns fields/invariants.
 
 ### Source Code (planned, not created)
@@ -196,7 +197,8 @@ internal connector rather than contacting Discord. Actual SDK method wiring must
 
 ## Review and Delivery Sequence
 
-After plan review, request tasks, then run cross-artifact analysis before authorized implementation.
+Plan review is accepted for task generation by the maintainer’s subsequent $speckit-tasks request.
+Run cross-artifact analysis on the generated tasks before authorized implementation.
 Implement validated configuration and compatible root dispatch; real feature command/mapping/private
 responses; scoped registration/client wiring; bounded supervisor/diagnostics; full tests/documentation.
 The future task list must sequence test-first cases and all operation limits without speculative layers.
