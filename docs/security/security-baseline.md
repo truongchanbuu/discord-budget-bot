@@ -126,3 +126,25 @@ provider authentication/delivery. Full SDK dispatch/error contexts are source-re
 and hosted CI remain unverified. Financial operations still need authoritative resource scope and
 atomic audit/idempotency independently of readiness. See the
 [adapter contract](../../specs/004-discord-owner-entry/contracts/command.md).
+
+## Private financial journal controls (005)
+
+Finance is opt-in via a redacted dedicated PostgreSQL URL, ignored offline. The real local .env.local
+is not used by implementation tests. Owner-authenticated DMs only; no Message Content privilege,
+server financial replies, attachment processing or AI transmission. All views disable mentions/link
+embeds. IDs carry only draft/revision/action, never money/notes/identity. Every action rechecks owner,
+channel, revision/expiry; private acknowledgement failure prevents mutation. Legacy SDK modals are
+bounded five-field forms; financial payloads never enter app logs/error sources.
+
+Money is full-u64 integral VND, NUMERIC whole/range checked and restored through core validation.
+Owner-row serialization, unique origin, immutable entry trigger and one atomic draft/entry/audit
+transition prevent partial/duplicate effects. Historical validation rejects backdated overdraft.
+Original actor/source and confirmation actor/time are retained for audit, outside diagnostics.
+Clear OTP/password/CVV/PIN-label patterns are rejected from original/edited notes before storage;
+the UI never requests banking credentials. This is not universal secret recognition or a bank verifier.
+
+Local PostgreSQL setup grants dedicated migration/schema permissions. Operators own DB access control,
+backups, encryption, statement/parameter logging policy and retention; production hardening is deferred.
+Default tests are provider-free; explicit disposable DB tests cover real locking/race/rollback/restart.
+Live financial Discord flow and hosted CI remain unverified. Do not confuse local evidence with a
+complete security audit or execute real-money transfers. No deployment was performed.

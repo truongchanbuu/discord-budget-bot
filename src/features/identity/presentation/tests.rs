@@ -109,3 +109,28 @@ async fn failed_duplicate_and_timed_out_sends_are_not_retried() {
     );
     assert_eq!(started.elapsed(), std::time::Duration::from_secs(2));
 }
+
+#[test]
+fn finance_capability_updates_only_owner_readiness_text() {
+    let data = data(BindingState::Enabled).with_finance_dm();
+    assert_eq!(
+        decide(&data, &fixture("34", Some("12"))),
+        ReadinessDecision::FinanceReady
+    );
+    assert_eq!(
+        decide(&data, &fixture("35", Some("12"))),
+        ReadinessDecision::Denied
+    );
+    let value = to_value(
+        reply(ReadinessDecision::FinanceReady)
+            .to_slash_initial_response(serenity::CreateInteractionResponseMessage::new()),
+    )
+    .unwrap();
+    assert!(
+        value["content"]
+            .as_str()
+            .unwrap()
+            .contains("direct message")
+    );
+    assert_eq!(value["flags"], 64);
+}

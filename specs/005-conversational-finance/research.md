@@ -51,3 +51,16 @@ Decision: one ledger feature owns register/history/monthly query, reusing core M
 Rationale: cohesive first personal-journal slice without empty future feature modules. No asset valuations.
 Calendar uses date-only accounting and UTC+07 current Vietnam date; audit/expiry UTC. Opening in a new
 tracking month is labeled initial/carryover, never salary. Report totals use checked wide integers.
+
+## Executed implementation evidence
+
+Exact SQLx0.9 macro-free Migration::new requires SqlSafeStr::into_sql_str; use public
+Migrator::with_migrations and include_str, not semver-exempt struct fields. Tested migration rerun,
+full-u64/date roundtrip and fractional rejection against disposable PostgreSQL18.6. Parameterized
+queries use static literals; no arbitrary String/SQL interpolation. New typed redacted SecretValue
+covers the now-real token and database URL configuration boundaries.
+
+Actual DM/user and modal fixtures plus serialized SDK builders test privacy/limits; separate FinanceEvents
+keeps identity independent of ledger. Historical balance and monthly math are pure tests; real DB
+fixtures exercise concurrency, immutable entries, injected post-insert rollback and restart. Optional
+live finance and hosted CI remain unverified. No existing local secrets/data were used.

@@ -80,3 +80,27 @@ fn nontext_required_fields_fail() {
         assert!(DiscordConfig::load(&mut |key| values.get(key).cloned()).is_err());
     }
 }
+
+#[test]
+fn optional_database_url_is_validated_and_redacted() {
+    let mut values = settings();
+    assert!(
+        DiscordConfig::load(&mut |key| values.get(key).cloned())
+            .unwrap()
+            .database_url
+            .is_none()
+    );
+    values.insert(
+        "FUNDGUARD_FINANCE_DATABASE_URL",
+        "postgresql://synthetic:secret-marker@localhost/fundguard_test".into(),
+    );
+    let config = DiscordConfig::load(&mut |key| values.get(key).cloned()).unwrap();
+    assert!(config.database_url.is_some());
+    assert!(!format!("{config:#?} {:?}", config.database_url).contains("secret-marker"));
+    for invalid in ["", " postgres://local/db", "postgres://local/db "] {
+        values.insert("FUNDGUARD_FINANCE_DATABASE_URL", invalid.into());
+        let error = DiscordConfig::load(&mut |key| values.get(key).cloned()).unwrap_err();
+        assert!(error.to_string().contains("FUNDGUARD_FINANCE_DATABASE_URL"));
+        assert!(!format!("{error:?}").contains("postgres://"));
+    }
+}

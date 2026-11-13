@@ -9,7 +9,12 @@ Maintainer authorized full Spec Kit workflow for private conversational income/e
 virtual funds/reserves and monthly totals. [Spec](specs/005-conversational-finance/spec.md) quality16/16;
 [plan](specs/005-conversational-finance/plan.md), contracts/model/research and
 [32 tasks](specs/005-conversational-finance/tasks.md) generated; cross-artifact review passed.
-Implementation in progress. No production/environment credentials used; no deployment authorized.
+Implementation complete: all32 tasks verified, four Cargo gates pass,87 ordinary tests plus8 explicit
+PostgreSQL tests pass. DM previews/edit/confirm/cancel, durable manual journal, fund initialization/
+transfers, categories and exact monthly view implemented. Owner serialization and immutable history
+passed concurrency/rollback/restart/full-u64 checks. ADR0006 accepted. Real .env.local untouched;
+no real financial data, live finance/provider test or deployment. Hosted CI remains unverified.
+Next: optional synthetic finance DM smoke, then separately specify immutable correction/reversal.
 
 ## 2026-11-12 — 004 Trusted Discord Owner Entrypoint
 

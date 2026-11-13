@@ -87,7 +87,7 @@ trusted actor/configuration/ownership and re-check current policy before each pr
 See [ADR 0004](decisions/0004-owner-access-policy.md) and the
 [contract](../../specs/003-owner-access/contracts/owner-access.md).
 
-## Future interface boundary
+## Interface boundaries
 
 Discord is the initial UI. Future feature presentation owns commands and views; platform/discord
 owns client lifecycle and registers commands supplied by the composition root. Serenity Context,
@@ -95,7 +95,7 @@ transport identifiers, and SQLx records stay out of domain/application APIs. Pre
 transport identity to explicit application input using the identity feature's explicit binding and scoped-authorization policy, with authenticated
 provider identity and authoritative resource ownership supplied by future integrations. No assumption that a Discord sender is the owner is allowed.
 
-| Future capability | Owning boundary |
+| Capability | Owning boundary |
 | --- | --- |
 | Slash commands and direct messages | Feature presentation calls application use cases |
 | Pattern-based input | Presentation validates/parses before application calls |
@@ -105,7 +105,8 @@ provider identity and authoritative resource ownership supplied by future integr
 | Report images | Reports application supplies results; presentation/infrastructure renders them |
 | Payment awareness | Payments application/domain enforce future invariants before presentation handoff |
 
-These are design accommodations, not implemented capabilities. Use minimal justified gateway
+Readiness and private journal DMs are implemented; other interfaces remain design accommodations.
+Use minimal justified gateway
 intents. Message content or attachment access requires a feature-specific privilege review;
 do not enable privileged intents by default. No bots or HTTP API are initialized in Phase 0.
 
@@ -114,3 +115,27 @@ and outputs without copying rules. A new composition root is added only when a r
 requires it. Platform database manages pool lifecycle; feature infrastructure owns persistence
 and application workflows own transaction boundaries. Multi-user isolation, concurrency,
 retention, authentication and deployment remain decisions for owning future specifications.
+
+## Conversational personal journal (005)
+
+features/ledger owns this vertical slice's fund register, immutable entry workflow and monthly query.
+Its domain uses existing core Money/BalanceChange/VirtualBalance and pure calendar/rule logic. The
+application facade rechecks identity policy and declares one real JournalStore port with Send futures.
+SQLx lives only in infrastructure/platform; the adapter locks an owner row, loads authoritative state,
+invokes pure posting validation, and atomically saves entry/audit/draft state. No mutable balance cache.
+Ledger imports existing facades; Financial Core/identity do not import ledger. Arc shares immutable
+owner binding with both SDK handlers. A crate-private numeric identity accessor exists for audit only,
+not as permission to log identity. FinanceEvents is a concrete separate SDK EventHandler, not a second
+bot or generic service framework. It handles only owner DMs and finance component/modal prefixes;
+Poise retains guild readiness. DIRECT_MESSAGES is enabled only with optional explicit finance DB URL.
+
+Source/channel/revision/expiry are authoritative. Edit lookup+initial modal is bounded2s; other actions
+privately acknowledge before DB work, then edit response. Five-field legacy SDK modals remain supported;
+no custom HTTP/AI, privileged message-content scan, public financial replies, attachments or collectors.
+The enabled readiness reply points the owner to DMs; disabled finance retains old readiness text.
+
+PostgreSQL constraints preserve whole full-u64 values (no NUMERIC scale rounding); owner serialization
+and immutable history guard race/retry/restart. All dated effects are replayed for historical balance
+validation. Opening in the month is included in “Đầu kỳ/khởi tạo”, not income; transfers are separate
+from consumption. See [ADR0006](decisions/0006-conversational-journal.md),
+[contract](../../specs/005-conversational-finance/contracts/finance.md) and task evidence.

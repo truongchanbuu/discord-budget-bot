@@ -5,6 +5,7 @@ use super::{
 use crate::{
     config::discord::DiscordConfig,
     features::identity::presentation::{CommandData, ReadinessError, fundguard},
+    features::ledger::{infrastructure::PgStore, presentation::FinanceEvents},
 };
 use poise::serenity_prelude as serenity;
 use std::{future::Future, time::Duration};
@@ -60,19 +61,46 @@ async fn complete_setup(
     result.map(|()| data).map_err(|_| ReadinessError)
 }
 
-pub(crate) async fn run(config: DiscordConfig) -> Result<(), SessionError> {
+pub(crate) async fn run(
+    config: DiscordConfig,
+    pool: Option<sqlx::PgPool>,
+) -> Result<(), SessionError> {
     let deadline = Instant::now() + Duration::from_secs(30);
     let mut interrupt = Box::pin(tokio::signal::ctrl_c());
     let guild = serenity::GuildId::new(config.guild.get());
-    let data = CommandData::new(config.binding, guild);
+    let mut data = CommandData::new(config.binding, guild);
+    if pool.is_some() {
+        data = data.with_finance_dm();
+    }
+    let binding = data.binding.clone();
     let accepting = data.accepting.clone();
     let (sender, setup) = oneshot::channel();
-    let builder = serenity::Client::builder(config.token.as_str(), INTENTS)
+    let intents = if pool.is_some() {
+        INTENTS | serenity::GatewayIntents::DIRECT_MESSAGES
+    } else {
+        INTENTS
+    };
+    let mut builder = serenity::Client::builder(config.token.as_str(), intents)
         .framework(framework(data, guild, deadline, sender));
-    let Some(mut client) =
-        lifecycle::prepare(async move { builder.await }, interrupt.as_mut(), deadline).await?
-    else {
-        return Ok(());
+    if let Some(database) = &pool {
+        builder = builder.event_handler(FinanceEvents {
+            journal: PgStore::journal(database.clone()),
+            binding,
+            accepting: accepting.clone(),
+        });
+    }
+    let prepared =
+        lifecycle::prepare(async move { builder.await }, interrupt.as_mut(), deadline).await;
+    let mut client = match prepared {
+        Ok(Some(client)) => client,
+        result => {
+            if let Some(pool) = pool {
+                tokio::time::timeout(Duration::from_secs(2), pool.close())
+                    .await
+                    .map_err(|_| SessionError::ShutdownTimeout)?;
+            }
+            return result.map(|_| ());
+        }
     };
     let manager = client.shard_manager.clone();
     let status = manager.clone();
@@ -96,6 +124,9 @@ pub(crate) async fn run(config: DiscordConfig) -> Result<(), SessionError> {
         },
         move || async move {
             manager.shutdown_all().await;
+            if let Some(pool) = pool {
+                pool.close().await;
+            }
             Ok(())
         },
     )

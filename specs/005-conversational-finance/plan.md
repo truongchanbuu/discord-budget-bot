@@ -1,5 +1,6 @@
 # Implementation Plan: Conversational Personal Finance
 
+**Status**: Implemented and locally verified; see tasks.md for exact evidence and limits.
 **Date**: 2026-11-13. **Feature**: [spec.md](spec.md). Actual Git branch: main.
 **Authorization**: Maintainer explicitly requested specify → analyze → plan → tasks → implement;
 review gates are covered by that request. Analysis runs after design/tasks prerequisites exist.
@@ -28,7 +29,7 @@ Keep existing offline and guild readiness compatible. No AI/banking/real transfe
 
 ## Constitution Check
 
-Pre-research and post-design: PASS, no exception. Domain/application use std/chrono/thiserror and
+Pre-research and post-design: PASS, no exception. Domain/application use std/chrono/thiserror (Tokio only for application port deadlines) and
 existing feature facades, never SDK/SQLx. Application declares one real persistence port with boxed
 Send futures; implementation controls SQL transaction mechanics. Pure posting validation and reporting
 remain application/domain rules called within the infrastructure transaction. No generic repository engine.
@@ -124,3 +125,12 @@ financial data is used. Document setup/commands/limits and update ADR/index/hand
 Justified: one persistence port, one owner lock and one immutable journal; concrete SDK event handler.
 No bank provider, AI, event bus, general account tree, double-entry accounting framework, multi-bot,
 background scheduler, complex generic unit of work or premature standalone funds/reports modules.
+
+## Implementation refinements
+
+Conservative UTF-16 UI bounds; unsupported message kinds/attachments ignored. Mixed income+allocation
+and explicit natural “từ … sang …” are not guessed. Posted kinds require cancel/resend to change kind.
+Readiness retains the same command/scope and updates owner capability text only when finance enabled.
+Views cap categories/funds with disclosed omissions, keeping exact aggregate totals. Clear bank-secret
+labels rejected before note storage. Numeric identity accessor is crate-private and used only for audit.
+Pool closure participates in the bounded Discord cleanup; failed pre-client startup also closes the pool.

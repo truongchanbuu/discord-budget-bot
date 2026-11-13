@@ -18,6 +18,10 @@ pub enum BindingState {
 pub struct DiscordAccountId(NonZeroU64);
 
 impl DiscordAccountId {
+    pub(crate) fn as_u64(self) -> u64 {
+        self.0.get()
+    }
+
     pub fn parse(input: &str) -> Result<Self, AccessError> {
         if input.is_empty()
             || input.len() > 20

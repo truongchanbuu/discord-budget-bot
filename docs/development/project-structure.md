@@ -66,3 +66,16 @@ empty directories, mod files, unused traits, or global repositories/services/han
 The [architecture guide](../architecture/overview.md) defines dependency direction. The
 [feature map](../product/feature-map.md) describes intended ownership. Feature requirements and
 implementation progress belong to [Spec Kit](../../specs/003-owner-access/tasks.md).
+
+## Personal journal (005)
+
+src/features/ledger/domain contains redacted models, finite parser, historical posting validation and
+monthly arithmetic. application defines owner-authorized Journal and its genuine persistence port.
+infrastructure implements static parameterized SQL/mapping/draft/commit/query operations. presentation
+owns actual DM SDK events, private component/modal flow and Vietnamese views. Sibling tests keep each
+responsibility/file bounded. Ledger does not create provider clients or access another feature's internals.
+
+src/platform/database.rs owns bounded pool/embedded migration startup; migrations/0001_personal_journal.sql
+owns schema constraints and immutable-entry trigger. runtime/client wire the optional pool/service and
+shared owner binding. scripts/test-postgres.sh creates/stops only its own disposable private cluster.
+No future funds/reports directories or speculative shared abstractions were created.

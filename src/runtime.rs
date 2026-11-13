@@ -61,7 +61,15 @@ pub async fn start() -> Result<(), ApplicationError> {
         &mut |name| std::env::var_os(name),
         crate::run,
         |config| async {
-            crate::platform::discord::run(config)
+            let pool = match &config.database_url {
+                None => None,
+                Some(url) => Some(
+                    crate::platform::database::connect(url.as_str())
+                        .await
+                        .map_err(|_| ApplicationError::session("finance_storage_unavailable"))?,
+                ),
+            };
+            crate::platform::discord::run(config, pool)
                 .await
                 .map_err(|error| ApplicationError::session(error.category()))
         },

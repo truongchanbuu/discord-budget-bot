@@ -10,6 +10,8 @@ publish = false
 path = "src/lib.rs"
 
 [dependencies]
+chrono = { version = "0.4.45", default-features = false, features = ["now"] }
+sqlx = { version = "0.9.0", default-features = false, features = ["runtime-tokio", "tls-rustls-ring", "postgres", "chrono", "migrate"] }
 poise = { version = "0.7.1", default-features = false }
 serenity = { version = "0.12.5", default-features = false, features = ["rustls_backend"] }
 tokio = { version = "1.54.1", default-features = false, features = ["macros", "rt", "signal", "sync", "time"] }

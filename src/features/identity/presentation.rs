@@ -11,15 +11,22 @@ use std::{
 };
 
 pub(crate) struct CommandData {
-    binding: OwnerBinding,
+    pub(crate) binding: Arc<OwnerBinding>,
+    finance_dm: bool,
     guild: serenity::GuildId,
     pub(crate) accepting: Arc<AtomicBool>,
 }
 
 impl CommandData {
+    pub(crate) fn with_finance_dm(mut self) -> Self {
+        self.finance_dm = true;
+        self
+    }
+
     pub(crate) fn new(binding: OwnerBinding, guild: serenity::GuildId) -> Self {
         Self {
-            binding,
+            binding: Arc::new(binding),
+            finance_dm: false,
             guild,
             accepting: Arc::new(AtomicBool::new(true)),
         }
@@ -34,6 +41,7 @@ impl fmt::Debug for CommandData {
 
 #[derive(Debug, PartialEq, Eq)]
 enum ReadinessDecision {
+    FinanceReady,
     Ready,
     Denied,
 }
@@ -54,7 +62,11 @@ fn decide(data: &CommandData, interaction: &serenity::CommandInteraction) -> Rea
         .ok()
         .map(TrustedActor::new);
     if resolve_owner(actor.as_ref(), Some(&data.binding)).is_ok() {
-        ReadinessDecision::Ready
+        if data.finance_dm {
+            ReadinessDecision::FinanceReady
+        } else {
+            ReadinessDecision::Ready
+        }
     } else {
         ReadinessDecision::Denied
     }
@@ -62,6 +74,9 @@ fn decide(data: &CommandData, interaction: &serenity::CommandInteraction) -> Rea
 
 fn reply(decision: ReadinessDecision) -> poise::CreateReply {
     let content = match decision {
+        ReadinessDecision::FinanceReady => {
+            "FundGuard is ready. Send a direct message to record income and expenses."
+        }
         ReadinessDecision::Ready => "FundGuard is ready. No financial operations are available.",
         ReadinessDecision::Denied => "Access denied.",
     };

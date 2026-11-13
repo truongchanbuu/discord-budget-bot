@@ -7,24 +7,25 @@ use crate::{
 };
 use std::{ffi::OsString, fmt, num::NonZeroU64};
 
-pub(crate) struct SecretToken(String);
+pub(crate) struct SecretValue(String);
 
-impl SecretToken {
+impl SecretValue {
     pub(crate) fn as_str(&self) -> &str {
         &self.0
     }
 }
 
-impl fmt::Debug for SecretToken {
+impl fmt::Debug for SecretValue {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        formatter.write_str("SecretToken([redacted])")
+        formatter.write_str("SecretValue([redacted])")
     }
 }
 
 pub(crate) struct DiscordConfig {
-    pub(crate) token: SecretToken,
+    pub(crate) token: SecretValue,
     pub(crate) guild: NonZeroU64,
     pub(crate) binding: OwnerBinding,
+    pub(crate) database_url: Option<SecretValue>,
 }
 
 impl fmt::Debug for DiscordConfig {
@@ -74,8 +75,23 @@ impl DiscordConfig {
             "disabled" => BindingState::Disabled,
             _ => return Err(ApplicationError::configuration("FUNDGUARD_OWNER_STATE")),
         };
+        let database_url = match lookup("FUNDGUARD_FINANCE_DATABASE_URL") {
+            None => None,
+            Some(value) => {
+                let value = value.into_string().map_err(|_| {
+                    ApplicationError::configuration("FUNDGUARD_FINANCE_DATABASE_URL")
+                })?;
+                if value.is_empty() || value.trim() != value {
+                    return Err(ApplicationError::configuration(
+                        "FUNDGUARD_FINANCE_DATABASE_URL",
+                    ));
+                }
+                Some(SecretValue(value))
+            }
+        };
         Ok(Self {
-            token: SecretToken(token),
+            token: SecretValue(token),
+            database_url,
             guild,
             binding: OwnerBinding::new(account, owner, state),
         })

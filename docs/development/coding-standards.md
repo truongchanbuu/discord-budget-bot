@@ -116,7 +116,8 @@ and platform; business rules do not create runtimes. Do not enable Tokio full sp
 
 ## Future domain values and transactions
 
-Financial Core implements pure validated whole-VND values; transactions remain future work.
+Financial Core implements pure validated whole-VND values; the ledger now implements owner-serialized
+PostgreSQL journal transactions under its explicit application port.
 Use validated value objects for
 actual invariants, with explicit currency/units; never floating-point financial amounts. Avoid
 boolean flags that confuse virtual funds with bank verification. Financial Core defines

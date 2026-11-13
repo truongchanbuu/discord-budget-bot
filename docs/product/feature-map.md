@@ -1,32 +1,28 @@
 # Feature roadmap
 
-Phase 0, pure Financial Core, owner-access policy and opt-in Discord readiness are implemented. Business workflows remain planned
-and unavailable. Each future feature requires one authoritative Spec Kit specification.
+Phase 0, pure Financial Core, owner-access policy and opt-in Discord readiness are implemented. The first private manual-journal slice is implemented; other workflows remain planned. Each future feature requires one authoritative Spec Kit specification.
 
 | Feature | Intended ownership | State |
 | --- | --- | --- |
 | Financial Core | Exact whole-VND values, virtual previews, supplied-context replay/conflict validation | Implemented; no posting or persistence |
 | Identity | Owner binding, authorization, future user isolation | [Pure single-owner policy implemented](../../specs/003-owner-access/spec.md); trusted environment binding and readiness adapter implemented; live private owner reply confirmed; other-account/disabled denial pending |
 | Discord entrypoint | Opt-in local session, trusted owner configuration and private readiness command | [Implemented](../../specs/004-discord-owner-entry/spec.md); local tests and live auth/registration/shutdown verified; owner reply confirmed; denial/recovery checks pending |
-| Funds | Virtual fund definitions/balances and eventual CRUD | Not implemented |
-| Income | Income allocation and salary policy | Not implemented |
+| Funds | Virtual register, opening and transfers | Minimal register in ledger implemented; rename/delete/full settings deferred |
+| Income | Received salary/freelance/bonus and allocations | Manual receipt/transfers implemented; recurring/expected-income automation deferred |
 | Payments | Awareness before handoff and explicit completion meanings | Not implemented |
-| Ledger | Traceable entries, audit history, atomic idempotency | Not implemented |
-| Reports | Financial calculations and eventual report images | Not implemented |
+| Ledger | Traceable entries, audit history, atomic idempotency | [Conversational journal implemented](../../specs/005-conversational-finance/spec.md); no committed edits/deletion |
+| Reports | Monthly cash flow/category/fund totals | Monthly text journal view implemented; images/export deferred |
 | Reminders | Notification policy and salary/reminder scheduling logic | Not implemented |
 
 ## Recommended sequence
 
-1. Preserve the implemented Financial Core contract: exact whole-VND, no virtual overdraft,
-   traceable candidate origin, replay/conflict rules and honest evidence meanings. It does not
-   establish durable idempotency, actual accounting entries, or verified bank balances.
-2. Preserve the owner policy and opt-in adapter. Next specify persistence/atomic commit boundaries,
-   authoritative resource ownership, audit origins, concurrency and durable idempotency. The adapter
-   does not prove financial resource ownership; remaining live denial/recovery evidence remains separate.
-3. Add small feature slices with their own Discord presentation and relevant domain tests.
-4. Specify payment awareness and handoff only after foundational financial invariants are proven.
+Preserve exact core/owner contracts and the first journal's durable idempotency, immutable audit,
+historical nonnegative balances and private confirmations. Verify the financial DM flow with synthetic
+local data before real personal use. Specify immutable correction/reversal and richer administration
+before expanding financial workflows. Payments/awareness/handoff remain separate future specifications.
 
-Future interface work beyond the implemented readiness slash command includes DMs, message patterns, buttons, selects, modals,
+Future interface work beyond implemented readiness and finance DMs includes broader message patterns,
+additional buttons/selects/modals,
 image/attachment handling, and multiple bots/Web/mobile adapters. QR parsing/scanning, OCR, AI
 agents/integrations, payment handoff, bank integration, financial reports, salary scheduling,
 production financial migrations, and production deployment are outside Phase 0. None is a

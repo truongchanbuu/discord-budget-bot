@@ -127,3 +127,15 @@ fn ambient_rust_log_cannot_override_primary_or_fallback_policy() {
         assert!(!stderr.contains("invalid-log-marker"));
     }
 }
+
+#[test]
+fn offline_ignores_even_invalid_finance_database_configuration() {
+    for value in ["", "invalid-url-marker"] {
+        let output = execute(
+            Some("offline"),
+            &[("FUNDGUARD_FINANCE_DATABASE_URL", value.into())],
+        );
+        assert!(output.status.success());
+        assert!(!String::from_utf8_lossy(&output.stderr).contains("invalid-url-marker"));
+    }
+}
