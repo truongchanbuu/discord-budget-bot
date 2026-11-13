@@ -4,7 +4,8 @@
 
 **Created**: 2026-11-12
 
-**Status**: Draft for maintainer review. Specification only; no plan, tasks or implementation.
+**Status**: Scope accepted for technical planning by the maintainer's $speckit-plan request on
+2026-11-13. Design artifacts generated; no task generation or implementation authorized.
 
 **Input**: User description: "$speckit-specify next faeture pls".
 The completed owner-access feature recommends trusted owner configuration and a minimal authenticated

@@ -1,52 +1,59 @@
 # Session Handoff
 
-Updated: 2026-11-12
+Updated: 2026-11-13
 
 ## Current phase and active feature
 
-004 Trusted Discord Owner Entrypoint is drafted for specification review. The maintainer requested
-$speckit-specify for the next feature; the completed owner-access handoff recommended trusted
-configuration and a first authenticated interface. The [specification](../../specs/004-discord-owner-entry/spec.md)
-selects one opt-in local Discord session and a private /fundguard readiness command in one
-configured server. No plan, tasks or implementation exists for 004; constitution 1.1.0 is unchanged.
+004 Trusted Discord Owner Entrypoint has completed technical planning under the maintainer's
+$speckit-plan request. [Specification](../../specs/004-discord-owner-entry/spec.md) scope is accepted
+for planning; [plan](../../specs/004-discord-owner-entry/plan.md), research, data model, runtime/
+command contracts and quickstart are ready for review. No tasks.md or feature-004 implementation
+exists. Constitution 1.1.0 is unchanged; no implementation approval is inferred.
 
-## Completed specification work and assumptions
+## Planned design and decisions
 
-Created the spec and its [quality checklist](../../specs/004-discord-owner-entry/checklists/requirements.md).
-Offline startup remains default, independent of ambient Discord settings. Live mode requires a
-complete trusted credential/server/owner binding before provider access. Actual provider events
-supply invoking identity, existing owner resolution makes the decision, and all replies stay private.
-Registration must preserve unrelated commands; lifecycle/errors must not disclose sensitive data.
-Configuration changes apply after restart; no hot reload or in-flight revocation is specified.
+Keep offline default and legacy run() offline-only; introduce async start() for selected runtime.
+Complete operator configuration precedes provider access. Identity presentation maps genuine command
+actor/guild to existing owner policy, and platform supervises one client with zero gateway intents.
+Named guild-command upsert preserves unrelated commands; all replies explicitly private. Replace
+Poise default errors and allow only reviewed application tracing targets, even at trace/debug.
 
-Scope assumes a local developer-controlled application/server, one owner and no financial commands.
-DMs, ordinary messages, attachments, resource lookup, storage and deployment remain excluded.
-Finite external-attempt limits, dependency compatibility, setting names and concrete adapter/lifecycle
-contracts must be resolved during planning. These are explicit planning obligations, not approved
-technical choices. No new ADR is adopted during specification.
+Proposed Poise 0.7.1/Serenity 0.12.5 disable defaults with rustls enabled. Existing Tokio gains
+signal/sync/time, plus dev-only test-util. A setup result signal is required: SDK Client::start alone
+does not propagate framework setup failure. Startup 30s, registration 10s within startup, reply 2s,
+observed recovery 30s, SDK shutdown 8s and total close/cancel/join 10s. SDK internal retry counts are
+not application/wire-attempt guarantees. Details are authoritative in the runtime/command contracts.
+[ADR 0005](../architecture/decisions/0005-trusted-discord-entrypoint.md) remains proposed.
 
 ## Verification and limits
 
-Requirement-quality review passed all 16 items: 16 requirements, 14 acceptance scenarios and six
-measurable outcomes. Reviewed constitution, existing runtime/identity code and contracts, architecture,
-security baseline and roadmap. Checked primary Discord documentation for command scope and initial
-response deadlines. Validated local links, path-only selector discovery, file sizes and whitespace.
-No before/after specification extension hooks are configured.
+Pre/post-design constitution checks pass without exceptions. All 16 requirements, fourteen AC and
+six outcomes have planned tests/reviews. Specification-quality checklist remains 16/16 and was not
+modified. Planned private unit tests will exercise real mapper/builders and bounded operations;
+binary tests will cover offline/invalid input. Automated tests must use no real sockets or credentials;
+no production fake mode is planned.
 
-Documentation-only session: Cargo checks were not run, no real token/account was used and no live
-Discord smoke test occurred. Existing 37-test evidence belongs to completed
-[owner-access tasks](../../specs/003-owner-access/tasks.md); prior task checklists are unchanged.
-Hosted CI remains unverified. User edits to AGENTS.md and src/bootstrap.rs, src/lib.rs, src/main.rs
-are preserved. Product code, dependencies, constitution and generated tooling remain unchanged.
+Read-only research checked published source and primary Discord documentation. An isolated /tmp
+probe resolved the exact SDK/current dependency combination and compiled a minimal framework builder
+on Rust 1.99.1, Edition 2024 without warnings. This is dependency compatibility evidence, not a
+FundGuard feature test, vulnerability audit or live authentication/delivery claim.
+Validated artifact links, prerequisites, coverage, file sizes, whitespace and unchanged protected
+source/tooling/configuration. No before/after planning hooks are configured.
+
+Repository Cargo checks were not rerun because planning changes documentation only. The repository
+manifest/lockfile/toolchain and all implementation source/tests remain unchanged. Prior 37-test
+results belong to completed [owner-access tasks](../../specs/003-owner-access/tasks.md). This session
+began with a clean working tree; existing committed instruction/source changes are preserved.
+Hosted CI and live Discord smoke remain unverified; no token/account/server was used.
 
 ## Pending work, blockers and next action
 
-No unresolved specification clarification. Maintainer scope review precedes $speckit-plan; the
-configured workflow's review-spec gate requires this review. Do not generate technical tasks or
-implement automatically. Quality-checklist completion is not implementation authorization.
+No unresolved planning blocker. Review the plan/contracts and proposed ADR, then request
+$speckit-tasks. The review-plan gate precedes task generation. Later analyze all artifacts and
+explicitly authorize implementation; do not start code or generate tasks automatically.
 
-Automated checks must use synthetic inputs and controlled boundaries without real provider calls.
-Later manual smoke tests must be opt-in with local credentials and report owner/second-account,
-privacy and shutdown evidence honestly; their absence prevents a live-verification claim.
-Use [FEATURE_INDEX.md](FEATURE_INDEX.md) when the ignored selector is absent. The active directory
-is specs/004-discord-owner-entry; actual Git branch remains 001-project-foundation.
+Manual live smoke is opt-in and uses locally supplied credentials only. Report it separately from
+simulated coverage; no live integration assurance follows from the dependency probe. No financial
+operations, resource lookup, persistence, privileged intents, message handling or deployment.
+Use [FEATURE_INDEX.md](FEATURE_INDEX.md) when the ignored selector is absent. Active directory is
+specs/004-discord-owner-entry; actual Git branch remains 001-project-foundation.

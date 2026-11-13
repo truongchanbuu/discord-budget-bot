@@ -5,12 +5,15 @@ replace their requirements, implementation checklists, or verification evidence.
 
 ## 2026-11-12 — 004 Trusted Discord Owner Entrypoint
 
-Status: [specification](specs/004-discord-owner-entry/spec.md) drafted for scope review;
-quality checklist passed 16/16. Defines opt-in local Discord mode, operator-controlled binding,
+Status: [specification](specs/004-discord-owner-entry/spec.md) accepted for planning on 2026-11-13.
+[Plan](specs/004-discord-owner-entry/plan.md), research, model, runtime/command contracts and guide
+generated; constitution checks pass and ADR 0005 is proposed. Quality checklist remains 16/16.
+Defines opt-in local Discord mode, operator-controlled binding,
 one private /fundguard readiness command in one configured server, least privilege and safe
 registration/failure/shutdown. Offline remains the default. No financial/resource operations.
 Automated verification must remain credential-free; real Discord smoke evidence is separate.
-No product code, dependencies, plan or tasks added. Next: review scope, then $speckit-plan.
+Isolated dependency/framework probe passed on the pinned toolchain; no live provider call.
+Repository code/dependencies are unchanged. No tasks generated. Next: plan review, then $speckit-tasks.
 
 ## 2026-11-12 — 003 Owner Identity and Access Boundaries
 
