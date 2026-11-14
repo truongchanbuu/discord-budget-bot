@@ -3,6 +3,15 @@
 This log records feature milestones and links to authoritative specifications/tasks. It does not
 replace their requirements, implementation checklists, or verification evidence.
 
+## 2026-11-14 — 006 Private Finance Channels specification
+
+Created [spec](specs/006-private-finance-channels/spec.md) and16/16 quality checklist for mention-based
+self-service private channels with per-member journals. Maintainer clarified read-only viewers and
+explicit bot mentions. Defined owner-only writes/access management, privacy/admin/history limits,
+legacy journal preservation, provisioning/retry/recovery and permission drift boundaries. Passwords
+are deferred. Constitution review passed; spec review pending before planning. No006 plan/tasks/code,
+runtime changes, live channel operations or deployment. Active index/handoff updated.
+
 ## 2026-11-14 — Repository publication
 
 Maintainer requested main/rebase/push to discord-budget-bot. Local already main; empty destination

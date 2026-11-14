@@ -7,6 +7,7 @@ Phase 0, pure Financial Core, owner-access policy and opt-in Discord readiness a
 | Financial Core | Exact whole-VND values, virtual previews, supplied-context replay/conflict validation | Implemented; no posting or persistence |
 | Identity | Owner binding, authorization, future user isolation | [Pure single-owner policy implemented](../../specs/003-owner-access/spec.md); trusted environment binding and readiness adapter implemented; live private owner reply confirmed; other-account/disabled denial pending |
 | Discord entrypoint | Opt-in local session, trusted owner configuration and private readiness command | [Implemented](../../specs/004-discord-owner-entry/spec.md); local tests and live auth/registration/shutdown verified; owner reply confirmed; denial/recovery checks pending |
+| Private finance channels | Self-service per-member channels and owner-managed read-only viewers | [006 specification](../../specs/006-private-finance-channels/spec.md) under review; not implemented |
 | Funds | Virtual register, opening and transfers | Minimal register in ledger implemented; rename/delete/full settings deferred |
 | Income | Received salary/freelance/bonus and allocations | Manual receipt/transfers implemented; recurring/expected-income automation deferred |
 | Payments | Awareness before handoff and explicit completion meanings | Not implemented |
@@ -18,8 +19,8 @@ Phase 0, pure Financial Core, owner-access policy and opt-in Discord readiness a
 
 Preserve exact core/owner contracts and the first journal's durable idempotency, immutable audit,
 historical nonnegative balances and private confirmations. Verify the financial DM flow with synthetic
-local data before real personal use. Specify immutable correction/reversal and richer administration
-before expanding financial workflows. Payments/awareness/handoff remain separate future specifications.
+local data before real personal use. Active006 specifies private server channels and isolated membership. Immutable correction/reversal
+and richer financial administration remain separate future work. Payments/awareness/handoff remain separate future specifications.
 
 Future interface work beyond implemented readiness and finance DMs includes broader message patterns,
 additional buttons/selects/modals,

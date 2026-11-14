@@ -16,3 +16,6 @@ PostgreSQL verification. No bank integration, OCR/AI, attachments, recurring inc
 
 [Feature map](feature-map.md), [architecture](../architecture/overview.md),
 [security](../security/security-baseline.md), [active spec](../../specs/005-conversational-finance/spec.md).
+
+Planned, not implemented: [006 private finance channels](../../specs/006-private-finance-channels/spec.md)
+adds mention-based self-service server channels, isolated members and owner-managed read-only viewers.

@@ -143,8 +143,8 @@ Read [ADR0006](docs/architecture/decisions/0006-conversational-journal.md),
 Use Spec Kit: specify → plan → tasks → analyze → authorized implementation, with clarification/review
 as needed. Requirements, detailed progress and current state live in spec/tasks/handoff respectively.
 
-[Active specification](specs/005-conversational-finance/spec.md) ·
-[Tasks](specs/005-conversational-finance/tasks.md) · [Feature index](docs/ai/FEATURE_INDEX.md) ·
+[Active specification — planned private channels](specs/006-private-finance-channels/spec.md) ·
+[Delivered journal tasks](specs/005-conversational-finance/tasks.md) · [Feature index](docs/ai/FEATURE_INDEX.md) ·
 [Handoff](docs/ai/SESSION_HANDOFF.md)
 
 ## Roadmap
