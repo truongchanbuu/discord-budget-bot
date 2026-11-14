@@ -100,3 +100,10 @@ probe. No financial mutation or agent Discord message sent. Owner was asked to D
 await response before testing synthetic preview/edit/cancel/confirm/transfers/monthly report/replay.
 Full finance E2E remains partial/unverified. Bot remains running; do not start a duplicate. No code or
 local configuration changed; no real secrets or personal records saved in repository.
+
+DM no-response follow-up: bot still running, Supabase/schema/security probes healthy, no response-failure
+log observed. Bot-authenticated REST retrieved/created the configured owner's private DM and read
+its last10 messages: empty. The live token's bot display name differs from the FundGuard product
+label; user was given the exact private channel link in chat to remove recipient ambiguity. No
+message content, account/channel IDs or link retained here. Await owner sending help in that exact
+channel; if inaccessible, privately verify configured owner ID. No agent message or finance mutation.

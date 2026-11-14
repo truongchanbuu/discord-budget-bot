@@ -182,3 +182,8 @@ checks: five protected tables have RLS, zero API-role table grants, zero owners/
 No financial test mutation or agent Discord message sent. Owner DM help/fund-list result is pending;
 finance UI/modal/posting/report/replay smoke remains unverified. The bot remains running for that test.
 No real credential value or personal record retained in repository; configured local file unchanged.
+
+DM-routing investigation: valid running bot and healthy migrated Supabase confirmed; no financial
+response-failure log. Bot REST owner-DM lookup returned empty history. Shared exact bot/private chat
+link with maintainer (not retained in repository); await known-help message in that channel. This
+is partial live diagnostic evidence, not proof of successful gateway DM dispatch or a code defect.
