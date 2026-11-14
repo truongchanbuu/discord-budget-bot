@@ -170,3 +170,15 @@ no migrations/actions sent and no bot restart or Discord messages sent by the ag
 results are awaiting maintainer feedback. Correct next step: copy Session pooler5432 URL into the
 ignored local file, retain sslmode=require, then restart with exported config and retry scoped smoke.
 Live finance/components/modal/report/restart remain unverified; previous local test evidence stands.
+
+### Session-pooler retry — 2026-11-14
+
+After maintainer corrected local configuration, actual Supabase session connection PASS; psql client
+connection info confirms TLS. pg_stat_ssl describes the pooler-to-DB hop, not the client-to-pooler
+hop; do not infer unencrypted client transport from that backend view. Old readiness-only local bot
+stopped gracefully and one current binary restarted with finance URL; application_initialized and
+discord_ready observed. Both embedded migrations succeeded on the previously empty project. Read-only
+checks: five protected tables have RLS, zero API-role table grants, zero owners/drafts/entries at probe.
+No financial test mutation or agent Discord message sent. Owner DM help/fund-list result is pending;
+finance UI/modal/posting/report/replay smoke remains unverified. The bot remains running for that test.
+No real credential value or personal record retained in repository; configured local file unchanged.

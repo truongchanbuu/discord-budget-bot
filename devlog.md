@@ -3,13 +3,14 @@
 This log records feature milestones and links to authoritative specifications/tasks. It does not
 replace their requirements, implementation checklists, or verification evidence.
 
-## 2026-11-14 — Live Supabase/local bot smoke attempt
+## 2026-11-14 — Live Supabase/local bot smoke (partial)
 
-Maintainer requested real setup testing. Valid running bot/token/owner confirmed;90 ordinary tests
-pass again. Bot process has no finance URL; local file's Direct IPv6 endpoint is unreachable from
-this host. Await Session pooler5432 configuration and restart with exported settings. No hosted rows,
-financial mutations, migrations or agent Discord sends; UI results remain unverified. Only sanitized
-outcomes recorded; local credentials read in memory for the authorized probe, never printed/changed.
+Initial attempt found missing process config and unreachable Direct IPv6. Maintainer changed to
+Session pooler; real connection/client TLS then passed. Restarted one local bot with finance enabled;
+discord_ready observed, both embedded migrations applied, five tables RLS-protected and no API-role
+access. Project empty at read-only probe.90 ordinary tests passed earlier in this smoke. Owner DM
+help/funds confirmation pending; financial UI/mutation/report smoke unverified. Bot remains running.
+No agent Discord send, financial mutation, local-config edit or credential value retained in repo.
 
 ## 2026-11-14 — 005 Supabase storage amendment
 

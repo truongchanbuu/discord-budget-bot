@@ -76,7 +76,7 @@ no hosted connection or data migration. Preserve any old database until a review
 Actual Supabase project settings/connectivity remain unverified; this is operator setup pending,
 not an unfinished code task. All37 tasks complete;90 ordinary +10 isolated DB tests passed locally.
 
-## Current live-test blocker — 2026-11-14
+## Initial live-test blocker — resolved 2026-11-14
 
 Maintainer requested a real local smoke and authorized use of their newly configured local settings.
 Only read-only connection/token probes used the settings in memory; no credential output or edits.
@@ -88,3 +88,15 @@ Await maintainer changing to Session pooler5432 with sslmode=require and reporti
 restart with exported settings, then verify connection and owner-driven synthetic UI flow. Live
 Supabase/financial UI evidence is still blocked/unverified; no implementation task was reopened.
 Earlier no-real-env statements describe implementation, before this explicit live-test authorization.
+
+## Current live-test state — 2026-11-14
+
+Session-pooler URL now connects successfully. Client TLS explicitly confirmed using connection info;
+pg_stat_ssl reports the separate pooler-to-database hop, not client transport. Stopped the previous
+readiness-only process gracefully; one current binary is now running with finance enabled and
+reported discord_ready. Embedded migrations1/2 succeeded on the empty Supabase project. Read-only
+checks PASS: RLS on five protected tables, zero API-role table access, zero owners/drafts/entries at
+probe. No financial mutation or agent Discord message sent. Owner was asked to DM help and fund-list;
+await response before testing synthetic preview/edit/cancel/confirm/transfers/monthly report/replay.
+Full finance E2E remains partial/unverified. Bot remains running; do not start a duplicate. No code or
+local configuration changed; no real secrets or personal records saved in repository.
