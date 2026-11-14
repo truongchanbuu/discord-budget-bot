@@ -156,3 +156,17 @@ separate scripts/test-postgres.sh10/10 PASS. One Cargo job, debug info off; serv
 extracted outside repository. Temporary socket cluster removed. No hosted Supabase/Discord/CI run,
 cloud provisioning, existing-data migration or deployment. No implementation blocker; operator must
 configure their project/URL before hosted connectivity can be verified.
+
+## Live setup smoke attempt — 2026-11-14
+
+Maintainer explicitly requested testing their running local bot after adding Supabase configuration.
+Read process settings and the local file in memory only, with no secret values emitted or changed.
+PASS: one existing local bot process, current binary, enabled owner, valid Discord bot token via
+read-only /users/@me; cargo test --locked90/90 ordinary tests (10 DB cases explicitly ignored).
+BLOCKED: running process has no FUNDGUARD_FINANCE_DATABASE_URL, so finance adapter is disabled.
+The newly configured direct Supabase host resolves to IPv6; the host network cannot reach it.
+Read-only DB connection probe failed before authentication/query; no hosted DB rows were read/written,
+no migrations/actions sent and no bot restart or Discord messages sent by the agent. Owner slash/DM
+results are awaiting maintainer feedback. Correct next step: copy Session pooler5432 URL into the
+ignored local file, retain sslmode=require, then restart with exported config and retry scoped smoke.
+Live finance/components/modal/report/restart remain unverified; previous local test evidence stands.

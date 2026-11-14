@@ -75,3 +75,16 @@ table-owner credential remains backend-only. Existing migration0001 unchanged. N
 no hosted connection or data migration. Preserve any old database until a reviewed backup/restore.
 Actual Supabase project settings/connectivity remain unverified; this is operator setup pending,
 not an unfinished code task. All37 tasks complete;90 ordinary +10 isolated DB tests passed locally.
+
+## Current live-test blocker — 2026-11-14
+
+Maintainer requested a real local smoke and authorized use of their newly configured local settings.
+Only read-only connection/token probes used the settings in memory; no credential output or edits.
+Existing bot is running with valid token/current binary/enabled owner but WITHOUT the finance URL.
+The URL saved in .env.local uses an IPv6 Direct endpoint; this host reports Network is unreachable.
+No hosted DB query/migration/mutation or agent Discord send occurred, and the bot was not restarted.
+90 ordinary tests reran successfully (10 DB tests explicitly ignored, not rerun against cloud).
+Await maintainer changing to Session pooler5432 with sslmode=require and reporting slash/DM results;
+restart with exported settings, then verify connection and owner-driven synthetic UI flow. Live
+Supabase/financial UI evidence is still blocked/unverified; no implementation task was reopened.
+Earlier no-real-env statements describe implementation, before this explicit live-test authorization.

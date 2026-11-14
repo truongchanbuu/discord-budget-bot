@@ -3,6 +3,14 @@
 This log records feature milestones and links to authoritative specifications/tasks. It does not
 replace their requirements, implementation checklists, or verification evidence.
 
+## 2026-11-14 — Live Supabase/local bot smoke attempt
+
+Maintainer requested real setup testing. Valid running bot/token/owner confirmed;90 ordinary tests
+pass again. Bot process has no finance URL; local file's Direct IPv6 endpoint is unreachable from
+this host. Await Session pooler5432 configuration and restart with exported settings. No hosted rows,
+financial mutations, migrations or agent Discord sends; UI results remain unverified. Only sanitized
+outcomes recorded; local credentials read in memory for the authorized probe, never printed/changed.
+
 ## 2026-11-14 — 005 Supabase storage amendment
 
 Maintainer requested managed Supabase instead of self-hosted application PostgreSQL. ADR0007 keeps
