@@ -114,3 +114,13 @@ current process with the newly saved config. New bot reached discord_ready with 
 Supabase migrations remain current. Private owner DM history was empty at probe; awaiting fresh
 help/fund-list messages (offline messages are not replayed). No agent message/financial mutation or
 secret/config-file edit. Earlier token-identity ambiguity is resolved; UI E2E remains pending.
+
+## Repository publication — 2026-11-14
+
+Maintainer authorized rebase/main push to https://github.com/truongchanbuu/discord-budget-bot.git .
+Local branch already main, working tree clean; destination fetch showed no branches/commits, so
+there is no upstream main to rebase onto. origin now targets that repository. Publish main normally,
+never force-push. Pre-push fmt/locked Clippy/test/check PASS (90 ordinary tests;10 explicit DB cases
+not rerun for this Git-only delivery).337 historical blobs checked against configured credentials:
+no matches; real env files absent from tracked history and remain ignored. No source/config changes
+or deployment. Verify remote HEAD after push; hosted CI result is separate from local checks.

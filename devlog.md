@@ -3,6 +3,13 @@
 This log records feature milestones and links to authoritative specifications/tasks. It does not
 replace their requirements, implementation checklists, or verification evidence.
 
+## 2026-11-14 — Repository publication
+
+Maintainer requested main/rebase/push to discord-budget-bot. Local already main; empty destination
+has no base to rebase onto. Configured origin; normal main push authorized. Four local Cargo gates
+pass,90 ordinary tests pass;10 DB tests explicitly ignored/not rerun for Git delivery. Historical
+tracked blobs contain no configured credentials; local env stays ignored. No product scope added.
+
 ## 2026-11-14 — Live Supabase/local bot smoke (partial)
 
 Initial attempt found missing process config and unreachable Direct IPv6. Maintainer changed to
