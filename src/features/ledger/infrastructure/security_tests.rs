@@ -55,7 +55,7 @@ async fn existing_v1_database_upgrades_without_losing_records() {
                 .fetch_one(&upgraded)
                 .await
                 .unwrap(),
-            2
+            4
         );
         upgraded.close().await;
     }
@@ -152,7 +152,7 @@ async fn backend_tables_deny_data_api_roles_after_upgrade() {
             .fetch_one(&f.pool)
             .await
             .unwrap(),
-        2
+        4
     );
     assert!(
         f.confirm(&f.preview("security:2", "nhận lương 1tr").await)

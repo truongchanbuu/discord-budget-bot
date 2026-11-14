@@ -124,9 +124,9 @@ application facade rechecks identity policy and declares one real JournalStore p
 SQLx lives only in infrastructure/platform; the adapter locks an owner row, loads authoritative state,
 invokes pure posting validation, and atomically saves entry/audit/draft state. No mutable balance cache.
 Ledger imports existing facades; Financial Core/identity do not import ledger. Arc shares immutable
-owner binding with both SDK handlers. A crate-private numeric identity accessor exists for audit only,
+owner binding with both SDK handlers. A crate-private numeric identity accessor exists for trusted audit/legacy association,
 not as permission to log identity. FinanceEvents is a concrete separate SDK EventHandler, not a second
-bot or generic service framework. It handles only owner DMs and finance component/modal prefixes;
+bot or generic service framework. Without private-channel configuration it handles only owner DMs and finance component/modal prefixes;
 Poise retains guild readiness. DIRECT_MESSAGES is enabled only with optional explicit finance DB URL.
 
 Source/channel/revision/expiry are authoritative. Edit lookup+initial modal is bounded2s; other actions
@@ -149,6 +149,31 @@ See [ADR0007](decisions/0007-supabase-postgres.md) and the
 [setup guide](../../specs/005-conversational-finance/quickstart.md#supabase-setup).
 Disposable local PostgreSQL remains an isolated test fixture, not an application hosting requirement.
 
-Planned006 extension (not implemented): private per-member spaces with isolated journals and read-only
-sharing. Proposed [ADR0008](decisions/0008-private-finance-spaces.md) records the acyclic feature
-direction and provider-reconciliation/privacy limits; current runtime remains005 until authorized work.
+## Private member spaces (006)
+
+The acyclic application graph is ledger → finance_spaces → identity/core. Spaces owns two current
+ports: durable SpaceStore and provider-neutral ChannelDirectory. SDK/SQLx types remain in adapters;
+only the composition root imports concrete adapters. Ledger resolves guild scope through fresh
+Spaces authorization before existing owner/channel/source-scoped storage and again before output.
+DM policy remains unchanged. fg_owners is the explicit shared identity anchor; no financial entry
+or fund query occurs in Spaces, and no Ledger SQL reaches private space tables.
+
+Root binds one client.http after build, preflights capabilities/legacy association before financial
+handling, and owns a bounded cancellable reconciliation worker. Gateway disconnect closes acceptance;
+reconnect invalidates before verification. Creation persists dispatch and exact marker binding before
+provider calls; ambiguous/multiple/hidden artifacts quarantine. Sharing serializes pending intents;
+DB CAS does not fence late Discord writes. Trusted cleanup settles only the known revoked overwrite
+while suspended, then full privacy/member verification can restore readiness.
+
+Four backend-only tables in0003 preserve immutable ownership/intents/audit and existing journal data.
+Exact member incarnation is lossless canonical UTC text (ADR0009). Prepared expiry frees only eligible
+undispatched sharing slots. Fresh recovery uses a new physical channel/current configured category;
+old controls/viewers never migrate. Admin visibility, old-history cleanup and provider/DB races remain
+explicit limits. See [ADR0008](decisions/0008-private-finance-spaces.md) and006 contracts.
+
+Automatic setup amendment: financial storage enables private guild spaces by default. Startup
+creates/reuses one private category with a durable backend-only0004 guild/category reservation.
+The two location IDs are independent optional overrides. Missing onboarding allowlist permits
+starts/recovery in accessible ordinary guild text channels; financial input remains owner-space-only.
+Unknown category creation/save or a deleted/hidden binding fails closed; use a verified category
+override, never name adoption/blind retry. Shared SDK Http, least privileges and no live-test claims.

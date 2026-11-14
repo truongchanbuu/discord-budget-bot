@@ -9,6 +9,10 @@ pub struct OwnerBinding {
 }
 
 impl OwnerBinding {
+    pub(crate) fn configured_account(&self) -> DiscordAccountId {
+        self.account
+    }
+
     pub fn new(account: DiscordAccountId, owner: OwnerRef, state: BindingState) -> Self {
         Self {
             account,

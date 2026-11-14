@@ -2,7 +2,8 @@
 
 FundGuard is a Discord-first personal finance and payment-awareness application. Financial intent
 should be clear before a future payment handoff; virtual balances must remain distinct from bank evidence.
-Initial scope is single-owner personal use; other users never become trusted merely by messaging.
+DM access remains configured-owner-only. Optional private server spaces authorize each member through
+verified ownership; other users never become trusted merely by messaging.
 
 Implemented: offline foundation, pure exact-VND Financial Core, configured owner policy and readiness;
 optional Supabase-managed PostgreSQL finance journal with durable manual income/expenses, notes/categories, fund opening/
@@ -15,7 +16,7 @@ DM/provider flow and hosted CI are unverified live; see authoritative task evide
 PostgreSQL verification. No bank integration, OCR/AI, attachments, recurring income or deployment.
 
 [Feature map](feature-map.md), [architecture](../architecture/overview.md),
-[security](../security/security-baseline.md), [active spec](../../specs/005-conversational-finance/spec.md).
+[security](../security/security-baseline.md), [active spec](../../specs/006-private-finance-channels/spec.md).
 
-Planned, not implemented: [006 private finance channels](../../specs/006-private-finance-channels/spec.md)
+Implemented with local test evidence; live/native visibility unverified: [006 private finance channels](../../specs/006-private-finance-channels/spec.md)
 adds mention-based self-service server channels, isolated members and owner-managed read-only viewers.

@@ -1,6 +1,6 @@
 # Discord Interaction Contract
 
-Design only; examples describe future behavior, not commands already implemented.
+Implemented interaction contract; local SDK/application fixtures do not claim live Discord delivery.
 
 ## Routing and context
 
@@ -12,12 +12,12 @@ SDK IDs map to provider-neutral validated refs before application calls; never t
 
 | Context | Input after mention | Outcome |
 | --- | --- | --- |
-| Designated onboarding text channel | empty, bắt đầu, bat dau | Reserve/recover/return requester's private space |
+| Accessible ordinary text channel (explicit allowlist if set) | empty, bắt đầu, bat dau | Reserve/recover/return requester's private space |
 | Any public/unrelated channel | financial text | No parsing/persistence/preview; generic private-entry guidance only |
 | Requester's ready personal channel | existing005 help/fund/finance/month grammar | Existing review/query semantics on that owner's journal |
 | Requester's authoritative personal channel | quyền, quyen | Owner management launcher; mutations obey state/serialization policy |
 | Retired/suspended/unknown channel | financial input/control | Denied; recovery starts from a fresh onboarding request |
-| Configured onboarding or authoritative space context | owner status/cancel/recovery controls | Management policy only; safe nonfinancial response, never a finance grant |
+| Permitted onboarding or authoritative space context | owner status/cancel/recovery controls | Management policy only; safe nonfinancial response, never a finance grant |
 | Guest or other owner in this channel | financial/access request or control | Ignore ordinary message; controls get generic ephemeral denial; no financial operation |
 | Existing configured-owner DM | existing005 input | Unchanged005 route and original DM origin/channel binding |
 | Other member DM | existing005 input | Existing denial; multi-user DM is not added in006 |

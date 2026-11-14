@@ -75,19 +75,58 @@ pub(crate) async fn run(
     let binding = data.binding.clone();
     let accepting = data.accepting.clone();
     let (sender, setup) = oneshot::channel();
-    let intents = if pool.is_some() {
+    let http = serenity::http::Http::new(config.token.as_str());
+    let configured_spaces = lifecycle::prepare(
+        super::space_setup::build(
+            config.spaces,
+            config.guild.get(),
+            pool.clone(),
+            binding.clone(),
+            &http,
+        ),
+        interrupt.as_mut(),
+        deadline,
+    )
+    .await;
+    let space_setup = match configured_spaces {
+        Ok(Some(setup)) => setup,
+        result => {
+            if let Some(pool) = &pool {
+                pool.close().await;
+            }
+            return result.map(|_| ());
+        }
+    };
+    let intents = if space_setup.is_some() {
+        INTENTS
+            | serenity::GatewayIntents::GUILDS
+            | serenity::GatewayIntents::GUILD_MESSAGES
+            | serenity::GatewayIntents::GUILD_MEMBERS
+            | serenity::GatewayIntents::DIRECT_MESSAGES
+    } else if pool.is_some() {
         INTENTS | serenity::GatewayIntents::DIRECT_MESSAGES
     } else {
         INTENTS
     };
-    let mut builder = serenity::Client::builder(config.token.as_str(), intents)
+    let mut builder = serenity::ClientBuilder::new_with_http(http, intents)
         .framework(framework(data, guild, deadline, sender));
     if let Some(database) = &pool {
         builder = builder.event_handler(FinanceEvents {
-            journal: PgStore::journal(database.clone()),
+            journal: match &space_setup {
+                Some(setup) => PgStore::journal(database.clone()).with_spaces(setup.spaces.clone()),
+                None => PgStore::journal(database.clone()),
+            },
+            spaces: space_setup.as_ref().map(|s| s.spaces.clone()),
+            bot: space_setup
+                .as_ref()
+                .map(|s| s.bot.clone())
+                .unwrap_or_default(),
             binding,
             accepting: accepting.clone(),
         });
+    }
+    if let Some(setup) = &space_setup {
+        builder = builder.event_handler(setup.handler(accepting.clone()));
     }
     let prepared =
         lifecycle::prepare(async move { builder.await }, interrupt.as_mut(), deadline).await;
@@ -102,6 +141,18 @@ pub(crate) async fn run(
             return result.map(|_| ());
         }
     };
+    if let Some(setup) = &space_setup
+        && !matches!(
+            tokio::time::timeout_at(deadline, setup.prepare(client.http.clone())).await,
+            Ok(Ok(()))
+        )
+    {
+        if let Some(pool) = &pool {
+            pool.close().await;
+        }
+        return Err(SessionError::Setup);
+    }
+    let (space_stop, space_worker) = super::space_setup::start_worker(space_setup);
     let manager = client.shard_manager.clone();
     let status = manager.clone();
     let task =
@@ -123,6 +174,12 @@ pub(crate) async fn run(
             }
         },
         move || async move {
+            if let Some(stop) = space_stop {
+                let _ = stop.send(true);
+            }
+            if let Some(worker) = space_worker {
+                worker.await.map_err(|_| SessionError::Task)?;
+            }
             manager.shutdown_all().await;
             if let Some(pool) = pool {
                 pool.close().await;

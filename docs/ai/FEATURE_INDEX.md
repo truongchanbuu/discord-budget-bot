@@ -9,11 +9,19 @@
 
 | 005 Conversational Personal Finance | [Specification](../../specs/005-conversational-finance/spec.md) | [Plan](../../specs/005-conversational-finance/plan.md), [tasks](../../specs/005-conversational-finance/tasks.md): all 37 tasks verified including Supabase amendment; 90 ordinary +10 explicit PostgreSQL tests pass; Supabase/finance live/hosted CI unverified |
 
-| 006 Private Finance Channels | [Specification](../../specs/006-private-finance-channels/spec.md) | [Plan](../../specs/006-private-finance-channels/plan.md), [56 tasks](../../specs/006-private-finance-channels/tasks.md) all pending; quality16/16; four analysis findings remediated; reanalysis pending, no code yet |
+| 006 Private Finance Channels | [Specification](../../specs/006-private-finance-channels/spec.md) | [Plan](../../specs/006-private-finance-channels/plan.md), [65 tasks](../../specs/006-private-finance-channels/tasks.md): complete locally;148 ordinary+27 isolated PostgreSQL tests pass; category/startup/owner onboarding verified live; viewer/outsider personas and hosted CI unverified |
 
-Active feature: 006 Private Finance Channels, task generation complete; analysis next.
-Feature005 remains delivered: manual private journal and optional managed PostgreSQL.006 proposes
-self-service private server channels, isolated per-member journals and read-only invited viewers;
-none of006 is implemented yet. Specifications own requirements, tasks own implementation progress,
-and [handoff](SESSION_HANDOFF.md) owns current state. Use these links if the local selector is absent.
-Constitution1.1.0 applies; no generated tooling or runtime configuration changed by006 planning.
+Active feature:006 Private Finance Channels, completed locally. No pending implementation tasks.
+Delivered automatic category setup with independent optional location overrides, private server
+channels, isolated per-member journals and read-only
+invited viewers; existing configured-owner DM journal stays compatible. Live category recovery,
+Gateway startup and one ready owner space are verified; no deployment or push performed. Next:
+operator-authorized synthetic viewer/outsider validation using
+[quickstart](../../specs/006-private-finance-channels/quickstart.md), then a separately specified feature.
+Specifications own requirements, tasks own detailed progress and [handoff](SESSION_HANDOFF.md) owns
+current state. Use these links if the local selector is absent. Constitution1.1.0 applies;
+generated tooling, dependency lockfile and migrations0001/0002 are unchanged.
+
+The live403/50013 caused by a redundant category MANAGE_ROLES overwrite was corrected without
+Administrator. Corrected category creation, durable binding and owner onboarding now pass live;
+viewer grant/revoke, outsider visibility and hosted CI remain unverified. See handoff for evidence.

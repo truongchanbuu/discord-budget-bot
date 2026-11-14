@@ -61,4 +61,4 @@ jobs:
       - name: Install pinned toolchain
         run: rustup show
       - name: Test real PostgreSQL transactions
-        run: cargo test --locked --lib features::ledger::infrastructure -- --ignored --test-threads=1
+        run: bash scripts/verify-postgres-suites.sh

@@ -2,6 +2,8 @@
 pub(crate) enum JournalError {
     #[error("Không gửi OTP, mật khẩu, PIN/CVV hay thông tin đăng nhập ngân hàng.")]
     SensitiveInput,
+    #[error("Bạn gửi quá nhiều lệnh. Vui lòng chờ một phút.")]
+    RateLimited,
     #[error("Không thể gửi phản hồi Discord.")]
     Delivery,
     #[error("Dữ liệu chưa hợp lệ. Hãy kiểm tra số tiền, ngày và quỹ.")]

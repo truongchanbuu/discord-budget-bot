@@ -79,3 +79,22 @@ src/platform/database.rs owns bounded pool/embedded migration startup; migration
 owns schema constraints and immutable-entry trigger. runtime/client wire the optional pool/service and
 shared owner binding. scripts/test-postgres.sh creates/stops only its own disposable private cluster.
 No future funds/reports directories or speculative shared abstractions were created.
+
+## Private finance spaces (006)
+
+src/features/finance_spaces owns domain refs/privacy/operation records, application workflows/ports,
+SQL and Discord adapters, and presentation messages/components/reference validation. Related tests
+live beside each responsibility, split by fault/ownership/lifecycle/limits rather than empty layers.
+Ledger calls the Spaces application before its existing journal store; neither domain/application
+imports framework types. The existing fg_owners table is the explicitly shared identity anchor;
+Spaces never reads/posts financial entries and Ledger adapters never query private space tables.
+platform/discord/space_setup.rs composes the shared Http adapter and owns the cancellable bounded
+reconciliation worker. scripts/verify-postgres-suites.sh supplies the same nonempty-suite guard to
+local disposable DB testing and CI. No new Cargo package/dependency or independent bot is introduced.
+
+Automatic setup amendment: financial storage enables private guild spaces by default. Startup
+creates/reuses one private category with a durable backend-only0004 guild/category reservation.
+The two location IDs are independent optional overrides. Missing onboarding allowlist permits
+starts/recovery in accessible ordinary guild text channels; financial input remains owner-space-only.
+Unknown category creation/save or a deleted/hidden binding fails closed; use a verified category
+override, never name adoption/blind retry. Shared SDK Http, least privileges and no live-test claims.

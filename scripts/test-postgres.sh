@@ -22,4 +22,4 @@ mkdir "$fundguard_test_dir/socket"
 createdb -h "$fundguard_test_dir/socket" -p 55438 -U fundguard_test fundguard_test
 export FUNDGUARD_TEST_PRIVATE_CLUSTER=1
 export FUNDGUARD_TEST_DATABASE_URL="postgresql://fundguard_test@localhost:55438/fundguard_test?host=$fundguard_test_dir/socket"
-cargo test --locked --lib features::ledger::infrastructure -- --ignored --test-threads=1
+bash scripts/verify-postgres-suites.sh

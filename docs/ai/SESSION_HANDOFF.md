@@ -1,105 +1,165 @@
 # Session Handoff
 
-Updated: 2026-11-14. Active feature:
-[006 Private Finance Channels](../../specs/006-private-finance-channels/spec.md).
-
-## Current phase and authority
-
-Maintainer invoked speckit-plan, accepting006 spec review. Research/design are complete:
+Updated:2026-11-14. Phase:006 Private Finance Channels — completed and locally verified.
+Active [spec](../../specs/006-private-finance-channels/spec.md),
 [plan](../../specs/006-private-finance-channels/plan.md),
-[research](../../specs/006-private-finance-channels/research.md),
-[model](../../specs/006-private-finance-channels/data-model.md),
-[UI/security/operations contracts](../../specs/006-private-finance-channels/contracts/discord.md),
-[validation guide](../../specs/006-private-finance-channels/quickstart.md) and proposed ADR0008.
-Maintainer then invoked speckit-tasks, accepting plan review. [56 tasks](../../specs/006-private-finance-channels/tasks.md)
-are generated and ALL unchecked; that file owns the implementation checklist. Quality16/16 preserved;
-constitution checks passed. No006 product code exists; nothing implemented.
+[authoritative65-task checklist](../../specs/006-private-finance-channels/tasks.md).
+All65 tasks, including automatic setup and the live-found permission fix, are locally verified; no pending implementation tasks. Local configuration was subsequently read under explicit live-test authorization; values were not
+printed or changed. Read-only Discord REST checks and a readiness-only Gateway session ran; no
+finance/database operations, deployment, commit or push performed.
 
-## Scope and decisions
+## Delivered behavior
 
-Self-service onboarding in configured server/channel(s); one active space per server/member;
-new members have isolated empty journals. Owner alone manages finances and explicit viewer list.
-Guests read history/future owner-posted responses, cannot post or invoke financial operations.
-Current configured-owner journal must be preserved through trusted mapping; existing owner DM
-behavior remains compatible. Message names/references and Discord visibility never grant ownership.
+Financial database configuration enables `@bot bắt đầu` personal channels by default; location IDs
+are independent optional overrides.
+owner-only existing financial interactions and `@bot quyền` private viewer management. Each member
+gets one stable journal association; the enabled exact legacy owner retains existing DM data.
+Viewers can read native history/posts but cannot invoke finances or manage access. No passwords,
+shared editing, banks/AI, new financial rules, per-user bots or HTTP API were introduced.
+Prepared confirmation expiry, durable dispatch/CAS/audit, restrictive initial masks, lifecycle
+invalidation/native cleanup and explicit fresh-channel recovery fail closed on uncertainty.
 
-No passwords/PINs/codes in first increment. Native channel privacy cannot hide messages from server
-owner/Administrators, nor undo previously read/copied history. These limitations must be disclosed.
-Creation/sharing/permission failures require truthful pending states and fail-closed disclosure;
-restart/retries must not create competing channels or financial effects. Channel deletion/departure
-retains financial history and requires safe explicit recovery. No bank/AI/deployment scope.
+## Decisions and boundaries
 
-## Related implemented context to inspect
+Accepted [ADR0008](../architecture/decisions/0008-private-finance-spaces.md) records two real ports,
+acyclic ledger → finance_spaces → identity/core and shared client.http/lifecycle ownership.
+Spaces uses only the approved shared fg_owners anchor, never entries/funds; Ledger SQL never reads
+space tables. Application/domain have no Discord/SQLx imports. Source files stay within250 lines.
+Accepted [ADR0009](../architecture/decisions/0009-lossless-member-incarnation.md) stores membership
+incarnations as canonical UTC RFC3339 TEXT with9 fractional digits. Exact owner/viewer/target
+comparisons remain intact; audit/expiry timestamps remain TIMESTAMPTZ. Unreleased0003 and additive0004 contain006 storage;
+0001/0002 and locked dependencies remain unchanged. This does not repair precision already lost
+in any external database; no external migrations were applied during this work.
 
-Read005 spec/plan/contracts and [tasks](../../specs/005-conversational-finance/tasks.md) for delivered
-journal behavior. Financial Core/identity are pure; ledger application currently uses a configured
-single-owner binding, and presentation rejects guild messages.006 must replace these assumptions
-with authoritative multi-user scope; merely accepting guild messages is unsafe. Domain/application
-remain independent of Discord/SQLx. No generic tenant framework or per-user bots.
+## Verification evidence
 
-Existing stack: one Rust2024 package, pinned stable1.99.1, Poise/Serenity, SQLx0.9/Chrono0.4.45,
-Supabase-managed PostgreSQL via direct/session5432, remote TLS, backend-only RLS/grants migration.
-Do not change applied migrations or expose DB credentials/API roles. Preserve legacy ledger invariants.
+- cargo fmt --all -- --check:PASS.
+- cargo clippy --all-targets -- -D warnings:PASS, no warning suppression.
+- cargo test:148 ordinary PASS;27 DB tests intentionally ignored there.
+- cargo check:PASS.
+- FUNDGUARD_MODE=offline cargo run --locked:PASS, application_initialized, exit0.
+- scripts/test-postgres.sh:PASS,12 Ledger+15 Spaces cases on disposable socket-only PostgreSQL18.6;
+  cluster cleaned by trap. CI and local scripts share nonempty suite discovery/checks.
+- Shell syntax, documentation links, diff whitespace, source sizes, dependency direction, migration
+  preservation and credential/logging review:PASS. All16 ACs have attributable local test/review
+  evidence in [quickstart](../../specs/006-private-finance-channels/quickstart.md).
 
-## Verification and live limits
+Historical partial checkpoints in devlog are superseded by this completion. Tests specifically
+cover nanosecond persistence, two-owner isolation/legacy DM preservation, crash recovery/no blind
+create, expiry/dispatch races, native viewer cleanup, quotas, SDK controls and owned worker shutdown.
+Temporary tool output/server tools remain under /tmp; no evidence logs were added to the repository.
 
-006: reviewed sixteen requirements/acceptance scenarios and six outcomes; design coverage matrix,
-links/diff/sizes and source-backed permission/recovery decisions verified. Two read-only research
-agents used as required by plan skill. No Rust changed; no new compilation/test/provider run claimed.
-Previous implementation/local gates: fmt/Clippy/test/check PASS,90 ordinary +10 isolated PostgreSQL
-cases passed; latest pre-push ordinary90 PASS,10 DB cases explicitly ignored in that command.
-Actual Supabase connection/client TLS, two migrations, five RLS tables and absent API-role grants
-verified during prior live smoke. Bot token corrected by maintainer and one bot restarted/ready.
-Maintainer subsequently reported it works; full finance confirmation/modal/replay/report flow and
-hosted CI remain unverified. Previous bot was left running; inspect before future live actions.
-No live Discord/DB resources, configuration or credentials touched for006 specification.
+## Unverified limits and next action
 
-## Repository and next action
+Hosted Actions, live Supabase migration, three real Discord personas/native visibility, real
+modal/history/recovery behavior are NOT RUN. Configured CI is not a hosted passing run.
+Administrator visibility, copies of already-read history and the non-atomic provider/database race
+remain explicit limitations. Unknown native writes block disclosure; old-channel cleanup may remain
+uncertain and recovery never inherits viewers or silently deletes old channels.
+Next: review local diff and optionally authorize synthetic live validation through the006 quickstart.
+Use documented environment keys/privileges and enable GUILD_MEMBERS; MESSAGE_CONTENT stays off.
+Do not start another feature without its own Spec Kit scope; do not deploy automatically.
 
-origin: https://github.com/truongchanbuu/discord-budget-bot.git . Branch main was published normally
-after destination was found empty. Do not assume new local work is pushed. Preserve unrelated work.
-Active selector is locally ignored; FEATURE_INDEX is tracked discovery. Generated skills unchanged.
+## Authorized live smoke — 2026-11-14
 
-Next: rerun speckit-analyze across the remediated006 artifacts, then explicitly authorized implementation.
-No unresolved product clarifications. Design decisions resolved in research; limits are explicit,
-including no exactly-once remote creation or atomic provider/database confidentiality. No real env,
-Discord/Supabase resources or running bot were touched by planning.
+Maintainer requested real Discord testing. Authenticated bot REST and configured-guild access PASS;
+readiness-only Gateway startup reports discord_ready. No existing local bot process was running.
+Database URL and006 keys were excluded from the child process, so no Supabase connection/migration
+or financial operations occurred. Token/config values were not logged or copied into tracked files.
+The configured bot role lacks Manage Roles; the application does not advertise Server Members intent
+flags. At that smoke both006 location settings were absent and the prior revision required them. The
+automatic-setup amendment removes that requirement; permission/intent prerequisites still apply.
+A human owner slash-command check was requested; no real user response is yet confirmed in this
+record. Native three-persona privacy, financial DM/guild operations and Supabase remain unverified.
+Read-only REST also confirmed exactly one configured-guild /fundguard command of chat-input type.
+Owned readiness session shut down cleanly with SIGINT, exit0; no bot process left running.
+Only documentation changed during this smoke; diff whitespace check PASS. Prior Cargo results above
+remain the implementation baseline, not newly rerun tests. Next action is enabling the bot permission/intent prerequisites,
+then repeat live006 tests; no implementation fix was needed for this readiness smoke.
 
-## Implementation decisions to preserve
+## Automatic-setup amendment complete
 
-Acyclic graph ledger → finance_spaces → identity/core; spaces imports no ledger. Journal application
-checks guild context via Spaces before existing owner/channel-scoped store; recheck privacy on output.
-No cross-feature SQL or financial engine rewrite. Four space/operation/viewer/audit tables via0003,
-backend-only RLS/revokes. Legacy mapping exact/enabled/collision-rejecting; never change old entries.
-Create has durable dispatch intent and opaque marker; unknown/multiple/hidden outcomes quarantine.
-Sharing serializes pending writes; CAS cannot fence late Discord writes. Retired bindings use fresh
-channel generations with no viewers carried over; old-native access uncertainty is stated honestly.
-GUILD_MEMBERS justified for remove/rejoin; Message Content stays off. Canonical unsynced overwrites,
-minimal management/send/thread bits; reject elevated viewers. Use existing shared SDK Http with one
-startup binding and bounded lifecycle worker. No new dependency/feature flag.
-Future tests must include both ledger and finance_spaces DB suites in script/CI, preserve private
-fixture-host guard and update migration-count expectations; do not silently test only005.
+T057–T063 verified. Location overrides are independent; no IDs means automatic category setup and
+unrestricted onboarding/recovery in accessible ordinary text channels. Startup uses one shared Http,
+private initial category masks, a durable0004 reservation and stored ID reuse across restarts.
+Unknown native create/save outcome or missing/hidden bound category stops startup; operator can
+supply a verified category override. Existing personal channels/journals are never moved or merged.
+Tests include exclusive concurrent category reservation, backend-only grants/RLS, persisted ID reuse,
+configuration defaults/independent overrides, unrestricted recovery and public financial denial.
+No live006 retest or Supabase migration performed for this amendment; prior live-smoke findings are
+historical. Only latest observed Manage Roles/Server Members capability remain setup prerequisites;
+no category/onboarding ID is required. Existing four Cargo gates/offline and updated27 DB cases pass.
 
-## Task generation verification
+## Live006 attempt after operator permission update — 2026-11-14
 
-56 atomic tasks: Setup3, Foundational13, US1 seven, US4 ten, US2 seven, US3 eight, Polish8.
-Execution: Setup → Foundational → US1 → US4 → US2 → US3 → Polish. US4 is the P1 safety prerequisite
-before guild finances; sharing is P2. Seven distinct-file parallel pairs are documented. Model field
-constraints are quoted in task continuations; corrected the model introduction to match its existing
-UUID operation-ID table (no product-scope change). Each task states dependencies, paths, verification
-and FR support. All16 FR/AC and6 SC mapped; exact IDs/DAG/checklist format/doc links/sizes verified.
-MVP is controlled onboarding with US4 safety, not an automatic deployment. No tests, implementation,
-live services or credentials were used/changed during task generation; no task marked complete.
+Explicit operator request continued the real Discord test. Read-only REST confirms Manage Roles,
+Manage Channels and all required view/send/history/thread bits; Administrator absent; Server Members
+intent application flag enabled. No pre-existing local bot process. Current binary loaded ignored
+local configuration without printing/changing secrets. This attempt included the configured Supabase
+connection: migrations1–4 are now successfully applied (verified read-only). Do not describe live
+migrations as unexecuted for the current state; earlier NOT RUN statements are historical evidence.
 
-## Authorized analysis remediation
+Full startup exited1 with safe client_build_failed before Gateway readiness. Read-only database
+inspection confirms this attempt durably reserved automatic category creation, with category_id NULL.
+The underlying creation error was mapped to a generic category and no safe HTTP status/code was
+retained, so the provider cause is UNKNOWN. REST listing shows no recently created visible channel;
+this does not prove native absence and does not justify clearing/resubmitting the reservation.
+No personal channel or financial mutation was executed by this test. No bot process remains running.
 
-Maintainer approved editing planning artifacts for I1/C1/U1/D1. I1 separates onboarding/finance-ready/
-owner-management authority; recovery has no journal capability and remains owner-only. C1 adds
-T028/T029 full Spaces authorization tests/implementation before root and Ledger integration.
-U1 makes5min prepared grant/revoke expiry atomic/idempotent on new request/status/confirm/cancel/
-startup, clears only matching pending slot and audits once; no dispatched/uncertain cleanup or
-privacy promotion. Prepared UI stores operation intent only, not speculative viewer grants.
-D1 requires fully implemented port expansions/fakes; T020 SDK mutations now precede T021 workflow.
-Existing downstream IDs renumbered consistently: root T031, Ledger integration T036, expiry T041/
-T043/T045. All56 implementation tasks remain unchecked. No product code, real env, live resources,
-new dependencies or generated tooling changed. Verification is document/ID/DAG/coverage review only.
+Current live blocker: unresolved automatic-category reservation. Do not restart blindly, clear its
+row, adopt a same-name category, or claim a successful live006 flow. A human inspection/category-ID
+recovery question is pending. A verified category override is the documented recovery mechanism.
+Future diagnostics should retain safe status/code for create failures without provider bodies or
+secrets. Hosted CI/native three-persona/financial interactions remain unverified. Local63-task/147+27
+verification remains unchanged; only documentation changed in this live-test turn; diff check PASS.
+
+## Live-found failure diagnosed and fixed — 2026-11-14
+
+User confirmed no new channel visible and explicitly authorized ONE diagnostic creation attempt.
+That single POST returned HTTP403/Discord50013; no category was created by this request. Guild
+permission bits/intents are correct; operator is server owner and guild MFA requirement is0.
+Official Discord Create Guild Channel docs say setting MANAGE_ROLES in a channel overwrite requires
+Administrator. The category builder redundantly set that bit; this is a code defect, not another
+operator permission prerequisite. Removed that channel-level assignment, retaining inherited guild
+MANAGE_ROLES and initial privacy. Added numeric/status-only safe create diagnostics and regression.
+Expected red reproduced the forbidden bit; final fmt/Clippy/test/check/offline PASS,148 ordinary+27
+isolated PostgreSQL PASS. T064/T065 done. No additional migration or financial changes.
+
+The original pending automatic-category row is preserved. The ONE authorized live trial is used;
+do not send another create until operator approves a corrected single recovery attempt. Once approved,
+create with corrected private profile, verify returned ID/guild/type/exact overwrites, CAS-bind only
+the matching pending guild row, then start the corrected bot. Never delete/reset the row or adopt
+by name. No bot currently running. Human channel/privacy/finance flow remains unverified.
+
+## Approved corrected live recovery — 2026-11-14
+
+Operator explicitly approved one further corrected create and verification/binding/startup.
+Corrected private category POST returned201; GET verified exact guild/type/everyone-deny/bot profile.
+Guild-scoped CAS populated exactly one pending category row; it was never deleted/reset. No financial
+mutation. No new location env values were required or written. A separately started old local bot
+using a deleted binary was detected, gracefully stopped to avoid duplicate handlers, then current
+binary started successfully: application_initialized, discord_ready. Owned current session36986;
+log /tmp/fundguard-live-spaces-corrected.log (private, sanitized events only in tracked evidence).
+Bot is intentionally left running for the authorized interactive check; do not start another one.
+
+User reported a private channel/welcome. Independent read-only check found0 finance_spaces for the
+configured guild, so personal-channel onboarding is NOT YET CORROBORATED. The category's creation
+must not be counted as a personal channel. User was asked to send an actual leading bot mention plus
+bắt đầu in an accessible ordinary text channel and check for #tai-chinh inside the category.
+Help/access-panel response and actual owner/viewer/outsider visibility remain pending. No financial
+entries were posted by these checks. Prior blocker is resolved for category startup only; update
+this record after observable human/DB/native-channel evidence agrees.
+
+## Final live onboarding evidence — 2026-11-14
+
+Maintainer confirmed the corrected `@bot bắt đầu` flow completed. A subsequent read-only Supabase
+query found exactly one configured-guild finance space in ready state with no pending operation;
+it preserves the configured legacy journal association. Authoritative Discord readback confirms the
+stored personal channel belongs to the stored category and has the exact everyone-deny plus owner/bot
+allow profile. This supersedes the earlier zero-space checkpoint. Category recovery, Gateway startup
+and owner onboarding are verified live. No financial entry was created during this validation.
+
+Bot process72637 remains intentionally online from this authorized live session. Do not start a
+second local process. Viewer grant/revoke with a second account, outsider visibility, help/access
+controls, and hosted CI remain unverified. The repository is ready for the maintainer-authorized
+commit and push; no credentials or local `.env.local` content belong in the commit.

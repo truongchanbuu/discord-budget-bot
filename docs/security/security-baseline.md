@@ -160,3 +160,36 @@ Remote TLS is mandatory; Require encrypts, VerifyFull with project CA also verif
 Use direct/session5432; known transaction6543 fails before network access. Never log provider
 SQL parameters or paste real URLs into chat. Local fixtures/CI use no Supabase secrets. Actual hosted
 connectivity, project settings and provider backup/privacy controls need separate verification.
+
+## Private guild spaces
+
+Ownership comes from current authenticated guild/member identity and exact joined_at incarnation,
+not visibility, usernames, controls or Administrator status. Per-request finance authorization and
+pre-output privacy checks are separate from nonfinancial owner recovery/management. Public replies
+contain no financial payload or viewer lists; metadata management is ephemeral and owner-only.
+
+Create private canonical overwrites initially; never create publicly then edit. Guests receive
+View/History allow and Send/thread-posting deny. Elevated guests are rejected. Server owner/Admin
+visibility and copied history cannot be prevented; revocation cannot erase past exposure.
+Remove/role changes invalidate before cleanup. Trusted cleanup serializes durable revoke intents,
+records the bot as actor and can confirm overwrite removal while leaving the space suspended;
+only full current-member/privacy verification permits financial output. Add never regrants access.
+Unknown older writes cannot be reversed, expired or declared revoked from a matching GET alone.
+
+Resource quotas are persistent; external commands have a bounded in-memory 10/member/min counter.
+Prepared sharing expires atomically after5min; dispatched uncertainty does not. Gateway disconnect
+closes financial acceptance immediately. SDK responses are bounded2s, privacy/DB5s, mutations10s,
+workflow attempts20s. A finite lifecycle worker processes two spaces serially, below four concurrent
+lookup capacity. No roster collection, Message Content, Presence, password or new public API.
+
+Known channel404/10003 retires only an authoritative binding; missing/hidden listings never prove
+absence. Fresh recovery retains journal and uses the configured category/new channel without old
+viewers; old-native-history cleanup may remain unknown. Incarnations use lossless UTC RFC3339 TEXT
+(ADR0009); audit and intent metadata are immutable/backend-only. See006 contracts for exact policies.
+
+Automatic setup amendment: financial storage enables private guild spaces by default. Startup
+creates/reuses one private category with a durable backend-only0004 guild/category reservation.
+The two location IDs are independent optional overrides. Missing onboarding allowlist permits
+starts/recovery in accessible ordinary guild text channels; financial input remains owner-space-only.
+Unknown category creation/save or a deleted/hidden binding fails closed; use a verified category
+override, never name adoption/blind retry. Shared SDK Http, least privileges and no live-test claims.

@@ -1,6 +1,6 @@
 # Durable Operations and Recovery Contract
 
-Design only. SpaceStore and ChannelDirectory are the two genuine application ports; neither exposes
+Implemented protocol. SpaceStore and ChannelDirectory are the two genuine application ports; neither exposes
 SDK/SQLx types. Never combine network waits with a held database transaction.
 Introduce methods only with complete concrete implementations and updated fakes in the same task.
 Foundational contracts cover current primitives; create/overwrite methods arrive before their
@@ -116,3 +116,22 @@ Stop accepting new work before cancellation. Own/join reconciliation tasks withi
 cleanup; interrupted dispatched operations remain uncertain, not failed. Build/startup failure must
 not leak background tasks or a pool. On restart, invalidate ready space observations before guild
 requests, expire eligible prepared sharing UI, resume only safe creation/reconciliation work and never replay dispatched creates blindly.
+
+## Internal membership cleanup
+
+Trusted lifecycle cleanup reserves a durable revoke intent only for an already invalidated stored
+grant, with the bot as actor. Dispatch/write/readback remains serialized with every other operation.
+Confirmed overwrite absence may settle that revoke while leaving the space suspended, allowing
+other invalidated overwrites to be removed in turn. Only full canonical/current-member verification
+restores readiness. This reduction never grants access, bypasses an older unresolved write or produces
+a user financial response. Unknown cleanup remains pending/manual; Add never restores a grant.
+
+## Automatic category diagnostic recovery
+
+Never put MANAGE_ROLES in the category creation overwrite; Discord reserves that channel-level
+assignment for administrators. The bot inherits its required guild-level permission. Keep the
+initial private everyone-deny/bot-view profile. On SDK create errors retain only safe category,
+HTTP status and numeric Discord code. A known403/50013 is rejected, but does not retrospectively
+prove an earlier unknown attempt failed; preserve its reservation. A further operator-approved
+single corrected create may be verified by returned ID, exact guild/type/overwrites, then linked
+by guild-scoped CAS from NULL. Do not clear the row, search/adopt by name or automatically repeat.

@@ -1,6 +1,7 @@
 # Data Model: Private Finance Channels
 
-Design only. Existing ledger models and migrations0001/0002 remain unchanged.
+Models, persistence and lifecycle integration implemented; local evidence is in tasks/quickstart. Existing ledger models
+and migrations0001/0002 remain unchanged.
 All diagnostic formatting redacts identifiers; persisted audit identifiers are not production log fields.
 
 ## Provider-neutral values
@@ -10,6 +11,10 @@ imports. Financial OwnerRef is reused through its existing facade. SpaceId is a 
 reference; operation IDs are opaque UUID text. Generation/operation tokens are opaque server-generated
 UUID text, not passwords
 or authorization credentials. Member incarnation is exact current joined_at; unknown incarnation denies.
+Persist owner/target/viewer incarnations as canonical UTC RFC3339 TEXT with exactly nine fractional
+digits; infrastructure encodes/decodes without precision loss. SQL CHECKs validate syntax/calendar;
+domain/application retain exact DateTime<Utc> equality. Audit/expiry times remain TIMESTAMPTZ.
+See [ADR0009](../../docs/architecture/decisions/0009-lossless-member-incarnation.md).
 
 ## FinanceSpace — fg_finance_spaces
 
@@ -129,3 +134,16 @@ No financial table rewrite/backfill/source renaming is needed. Feature-disabled 
 
 Space errors use static categories (denied, invalid, rate-limited, capacity, pending, permission,
 conflict, storage, timeout, uncertain). They retain no raw provider source or user/financial payload.
+
+Internal invalidated-grant cleanup records the authenticated bot actor. It may confirm a specific
+removed overwrite with space still suspended; only complete privacy verification makes it ready.
+Operation identity/source/target/generation/revision and an already recorded candidate are immutable
+in the database. Future UI intent never authorizes a financial use case.
+
+## Automatic category binding (0004)
+
+fg_finance_categories stores canonical guild_id primary key, nullable unique category_id and
+reserved_at. It is backend-only with RLS and API-role grants revoked. Atomic insert elects one
+creator; NULL remains uncertain after interruption and does not permit another create. Recording
+category_id is CAS from NULL; restart reads the stored ID and validates the authoritative category.
+No financial payload, no name-based adoption, and no edits to existing spaces/journal ownership.

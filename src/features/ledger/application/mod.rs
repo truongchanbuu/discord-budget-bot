@@ -4,7 +4,7 @@ use super::domain::{
 };
 use crate::features::{
     financial_core::{Money, OwnerRef},
-    identity::{OwnerBinding, TrustedActor, authorize_scope, resolve_owner},
+    identity::{OwnerBinding, TrustedActor, resolve_owner},
 };
 use chrono::{DateTime, Utc};
 pub(crate) use port::*;
@@ -13,11 +13,16 @@ use std::{sync::Arc, time::Duration};
 #[derive(Clone)]
 pub(crate) struct Journal {
     store: Arc<dyn JournalStore>,
+    spaces: Option<crate::features::finance_spaces::application::Spaces>,
 }
 pub(crate) struct Scope<'a> {
     pub actor: &'a TrustedActor,
     pub binding: &'a OwnerBinding,
     pub channel: &'a str,
+    pub guild: Option<(
+        crate::features::finance_spaces::ServerRef,
+        crate::features::finance_spaces::MemberRef,
+    )>,
 }
 
 fn authorized<'a>(scope: &Scope<'a>) -> Result<&'a OwnerRef, JournalError> {
@@ -32,7 +37,17 @@ async fn bounded<T>(
 }
 impl Journal {
     pub(crate) fn new(store: Arc<dyn JournalStore>) -> Self {
-        Self { store }
+        Self {
+            store,
+            spaces: None,
+        }
+    }
+    pub(crate) fn with_spaces(
+        mut self,
+        spaces: crate::features::finance_spaces::application::Spaces,
+    ) -> Self {
+        self.spaces = Some(spaces);
+        self
     }
     pub(crate) async fn preview(
         &self,
@@ -41,7 +56,7 @@ impl Journal {
         input: &str,
         now: DateTime<Utc>,
     ) -> Result<Draft, JournalError> {
-        let owner = authorized(&scope)?;
+        let owner = resolve_scope(&scope, self.spaces.as_ref()).await?;
         if owner.as_str().len() > 512
             || origin.is_empty()
             || origin.len() > 128
@@ -52,7 +67,7 @@ impl Journal {
         }
         let proposal = parse(input, local_date(now))?;
         bounded(self.store.open_draft(DraftInput {
-            owner,
+            owner: &owner,
             actor: scope.actor.account().as_u64().to_string(),
             channel: scope.channel,
             origin,
@@ -67,10 +82,11 @@ impl Journal {
         id: i64,
         revision: i32,
     ) -> Result<Draft, JournalError> {
-        let owner = authorized(&scope)?;
-        let draft = bounded(self.store.draft(owner, id)).await?;
-        authorize_scope(Some(scope.actor), Some(scope.binding), Some(&draft.owner))
-            .map_err(|_| JournalError::Denied)?;
+        let owner = resolve_scope(&scope, self.spaces.as_ref()).await?;
+        let draft = bounded(self.store.draft(&owner, id)).await?;
+        if draft.owner != owner {
+            return Err(JournalError::Denied);
+        }
         if draft.channel != scope.channel {
             return Err(JournalError::Denied);
         }
@@ -92,9 +108,9 @@ impl Journal {
         revision: i32,
         action: Action,
     ) -> Result<ActionResult, JournalError> {
-        let owner = authorized(&scope)?;
+        let owner = resolve_scope(&scope, self.spaces.as_ref()).await?;
         bounded(self.store.act(
-            owner,
+            &owner,
             Mutation {
                 id,
                 revision,
@@ -106,24 +122,24 @@ impl Journal {
         .await
     }
     pub(crate) async fn funds(&self, scope: Scope<'_>) -> Result<Vec<(Fund, Money)>, JournalError> {
-        let owner = authorized(&scope)?;
-        bounded(self.store.funds(owner)).await
+        let owner = resolve_scope(&scope, self.spaces.as_ref()).await?;
+        bounded(self.store.funds(&owner)).await
     }
     pub(crate) async fn create_fund(
         &self,
         scope: Scope<'_>,
         value: &str,
     ) -> Result<(), JournalError> {
-        let owner = authorized(&scope)?;
-        bounded(self.store.create_fund(owner, name(value)?)).await
+        let owner = resolve_scope(&scope, self.spaces.as_ref()).await?;
+        bounded(self.store.create_fund(&owner, name(value)?)).await
     }
     pub(crate) async fn summary(
         &self,
         scope: Scope<'_>,
         month: Month,
     ) -> Result<Summary, JournalError> {
-        let owner = authorized(&scope)?;
-        bounded(self.store.summary(owner, month)).await
+        let owner = resolve_scope(&scope, self.spaces.as_ref()).await?;
+        bounded(self.store.summary(&owner, month)).await
     }
 }
 
@@ -168,10 +184,40 @@ mod tests {
             authorized(&Scope {
                 actor: &actor,
                 binding: &binding,
-                channel: "1"
+                channel: "1",
+                guild: None
             })
             .unwrap_err(),
             JournalError::Denied
         );
     }
+}
+
+#[cfg(test)]
+mod scope_tests;
+
+async fn resolve_scope(
+    scope: &Scope<'_>,
+    spaces: Option<&crate::features::finance_spaces::application::Spaces>,
+) -> Result<OwnerRef, JournalError> {
+    let Some((guild, bot)) = scope.guild else {
+        return authorized(scope).cloned();
+    };
+    let spaces = spaces.ok_or(JournalError::Denied)?;
+    if guild != spaces.settings.guild {
+        return Err(JournalError::Denied);
+    }
+    let member = crate::features::finance_spaces::MemberRef::parse(
+        &scope.actor.account().as_u64().to_string(),
+    )
+    .map_err(|_| JournalError::Denied)?;
+    let channel = crate::features::finance_spaces::ChannelRef::parse(scope.channel)
+        .map_err(|_| JournalError::Denied)?;
+    let access = spaces
+        .authorize_finance(member, channel, bot)
+        .await
+        .map_err(|_| JournalError::Denied)?;
+    resolve_owner(Some(scope.actor), Some(&access.binding))
+        .cloned()
+        .map_err(|_| JournalError::Denied)
 }

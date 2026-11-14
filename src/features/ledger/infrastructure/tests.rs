@@ -5,12 +5,9 @@ use crate::features::{
     ledger::application::{Action, ActionResult, Scope},
 };
 use chrono::Utc;
-use std::{
-    str::FromStr,
-    sync::{
-        Arc,
-        atomic::{AtomicU64, Ordering},
-    },
+use std::sync::{
+    Arc,
+    atomic::{AtomicU64, Ordering},
 };
 static NEXT: AtomicU64 = AtomicU64::new(0);
 pub(super) struct Fixture {
@@ -26,6 +23,7 @@ impl Fixture {
             actor: &self.actor,
             binding: &self.binding,
             channel: "100",
+            guild: None,
         }
     }
     pub async fn preview(&self, source: &str, input: &str) -> Draft {
@@ -41,23 +39,7 @@ impl Fixture {
     }
 }
 pub(super) async fn fixture() -> Fixture {
-    assert_eq!(
-        std::env::var("FUNDGUARD_TEST_PRIVATE_CLUSTER").unwrap(),
-        "1"
-    );
-    let url = std::env::var("FUNDGUARD_TEST_DATABASE_URL").unwrap();
-    let options = sqlx::postgres::PgConnectOptions::from_str(&url).unwrap();
-    assert!(
-        options.get_host().starts_with("/tmp/fundguard")
-            || ["localhost", "127.0.0.1"].contains(&options.get_host())
-    );
-    assert!(
-        options
-            .get_database()
-            .unwrap_or("")
-            .starts_with("fundguard_test")
-    );
-    let pool = crate::platform::database::connect(&url).await.unwrap();
+    let pool = crate::platform::database::test_support::connect().await;
     let owner = format!(
         "fixture-{}-{}",
         Utc::now().timestamp_nanos_opt().unwrap(),
@@ -117,6 +99,7 @@ async fn durable_draft_revision_cancel_expiry_and_owner_isolation() {
         actor: &f.actor,
         binding: &f.binding,
         channel: "101",
+        guild: None,
     };
     assert_eq!(
         f.journal

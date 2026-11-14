@@ -10,11 +10,10 @@ pub(super) async fn button(
     context: &serenity::Context,
     component: &serenity::ComponentInteraction,
 ) -> Result<(), JournalError> {
-    if component.guild_id.is_some() || !handler.accepting.load(std::sync::atomic::Ordering::Acquire)
-    {
+    if !handler.accepting.load(std::sync::atomic::Ordering::Acquire) {
         return Ok(());
     }
-    let actor = match super::actor(&component.user, component.guild_id, &handler.binding) {
+    let actor = match handler.request_actor(&component.user, component.guild_id) {
         Ok(actor) => actor,
         Err(error) => {
             send(component.create_response(&context.http, views::private_error(error.to_string())))
@@ -32,11 +31,11 @@ pub(super) async fn button(
     };
     let channel = component.channel_id.to_string();
     if reference.action == "edit" {
-        return tokio::time::timeout(Duration::from_secs(2), async {
+        let initial = tokio::time::timeout(Duration::from_secs(2), async {
             let response = match handler
                 .journal
                 .draft(
-                    handler.scope(&actor, &channel),
+                    handler.scope(&actor, &channel, component.guild_id)?,
                     reference.id,
                     reference.revision,
                 )
@@ -48,11 +47,25 @@ pub(super) async fn button(
                 Ok(_) => views::private_error(JournalError::Stale.to_string()),
                 Err(error) => views::private_error(error.to_string()),
             };
+            handler
+                .recheck(&component.user, component.guild_id, component.channel_id)
+                .await?;
             send(component.create_response(&context.http, response)).await?;
             Ok(())
         })
-        .await
-        .map_err(|_| JournalError::Timeout)?;
+        .await;
+        return match initial {
+            Ok(result) => result,
+            Err(_) => tokio::time::timeout(
+                Duration::from_millis(500),
+                send(component.create_response(
+                    &context.http,
+                    views::private_error("Chưa xác minh kịp. Vui lòng thử lại.".into()),
+                )),
+            )
+            .await
+            .map_err(|_| JournalError::Timeout)?,
+        };
     }
     let action = match reference.action {
         "save" => Action::Confirm,
@@ -74,7 +87,7 @@ pub(super) async fn button(
             handler
                 .journal
                 .act(
-                    handler.scope(&actor, &channel),
+                    handler.scope(&actor, &channel, component.guild_id)?,
                     reference.id,
                     reference.revision,
                     action,
@@ -86,6 +99,15 @@ pub(super) async fn button(
         Ok(result) => views::result(result),
         Err(error) => (error.to_string(), vec![]),
     };
+    let (text, buttons) = if handler
+        .recheck(&component.user, component.guild_id, component.channel_id)
+        .await
+        .is_ok()
+    {
+        (text, buttons)
+    } else {
+        (JournalError::Denied.to_string(), vec![])
+    };
     send(component.edit_response(&context.http, views::edited(text, buttons))).await?;
     Ok(())
 }
@@ -95,10 +117,10 @@ pub(super) async fn modal(
     context: &serenity::Context,
     modal: &serenity::ModalInteraction,
 ) -> Result<(), JournalError> {
-    if modal.guild_id.is_some() || !handler.accepting.load(std::sync::atomic::Ordering::Acquire) {
+    if !handler.accepting.load(std::sync::atomic::Ordering::Acquire) {
         return Ok(());
     }
-    let actor = match super::actor(&modal.user, modal.guild_id, &handler.binding) {
+    let actor = match handler.request_actor(&modal.user, modal.guild_id) {
         Ok(actor) => actor,
         Err(error) => {
             send(modal.create_response(&context.http, views::private_error(error.to_string())))
@@ -118,7 +140,7 @@ pub(super) async fn modal(
         let draft = handler
             .journal
             .draft(
-                handler.scope(&actor, &channel),
+                handler.scope(&actor, &channel, modal.guild_id)?,
                 reference.id,
                 reference.revision,
             )
@@ -127,7 +149,7 @@ pub(super) async fn modal(
         handler
             .journal
             .act(
-                handler.scope(&actor, &channel),
+                handler.scope(&actor, &channel, modal.guild_id)?,
                 reference.id,
                 reference.revision,
                 Action::Edit(proposal),
@@ -138,6 +160,15 @@ pub(super) async fn modal(
     let (text, buttons) = match result {
         Ok(value) => views::result(value),
         Err(error) => (error.to_string(), vec![]),
+    };
+    let (text, buttons) = if handler
+        .recheck(&modal.user, modal.guild_id, modal.channel_id)
+        .await
+        .is_ok()
+    {
+        (text, buttons)
+    } else {
+        (JournalError::Denied.to_string(), vec![])
     };
     send(modal.edit_response(&context.http, views::edited(text, buttons))).await?;
     Ok(())

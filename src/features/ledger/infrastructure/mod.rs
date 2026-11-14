@@ -76,3 +76,6 @@ mod report_tests;
 mod security_tests;
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod guild_tests;

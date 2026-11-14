@@ -6,6 +6,8 @@ use sqlx::{
 use std::{str::FromStr, time::Duration};
 
 #[cfg(test)]
+pub(crate) mod test_support;
+#[cfg(test)]
 mod tests;
 
 #[derive(Debug, thiserror::Error)]
@@ -54,7 +56,21 @@ pub(crate) async fn connect(url: &str) -> Result<PgPool, DatabaseError> {
             include_str!("../../migrations/0002_backend_only.sql").into_sql_str(),
             false,
         );
-        if Migrator::with_migrations(vec![migration, security])
+        let spaces = Migration::new(
+            3,
+            "private finance spaces".into(),
+            MigrationType::Simple,
+            include_str!("../../migrations/0003_private_finance_spaces.sql").into_sql_str(),
+            false,
+        );
+        let category = Migration::new(
+            4,
+            "finance category".into(),
+            MigrationType::Simple,
+            include_str!("../../migrations/0004_finance_category.sql").into_sql_str(),
+            false,
+        );
+        if Migrator::with_migrations(vec![migration, security, spaces, category])
             .run(&pool)
             .await
             .is_err()

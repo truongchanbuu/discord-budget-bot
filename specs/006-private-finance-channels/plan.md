@@ -3,7 +3,8 @@
 **Branch**: main (feature selector006-private-finance-channels) | **Date**: 2026-11-14
 **Spec**: [spec.md](spec.md). Maintainer's speckit-plan request accepts specification review.
 **Status**: Plan accepted by maintainer's speckit-tasks request2026-11-14;
-[56 tasks](tasks.md) generated, all pending. No implementation generated.
+[65 tasks](tasks.md): complete and locally verified2026-11-14. All Cargo gates, offline smoke
+and both isolated PostgreSQL suites pass; live Discord and hosted CI remain unverified.
 
 ## Summary
 
@@ -19,14 +20,16 @@ blindly create/adopt/delete. No passwords, shared financial editing, new bank/AI
 - Language/platform: existing Rust stable1.99.1/Edition2024, single Cargo package, long-running bot.
 - Dependencies: retain locked Poise0.7.1/Serenity0.12.5, Tokio1.54.1, SQLx0.9.0, Chrono0.4.45,
   tracing/thiserror. No new dependencies or Cargo features required. Pinned SDK source reviewed.
-- Storage: managed PostgreSQL, additive0003 migration only; never rewrite0001/0002 or existing entries.
+- Storage: managed PostgreSQL, additive0003/0004 migrations; never rewrite previously delivered migrations or existing entries.
   Use server-generated UUID text via gen_random_uuid(), existing whole-VND types and owner locks.
+  External member incarnations use canonical UTC RFC3339 TEXT with9 fractional digits through one
+  infrastructure codec; audit/expiry timestamps remain TIMESTAMPTZ (ADR0009).
 - Interfaces: explicit leading bot mention, private member-selection/confirmation controls and
   existing finance buttons/modals; no new financial slash commands or HTTP API.
 - Optional config: FUNDGUARD_FINANCE_CATEGORY_ID and FUNDGUARD_FINANCE_ONBOARDING_CHANNEL_IDS.
-  Both absent disables006; both present require existing finance URL/guild settings. Reject partial,
-  invalid/duplicate IDs; list1–8 canonical IDs, comma-separated with surrounding item whitespace trimmed.
-  Offline ignores all bot settings; missing optional configuration preserves005/readiness behavior.
+  Both are independent overrides; finance URL enables006 with automatic category and unrestricted
+  text-channel onboarding by default. Reject invalid/duplicate supplied IDs; optional allowlist1–8.
+  No finance URL means readiness only; overrides without storage fail. Offline ignores bot settings.
 - Intents when006 enabled: GUILDS, GUILD_MESSAGES, GUILD_MEMBERS plus existing DIRECT_MESSAGES.
   GUILD_MEMBERS is justified for departure/rejoin and role invalidation; no MESSAGE_CONTENT/PRESENCES.
   No member roster enumeration/cache. Portal intent toggle is an explicit setup prerequisite.
@@ -55,7 +58,7 @@ Pre-research PASS; post-design PASS. No amendment/exception required.
 | Feature-first boundaries | ledger → finance_spaces → identity/core; spaces never imports ledger; provider types stay in adapters |
 | Financial integrity | Reuse005 posting rules, immutable entries, owner/channel/source checks and atomic idempotency |
 | Minimal replaceable integrations | Existing SDK/SQLx only; two real space ports, no per-user bots, generic tenant engine or event bus |
-| Verified persistent delivery | AC/FR matrix, proposed ADR0008, separate future tasks and honest local/live evidence |
+| Verified persistent delivery | AC/FR matrix, ADR0008, separate future tasks and honest local/live evidence |
 | Security | Current membership and per-request ownership; fail-closed privacy; minimal privileges and no credential/financial logs |
 
 Current single-owner configuration is a legacy identity binding, not a global allowlist for006.
@@ -67,9 +70,9 @@ Privileged member intent is narrowly required by AC15; Message Content stays off
 Documentation: spec.md, this plan, [research](research.md), [model](data-model.md),
 [commands](contracts/discord.md), [operations](contracts/operations.md),
 [security](contracts/security.md), [validation guide](quickstart.md).
-The subsequent speckit-tasks command generated [tasks.md](tasks.md); all implementation work is pending.
+Implementation status is tracked in [tasks.md](tasks.md); all user stories are implemented; local verification evidence is recorded there.
 
-Proposed source additions (create only when implemented):
+Implemented feature entry points (behavior-specific helpers/tests are listed in project-structure.md):
 
 ```text
 src/features/finance_spaces/
@@ -104,6 +107,10 @@ channel permissions. Provider-neutral IDs, snapshots and errors cross ports; no 
 Store holds short transactions; directory returns canonical facts, not permission to skip policy.
 
 Introduce port methods only alongside their complete concrete implementations and updated test fakes.
+T013 defines only current-use provider-neutral data contracts and exports validated types; it adds
+no port trait or empty service facade. T014 introduces SpaceStore primitives with complete SQL/fake
+implementations; T015 introduces ChannelDirectory inspection with complete SDK/fake implementations.
+Shared application test_support.rs holds these concrete fakes and remains test-only.
 Foundational ports contain current observation/state primitives, not future required mutation stubs.
 Reservation methods arrive with their SQL implementation; all Discord mutation methods arrive before
 provisioning/root wiring; sharing-specific store methods arrive with their SQL implementation.
@@ -157,7 +164,7 @@ discord:guild:<message-id>; existing discord:dm:<message-id> origins are unchang
 
 ## Provisioning, Sharing and Failure Recovery
 
-1. Check configured guild/onboarding channel, authenticated current human membership and quotas.
+1. Check configured guild and a permitted onboarding text channel, authenticated current human membership and quotas.
 2. Reserve unique guild/member space, journal association and immutable operation/generation.
 3. Commit dispatch_started before SDK create with restrictive overwrites and opaque generation marker.
 4. Persist returned ID, verify scope/membership/privacy, then CAS ready and reveal only the private link.
@@ -212,4 +219,16 @@ No constitution violations. Required complexity: four durable state/audit tables
 one optional guild authorization path and one startup binding for the real shared HTTP dependency.
 Rejected: multi-crate/multi-bot deployment, generic ACL/tenant/event frameworks, per-user roles,
 new financial engine, broad roster caching, password authentication and custom no-retry HTTP stack.
-See proposed [ADR0008](../../docs/architecture/decisions/0008-private-finance-spaces.md).
+See [ADR0008](../../docs/architecture/decisions/0008-private-finance-spaces.md).
+
+## Automatic setup amendment
+
+Prepare an automatic category during bounded/interruptible startup using the same Http instance
+subsequently moved into ClientBuilder::new_with_http and shared via client.http.0004 stores one
+backend-only guild/category binding. Reserve before native creation; null ID means pending/uncertain
+and never authorizes a blind retry. A stored ID is verified by existing category preflight, never
+adopted by display name. Operators can supply a category override after verifying an uncertain result.
+Initial category overwrites deny everyone visibility and allow the bot; children use existing explicit
+owner/bot/viewer profiles. No category deletion/move/rename, ledger mutation or new dependency.
+An empty onboarding list denotes unrestricted ordinary guild text channels; nonempty retains the
+allowlist. Presentation validates channel kind/guild; financial authorization remains channel-bound.

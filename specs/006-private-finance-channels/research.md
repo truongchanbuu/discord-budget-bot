@@ -22,7 +22,7 @@ Decision: enable GUILDS/GUILD_MESSAGES for006, preserve DIRECT_MESSAGES, omit ME
 Require a literal leading `<@bot-id>` or `<@!bot-id>` token plus matching actual mention metadata;
 reply-only mentions, role/everyone mentions, other bots and webhooks are ignored. Strip just this
 prefix before applying the existing finite grammar. Outside ready private channels only bare/start
-mentions in configured onboarding channels are recognized. Never interpret public financial text.
+mentions in accessible ordinary text channels (or an explicit onboarding allowlist) are recognized. Never interpret public financial text.
 Rationale: Discord retains content when the app is explicitly mentioned, without Message Content.
 Alternatives: passive text requires broader content privileges; new slash finance is outside006.
 Source: [Gateway content exceptions](https://github.com/discord/discord-api-docs/blob/main/developers/events/gateway.mdx#message-content-intent).
@@ -152,3 +152,16 @@ onboarding is current-member eligibility. Added explicit full authorization test
 root/Ledger consumers. Prepared sharing expiry releases only a matching undispatched slot atomically,
 never permissions or dispatched uncertainty. Port extensions include complete implementations/fakes;
 SDK mutations precede provisioning/root use. No new framework, dependency or product scope.
+
+## Automatic setup amendment — pinned SDK review
+
+Serenity0.12.5 ClientBuilder::new_with_http accepts an existing Http by value; startup category
+calls and subsequent client.http therefore retain one shared HTTP/rate-limit owner. CreateChannel
+supports Category and initial permission overwrites. Use persistent guild/category reservation
+instead of name lookup, public creation, retry-on-timeout or a second Discord HTTP client.
+
+Live correction: official Create Guild Channel docs explicitly restrict MANAGE_ROLES channel
+overwrites to administrators. The original category payload included this redundant bit and the
+single authorized recovery reproduced403/50013. Omit the bit and retain guild-level permission;
+regression checks it is absent while the category remains private. No extra privilege is needed.
+Source: https://docs.discord.com/developers/resources/guild#create-guild-channel.

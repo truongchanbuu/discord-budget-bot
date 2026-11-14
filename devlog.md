@@ -3,13 +3,113 @@
 This log records feature milestones and links to authoritative specifications/tasks. It does not
 replace their requirements, implementation checklists, or verification evidence.
 
+## 2026-11-14 — Live private owner channel verified
+
+Maintainer completed `@bot bắt đầu`. Read-only Supabase evidence shows one ready space with no
+pending operation and preserved legacy journal ownership. Discord readback confirms the stored
+channel is inside the managed category with exact everyone-deny and owner/bot allow overwrites.
+Category recovery, Gateway readiness and owner onboarding now pass live. No financial entry was
+created. Viewer/outsider personas, help/access controls and hosted CI remain unverified.
+
+## 2026-11-14 — Corrected category recovery/startup succeeds live
+
+Further explicit operator approval: corrected create201, exact private guild/category profile verified,
+matching pending row CAS-bound once. Stopped separately started stale local binary, launched corrected
+bot and observed discord_ready. Current bot left running for interactive test. Human reported channel
+creation but database has0 personal spaces at inspection; clarified category versus #tai-chinh and
+requested actual mention onboarding. Category/startup PASS; personal-channel/help/sharing/finance
+live outcomes remain pending. No real financial mutations, secret/env edits or deployment.
+
+## 2026-11-14 — Live category403 diagnosed and corrected
+
+One explicitly authorized recovery create returned403/50013. Official Discord contract prohibits
+non-admin MANAGE_ROLES channel overwrites; removed this redundant bit from the category builder.
+Bot continues using guild-level permission; no Administrator requested. Mask regression went red
+before fix; safe diagnostic redaction test added. All65 local tasks verified;148 ordinary+27 private
+PostgreSQL tests, four Cargo gates and offline smoke pass. Pending live reservation preserved;
+previous one-attempt authority consumed, corrected live retry awaits approval. No financial writes.
+
+## 2026-11-14 — Live006 startup blocked after permission repair
+
+Verified required bot role bits and member-intent flag, no Administrator. Configured Supabase startup
+applied migrations1–4 successfully. Automatic-category reservation was persisted but startup exited1
+(client_build_failed) without a category ID/Gateway readiness; original provider cause was not retained.
+Read-only visible-channel inspection found no recent creation, which is not proof of absence.
+No blind retry/reset, financial mutation, live flow claim or deployment. Human category inspection/
+verified-override recovery remains pending; no local bot process left running. Local tests unchanged.
+
+## 2026-11-14 — 006 Automatic setup usability amendment
+
+Maintainer requested genuinely optional location IDs. Financial storage now enables private spaces
+by default; startup creates/reuses a private Tài chính category via durable0004 reservation. Either
+location override works independently; absent onboarding allowlist permits ordinary accessible text
+channels. Financial authorization remains confined to owner-bound spaces. Same SDK Http is moved
+into ClientBuilder, no new dependency. Pending create outcomes stop safely; documented override
+recovery avoids name-based adoption/duplicate creation. No live provider/database operations in this
+amendment; latest observed Manage Roles/Server Members prerequisites still need operator setup.
+All63 tasks verified; four Cargo gates/offline smoke pass,147 ordinary+27 isolated PostgreSQL
+tests pass (12 Ledger,15 Spaces). Prior failed fixture assumed pre-existing API roles; corrected
+fixture creates transactional roles and verifies revocation. No production workaround/suppression.
+
+## 2026-11-14 — Authorized live Discord readiness smoke
+
+Bot REST authentication/configured-guild access and readiness Gateway startup pass. No existing bot
+process was duplicated. Database disabled for this smoke; no Supabase/migration/financial mutations.
+Live006 blocked by missing category/onboarding config, Manage Roles and advertised Server Members
+intent capability. Configured-guild slash registration verified; owned session stopped cleanly (SIGINT/exit0). Human
+slash reply and three-persona privacy tests remain pending; secrets untouched.
+
+## 2026-11-14 — 006 Private Finance Channels completed locally
+
+All56 [tasks](specs/006-private-finance-channels/tasks.md) verified: self-service private onboarding,
+per-member journal isolation/legacy DM preservation, owner-only financial routing, read-only sharing,
+expiry/dispatch races, lifecycle invalidation/native cleanup and explicit fresh-channel recovery.
+All four Cargo gates and offline smoke pass;143 ordinary+26 isolated PostgreSQL tests pass
+(12 Ledger,14 Spaces). All16 ACs mapped to local tests/review in quickstart. ADR0008 accepted;
+ADR0009 exact-incarnation repair retained. Existing dependencies/generated tooling/0001/0002 unchanged.
+No live006 Discord/Supabase, hosted CI, deployment or push; these remain unverified. Earlier partial
+checkpoints below are historical and superseded. Next: optional authorized synthetic live validation.
+
+## 2026-11-14 — 006 Incarnation precision repair verified
+
+Repaired owner/operation/viewer incarnation persistence with a canonical UTC RFC3339 nanosecond
+codec and TEXT checks in unreleased0003. Exact authorization and audit/expiry timestamps unchanged.
+Both prior failing DB regressions now pass;124 ordinary+20 isolated DB tests pass. Format/check pass;
+Clippy still fails on previously recorded incomplete006 issues. ADR0009 accepted for this repair;
+ADR0008 and parent tasks remain pending. No provider credentials, live bot/database, deploy or push.
+
+## 2026-11-14 — 006 Continuation halted on identity precision regression
+
+Added partial provisioning, lifecycle/authorization, shared SDK/root wiring, guild Ledger scope and
+sharing/UI code plus tests. Ordinary121 PASS; isolated Ledger10 PASS/1 FAIL and Spaces7 PASS/1 FAIL.
+Confirmed SQLx/PostgreSQL loses sub-microsecond joined_at precision; exact owner validation then
+returns Denied. Added a deterministic regression and honored maintainer's stop-on-problem instruction.
+Format/check pass; Clippy fails; additional acceptance/security cases and final integration remain
+pending. No new tasks checked, live resources/credentials touched, commit/push or deployment.
+Next: preserve incarnation losslessly, rerun both regressions, then complete the authoritative tasks.
+
+## 2026-11-14 — 006 Foundation implementation checkpoint
+
+Implemented and verified T001–T016 in [tasks](specs/006-private-finance-channels/tasks.md): optional
+validated config, shared private DB fixture guard, pure typed models/privacy policy, additive0003
+backend-only schema, SQL primitives, SDK observation/mask/mention helpers, real ports/fakes and legacy
+identity resolution. No guild handlers/lifecycle activated; user stories T017–T056 remain pending.
+110 ordinary tests and13 isolated PostgreSQL tests passed; formatting/check/offline smoke passed.
+Clippy FAILS on unused foundations awaiting runtime wiring; no suppression added. Feature006 is partial,
+not ready for use/deployment; hosted CI/live guild visibility unverified. No real env/provider touched.
+Server tools/runtime libraries provisioned under /tmp; disposable DB cleaned by script. Existing D1
+planning changes preserved. ADR0008 remains proposed; no new architectural decision.
+
 ## 2026-11-14 — 006 Analysis remediation
 
 Maintainer authorized planning fixes for I1/C1/U1/D1: distinct finance/management guards, explicit
 Spaces authorization work, atomic abandoned-prepared expiry and complete incremental port adapters.
 Task list now56 unchecked items with consistent renumbered dependencies and coverage; no new product
 scope. Plan/model/contracts/ADR/handoff reconciled. No implementation or live resources touched;
-only document validation performed. Reanalysis precedes implementation.
+only document validation performed. Follow-up analysis identified residual D1 sequencing ambiguity:
+T013 now defines data contracts only; T014/T015 introduce each port with its complete adapter/fake.
+Plan and FR-014 coverage reconciled; 56 tasks remain unchecked and dependency order unchanged.
+Document checks passed; no Rust or live verification performed for this correction.
 
 ## 2026-11-14 — 006 Private Finance Channels specification
 

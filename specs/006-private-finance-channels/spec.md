@@ -3,7 +3,8 @@
 **Feature Branch**: 006-private-finance-channels (selector; current Git branch main)
 **Created**: 2026-11-14
 **Status**: Specification accepted for planning by maintainer's speckit-plan request2026-11-14;
-research/design accepted for task generation;56 tasks pending, no implementation generated.
+research/design accepted; implementation complete and locally verified2026-11-14.
+All65 tasks, including the authorized automatic-setup amendment, are locally verified; live Discord visibility and hosted CI remain unverified.
 **Input**: Mention the bot to create a personal finance channel; other members can create their own.
 Each owner controls who can view their channel. Guests are read-only; finance input still mentions
 this bot. Optional password access is deferred in the first increment.
@@ -112,8 +113,8 @@ or sharing; verify safe recovery and unchanged financial entries.
 
 ### Functional Requirements
 
-- **FR-001**: Restrict onboarding to current human members of the configured server in designated
-  onboarding channels. Require an explicit mention of this bot and supported start input. Ignore
+- **FR-001**: Restrict onboarding to current human members of the configured server in accessible ordinary
+  text channels by default, restricted to designated onboarding channels only if configured. Require an explicit mention of this bot and supported start input. Ignore
   ineligible servers, bots, webhooks and unrelated messages.
 - **FR-002**: Maintain at most one active personal channel per server/member, durable trusted ownership
   and lifecycle state. Deduplicate repeated/concurrent requests and recover uncertain external
@@ -192,8 +193,8 @@ or sharing; verify safe recovery and unchanged financial entries.
 
 - User decisions2026-11-14: guests are viewers only; owner alone manages finances/access; financial
   input still mentions this bot after channel creation.
-- First increment supports one configured server, designated onboarding channels and a managed finance
-  area. Multiple members are supported; arbitrary multi-server rollout is deferred.
+- First increment supports one configured server, accessible text channels (or an explicit onboarding allowlist) and
+  a managed finance area prepared automatically unless a category override is supplied. Multiple members are supported; arbitrary multi-server rollout is deferred.
 - One journal per owner in that server. Existing configured-owner DM and server space reuse their
   trusted journal; others start empty. DM message history is not copied into channels. Owner-requested
   reports may expose existing journal amounts to currently authorized channel viewers.
@@ -205,3 +206,18 @@ or sharing; verify safe recovery and unchanged financial entries.
   messages without verified multi-user authorization would violate this specification.
 - Backend-only managed persistence remains; no browser DB access, new public API, bank/AI integration,
   deployment or changes to generated Spec Kit tooling belong to this specification step.
+
+## Authorized usability amendment — 2026-11-14
+
+With financial database configuration present, private server spaces are enabled by default.
+Category and onboarding IDs are independent optional overrides: absent category means the bot
+prepares a private Tài chính category on startup and durably reuses its ID across restarts; absent
+onboarding allowlist permits explicit starts/recovery from accessible ordinary guild text channels.
+Existing configured-guild/current-member/owner/privacy checks remain mandatory. Explicit allowlists
+still restrict starts/recovery; financial input remains confined to the owner's verified space.
+An uncertain category creation is not retried blindly or resolved by name; operator may supply a
+verified category override. No database means readiness-only mode; overrides without storage fail.
+This amendment supersedes requirements to pre-create both locations or require paired settings.
+Acceptance: absent both settings with storage enables automatic setup; either override works alone;
+concurrent/restarted setup reuses one durable binding; ambiguous dispatch fails closed; unrestricted
+start/recovery does not permit financial actions in public channels.

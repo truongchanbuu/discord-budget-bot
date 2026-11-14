@@ -37,7 +37,7 @@ read-only prevents all reactions/UI actions; it prevents messages and financial 
 
 Authorization has three explicit entry policies; there is no universal ready-state guard:
 
-- Onboarding requires a current authenticated human in the configured guild/onboarding channel.
+- Onboarding requires a current authenticated human in the configured guild and a permitted onboarding text channel.
   Reserve ownership from that actor, never from an owner reference submitted in a message.
 - authorize_finance requires current membership/incarnation, authoritative active channel/space,
   ready privacy, enabled trusted journal association and exact owner equality. Apply it to every
@@ -47,7 +47,7 @@ Authorization has three explicit entry policies; there is no universal ready-sta
   retired. It returns no journal binding and cannot authorize any Ledger call. Status/list responses
   containing access metadata use owner-only interactions; public guidance stays generic.
 
-Recovery starts only in a configured onboarding channel with a fresh owner request. It may prepare
+Recovery starts only in a permitted ordinary guild text channel (restricted if an allowlist is configured) with a fresh owner request. It may prepare
 recovery for a known retired/deleted binding, never treat lost visibility as deletion or reuse old
 channel controls. Preparation records the fresh owner incarnation and bumps space revision without
 making the space ready; confirmation must still match that incarnation/operation/generation/revision.
