@@ -187,3 +187,7 @@ DM-routing investigation: valid running bot and healthy migrated Supabase confir
 response-failure log. Bot REST owner-DM lookup returned empty history. Shared exact bot/private chat
 link with maintainer (not retained in repository); await known-help message in that channel. This
 is partial live diagnostic evidence, not proof of successful gateway DM dispatch or a code defect.
+
+Token correction: maintainer supplied intended bot credential in ignored local file; verified actual
+bot identity, stopped old bot and restarted exactly one current process. discord_ready PASS with
+finance enabled. Await fresh owner help/funds messages; no UI success/financial effect claimed.

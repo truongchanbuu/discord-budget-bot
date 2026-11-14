@@ -107,3 +107,10 @@ its last10 messages: empty. The live token's bot display name differs from the F
 label; user was given the exact private channel link in chat to remove recipient ambiguity. No
 message content, account/channel IDs or link retained here. Await owner sending help in that exact
 channel; if inaccessible, privately verify configured owner ID. No agent message or finance mutation.
+
+Token correction follow-up: maintainer replaced the local token with the intended finance bot's
+credential. Read-only identity verified it, gracefully stopped the previous bot, and started one
+current process with the newly saved config. New bot reached discord_ready with finance enabled;
+Supabase migrations remain current. Private owner DM history was empty at probe; awaiting fresh
+help/fund-list messages (offline messages are not replayed). No agent message/financial mutation or
+secret/config-file edit. Earlier token-identity ambiguity is resolved; UI E2E remains pending.

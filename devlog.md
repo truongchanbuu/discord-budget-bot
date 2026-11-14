@@ -8,7 +8,7 @@ replace their requirements, implementation checklists, or verification evidence.
 Initial attempt found missing process config and unreachable Direct IPv6. Maintainer changed to
 Session pooler; real connection/client TLS then passed. Restarted one local bot with finance enabled;
 discord_ready observed, both embedded migrations applied, five tables RLS-protected and no API-role
-access. Project empty at read-only probe.90 ordinary tests passed earlier in this smoke. Owner DM
+access. Project empty at read-only probe.90 ordinary tests passed earlier in this smoke. Maintainer corrected the bot token; intended bot authenticated/restarted successfully. Owner DM
 help/funds confirmation pending; financial UI/mutation/report smoke unverified. Bot remains running.
 No agent Discord send, financial mutation, local-config edit or credential value retained in repo.
 
