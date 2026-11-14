@@ -11,8 +11,9 @@ Maintainer invoked speckit-plan, accepting006 spec review. Research/design are c
 [model](../../specs/006-private-finance-channels/data-model.md),
 [UI/security/operations contracts](../../specs/006-private-finance-channels/contracts/discord.md),
 [validation guide](../../specs/006-private-finance-channels/quickstart.md) and proposed ADR0008.
-Quality16/16 preserved; constitution checks PASS before/after design. Plan review is next, before
-speckit-tasks per workflow review-plan. No tasks.md or006 product code exists; nothing implemented.
+Maintainer then invoked speckit-tasks, accepting plan review. [54 tasks](../../specs/006-private-finance-channels/tasks.md)
+are generated and ALL unchecked; that file owns the implementation checklist. Quality16/16 preserved;
+constitution checks passed. No006 product code exists; nothing implemented.
 
 ## Scope and decisions
 
@@ -59,7 +60,7 @@ origin: https://github.com/truongchanbuu/discord-budget-bot.git . Branch main wa
 after destination was found empty. Do not assume new local work is pushed. Preserve unrelated work.
 Active selector is locally ignored; FEATURE_INDEX is tracked discovery. Generated skills unchanged.
 
-Next: review006 plan, then speckit-tasks → speckit-analyze → explicitly authorized implementation.
+Next: speckit-analyze across006 spec/plan/tasks, then explicitly authorized implementation.
 No unresolved product clarifications. Design decisions resolved in research; limits are explicit,
 including no exactly-once remote creation or atomic provider/database confidentiality. No real env,
 Discord/Supabase resources or running bot were touched by planning.
@@ -78,3 +79,14 @@ minimal management/send/thread bits; reject elevated viewers. Use existing share
 startup binding and bounded lifecycle worker. No new dependency/feature flag.
 Future tests must include both ledger and finance_spaces DB suites in script/CI, preserve private
 fixture-host guard and update migration-count expectations; do not silently test only005.
+
+## Task generation verification
+
+54 atomic tasks: Setup3, Foundational13, US1 seven, US4 eight, US2 seven, US3 eight, Polish8.
+Execution: Setup → Foundational → US1 → US4 → US2 → US3 → Polish. US4 is the P1 safety prerequisite
+before guild finances; sharing is P2. Seven distinct-file parallel pairs are documented. Model field
+constraints are quoted in task continuations; corrected the model introduction to match its existing
+UUID operation-ID table (no product-scope change). Each task states dependencies, paths, verification
+and FR support. All16 FR/AC and6 SC mapped; exact IDs/DAG/checklist format/doc links/sizes verified.
+MVP is controlled onboarding with US4 safety, not an automatic deployment. No tests, implementation,
+live services or credentials were used/changed during task generation; no task marked complete.

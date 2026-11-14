@@ -7,7 +7,7 @@ Phase 0, pure Financial Core, owner-access policy and opt-in Discord readiness a
 | Financial Core | Exact whole-VND values, virtual previews, supplied-context replay/conflict validation | Implemented; no posting or persistence |
 | Identity | Owner binding, authorization, future user isolation | [Pure single-owner policy implemented](../../specs/003-owner-access/spec.md); trusted environment binding and readiness adapter implemented; live private owner reply confirmed; other-account/disabled denial pending |
 | Discord entrypoint | Opt-in local session, trusted owner configuration and private readiness command | [Implemented](../../specs/004-discord-owner-entry/spec.md); local tests and live auth/registration/shutdown verified; owner reply confirmed; denial/recovery checks pending |
-| Private finance channels | Self-service per-member channels and owner-managed read-only viewers | [006 plan](../../specs/006-private-finance-channels/plan.md) under review; not implemented |
+| Private finance channels | Self-service per-member channels and owner-managed read-only viewers | [006 tasks](../../specs/006-private-finance-channels/tasks.md) generated; analysis pending, not implemented |
 | Funds | Virtual register, opening and transfers | Minimal register in ledger implemented; rename/delete/full settings deferred |
 | Income | Received salary/freelance/bonus and allocations | Manual receipt/transfers implemented; recurring/expected-income automation deferred |
 | Payments | Awareness before handoff and explicit completion meanings | Not implemented |

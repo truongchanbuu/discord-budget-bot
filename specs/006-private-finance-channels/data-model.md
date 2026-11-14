@@ -6,8 +6,9 @@ All diagnostic formatting redacts identifiers; persisted audit identifiers are n
 ## Provider-neutral values
 
 ServerRef/ChannelRef/MemberRef validate canonical positive account/channel identifiers without SDK
-imports. Financial OwnerRef is reused through its existing facade. SpaceId/operation IDs are positive
-backend references. Generation/operation tokens are opaque server-generated UUID text, not passwords
+imports. Financial OwnerRef is reused through its existing facade. SpaceId is a positive backend
+reference; operation IDs are opaque UUID text. Generation/operation tokens are opaque server-generated
+UUID text, not passwords
 or authorization credentials. Member incarnation is exact current joined_at; unknown incarnation denies.
 
 ## FinanceSpace — fg_finance_spaces

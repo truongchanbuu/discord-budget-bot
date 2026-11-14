@@ -12,8 +12,11 @@ legacy journal preservation, provisioning/retry/recovery and permission drift bo
 are deferred. Maintainer invoked speckit-plan, accepting spec review. Plan/research/model/contracts/guide generated,
 ADR0008 proposed; pre/post constitution checks passed. Two read-only research agents resolved SDK
 permission/intents, durable recovery and legacy mapping. One active binding, not exactly-once physical
-channel creation; no cross-feature SQL/financial rewrite. Plan review pending before tasks. No006
-implementation, live resources/config changes, new dependencies or deployment. Index/handoff updated.
+channel creation; no cross-feature SQL/financial rewrite. Maintainer invoked speckit-tasks, accepting plan review.54 unchecked tasks now cover16 FR/AC and6 SC;
+ordered Setup/Foundational/US1/US4/US2/US3/Polish with seven safe parallel pairs, model constraints,
+verification and DoD. Minor model prose corrected to existing UUID operation-ID definition. Format,
+dependencies/coverage/links verified; analysis next. No code/test execution, live resources/config,
+new dependencies or deployment. Index/handoff updated.
 
 ## 2026-11-14 — Repository publication
 

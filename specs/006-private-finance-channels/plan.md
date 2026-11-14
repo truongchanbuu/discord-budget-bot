@@ -2,7 +2,8 @@
 
 **Branch**: main (feature selector006-private-finance-channels) | **Date**: 2026-11-14
 **Spec**: [spec.md](spec.md). Maintainer's speckit-plan request accepts specification review.
-**Status**: Research/design complete; plan review pending. No tasks or implementation generated.
+**Status**: Plan accepted by maintainer's speckit-tasks request2026-11-14;
+[54 tasks](tasks.md) generated, all pending. No implementation generated.
 
 ## Summary
 
@@ -66,7 +67,7 @@ Privileged member intent is narrowly required by AC15; Message Content stays off
 Documentation: spec.md, this plan, [research](research.md), [model](data-model.md),
 [commands](contracts/discord.md), [operations](contracts/operations.md),
 [security](contracts/security.md), [validation guide](quickstart.md).
-The next command creates tasks.md; this command deliberately does not create one.
+The subsequent speckit-tasks command generated [tasks.md](tasks.md); all implementation work is pending.
 
 Proposed source additions (create only when implemented):
 
@@ -183,7 +184,7 @@ This is implementation order, not a generated task checklist:
 | V7 lifecycle/security | AC11/13/14/15; FR008/009/013 | failed revoke, role drift, remove/add ordering and stale joined_at |
 | V8 delivery | all; FR014/015/016, SC001–006 | architecture/docs/scope, four gates, local/live distinction |
 
-All16 FR,16 AC and6 SC are represented; task IDs/parallel dependencies belong to speckit-tasks.
+All16 FR,16 AC and6 SC are represented; [tasks](tasks.md) owns exact IDs/parallel dependencies.
 Planning validation is source/document review only, not proof of implementation or provider behavior.
 No new Rust/DB/live test run is claimed by this plan.
 
