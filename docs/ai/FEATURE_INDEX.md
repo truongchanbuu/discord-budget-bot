@@ -9,7 +9,7 @@
 
 | 005 Conversational Personal Finance | [Specification](../../specs/005-conversational-finance/spec.md) | [Plan](../../specs/005-conversational-finance/plan.md), [tasks](../../specs/005-conversational-finance/tasks.md): all 37 tasks verified including Supabase amendment; 90 ordinary +10 explicit PostgreSQL tests pass; Supabase/finance live/hosted CI unverified |
 
-| 006 Private Finance Channels | [Specification](../../specs/006-private-finance-channels/spec.md) | [Plan](../../specs/006-private-finance-channels/plan.md), [54 tasks](../../specs/006-private-finance-channels/tasks.md) all pending; quality16/16; ready for analysis, no code yet |
+| 006 Private Finance Channels | [Specification](../../specs/006-private-finance-channels/spec.md) | [Plan](../../specs/006-private-finance-channels/plan.md), [56 tasks](../../specs/006-private-finance-channels/tasks.md) all pending; quality16/16; four analysis findings remediated; reanalysis pending, no code yet |
 
 Active feature: 006 Private Finance Channels, task generation complete; analysis next.
 Feature005 remains delivered: manual private journal and optional managed PostgreSQL.006 proposes

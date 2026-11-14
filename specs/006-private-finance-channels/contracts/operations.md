@@ -2,6 +2,10 @@
 
 Design only. SpaceStore and ChannelDirectory are the two genuine application ports; neither exposes
 SDK/SQLx types. Never combine network waits with a held database transaction.
+Introduce methods only with complete concrete implementations and updated fakes in the same task.
+Foundational contracts cover current primitives; create/overwrite methods arrive before their
+provisioning/root callers. Later sharing store methods arrive with all consumers updated. Do not
+add future-required methods satisfied by todo!(), unimplemented!() or fake unavailable branches.
 
 ## Store operations
 
@@ -46,11 +50,29 @@ request; never reuse a retired physical ID. Financial history is preserved, old 
 retired, never described as remote cancellation; new channel grants start empty. Old channel history/
 permission cleanup may remain unknown, is disclosed and cannot affect the new physical channel ID.
 
+## Prepared confirmation expiry
+
+Only grant_viewer/revoke_viewer operations in phase=prepared with dispatched_at=NULL expire at
+now >= created_at +5min. Creation intents and any dispatched/uncertain operation are excluded.
+Before preparing a new management operation, reading/listing confirmation state, confirming/cancelling,
+and during startup reconciliation, run an idempotent expiry check in a short space/operation-locked
+transaction. Match the pending operation/generation and use revisions freshly read under lock
+for cleanup CAS; a stale confirmation revision cannot keep an expired slot occupied. Mark failed with outcome=expired,
+set completion time, clear only its matching pending pointer and append exactly one audit event.
+Never change native permissions, viewer grants or journal entries. Keep the current space state;
+expiry must not promote suspended/retired/verifying to ready. A new owner operation can reserve the
+released slot subject to normal authorization/quota. Old confirmation remains expired forever.
+Confirm-versus-cleanup CAS must have one winner: expiry first means no SDK write; dispatch first
+means cleanup cannot expire it. Repeated cleanup/restart is a no-op after the recorded transition.
+
 ## Viewer changes and ordering
 
+Prepared UI stores desired grant/revoke only in the operation; do not change viewer rows until
+confirmed dispatch. Expiry/cancel therefore leaves confirmed viewer state untouched.
 Prepare desired grant/revoke first; mark space access_pending before mutation. Grant preparation
 alone never changes native permissions; confirmation expires five minutes after operation.created_at; owner confirmation must still be current and unexpired.
-Only one pending space operation; no opposite write/newer dispatch over an unresolved prior write.
+Only one pending space operation; expire eligible abandoned prepared UI before checking the slot.
+Never dispatch an opposite/newer write over an unresolved prior dispatched/uncertain write.
 Grant uses exact idempotent member-overwrite PUT; revoke removes only that stored viewer overwrite.
 Observe complete canonical profile and member incarnation after write; record confirmed result with
 current CAS before reporting success. Timeout is uncertainty; a matching GET alone does not prove an
@@ -59,6 +81,11 @@ If prior writes may still complete out of order, leave blocked/manual and suppre
 Never display revoked merely because the DB says desired_state=revoked.
 
 ## Membership and structural recovery
+
+User recovery/status uses authorize_owner_management, not authorize_finance. A ready channel is
+not a recovery prerequisite. Fresh recovery preparation binds current owner joined_at/revision while
+leaving finance denied; its confirmation must still match. Old retired-channel controls stay invalid.
+
 
 - Remove owner: retire binding immediately, keep journal; no Add auto-reactivation. Explicit rejoin
   onboarding revalidates identity and creates a new physical channel/generation.
@@ -88,4 +115,4 @@ history. Private orphan cleanup is not automatic and never deletes channels iden
 Stop accepting new work before cancellation. Own/join reconciliation tasks within existing bounded
 cleanup; interrupted dispatched operations remain uncertain, not failed. Build/startup failure must
 not leak background tasks or a pool. On restart, invalidate ready space observations before guild
-requests, resume only safe prepared/reconciliation work and never replay dispatched creates blindly.
+requests, expire eligible prepared sharing UI, resume only safe creation/reconciliation work and never replay dispatched creates blindly.

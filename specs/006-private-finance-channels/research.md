@@ -93,7 +93,7 @@ earlier outcome is unknown. Verify readback plus current DB revision before succ
 writes cannot be declared settled just because one GET matches: keep blocked/manual if late completion
 is possible. Database fencing cannot fence Discord writes: there is no remote CAS/version contract.
 Rationale: retries/restart must not let a delayed grant undo a newer reported revocation. Check
-membership/privacy before application authorization and again before fresh financial output. These
+membership/privacy before financial authorization and again before fresh financial output. These
 are point-in-time checks, not atomic confidentiality against administrative changes. Old read history
 cannot be recalled. In-flight already-authorized work may finish; no future request bypasses fresh checks.
 Alternatives: parallel grant/revoke, cache-only authorization and unconditional success on request
@@ -105,7 +105,7 @@ Decision: new finance_spaces feature owns membership, provisioning, sharing and 
 it imports identity/Financial Core facades, NEVER ledger. Ledger application depends on its application
 facade for guild authorization; ledger presentation retains existing financial views/parsing. Space
 presentation owns onboarding/access UI and lifecycle events. Platform composes both handlers beside Poise.
-Journal requests gain DM/guild context; guild authorization resolves a fresh enabled OwnerBinding
+Journal requests gain DM/guild context; guild financial authorization resolves a fresh enabled OwnerBinding
 from authoritative space state, never user input. Existing JournalStore continues owner/channel scoping;
 no ledger SQL reaches into another feature's tables. There is no cross-feature DB transaction need:
 channel/share transitions never write financial entries. Recheck access before channel output.
@@ -144,3 +144,11 @@ Independent permission and recovery reviews found no blocking design contradicti
 wording issue was corrected: ordinary messages cannot get ephemeral replies; controls can. Prepared
 confirmation expiry uses operation.created_at; ready outcome replay still needs current privacy.
 Constitution recheck PASS; no generated tooling, runtime code, credentials or live resources changed.
+
+## Authorized remediation after analysis
+
+Maintainer authorized fixing I1/C1/U1/D1. Financial-ready and owner-management policies are distinct;
+onboarding is current-member eligibility. Added explicit full authorization tests/implementation before
+root/Ledger consumers. Prepared sharing expiry releases only a matching undispatched slot atomically,
+never permissions or dispatched uncertainty. Port extensions include complete implementations/fakes;
+SDK mutations precede provisioning/root use. No new framework, dependency or product scope.

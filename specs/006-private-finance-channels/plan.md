@@ -3,7 +3,7 @@
 **Branch**: main (feature selector006-private-finance-channels) | **Date**: 2026-11-14
 **Spec**: [spec.md](spec.md). Maintainer's speckit-plan request accepts specification review.
 **Status**: Plan accepted by maintainer's speckit-tasks request2026-11-14;
-[54 tasks](tasks.md) generated, all pending. No implementation generated.
+[56 tasks](tasks.md) generated, all pending. No implementation generated.
 
 ## Summary
 
@@ -103,6 +103,21 @@ Two genuine ports: SpaceStore for durable state/CAS and ChannelDirectory for Dis
 channel permissions. Provider-neutral IDs, snapshots and errors cross ports; no SQLx/Serenity types.
 Store holds short transactions; directory returns canonical facts, not permission to skip policy.
 
+Introduce port methods only alongside their complete concrete implementations and updated test fakes.
+Foundational ports contain current observation/state primitives, not future required mutation stubs.
+Reservation methods arrive with their SQL implementation; all Discord mutation methods arrive before
+provisioning/root wiring; sharing-specific store methods arrive with their SQL implementation.
+Every such checkpoint must compile. No todo!(), unimplemented!() or fake unavailable methods to
+satisfy a future trait. Keep the two existing real boundaries; do not add a generic provider framework.
+
+Spaces implements authorize_finance and authorize_owner_management as separate application policies
+before root wiring and Ledger guild integration. The former yields FinancialAccess with a verified journal binding only
+for ready owner finances; the latter yields OwnerManagementAccess with no financial authority and supports owner status/cancel/
+explicit recovery in non-ready states. Onboarding has its own current-member eligibility check.
+Recovery preparation binds the new incarnation/revision without reactivating the old channel;
+confirmation checks it again. Lifecycle service operations do not impersonate a user control.
+
+
 Journal gains DM/Guild request contexts and an optional Spaces application dependency. Each existing
 use case authorizes current context before using its existing JournalStore. DM authorization stays
 unchanged. Guild authorization resolves current member, verified active space and trusted OwnerBinding.
@@ -149,6 +164,9 @@ discord:guild:<message-id>; existing discord:dm:<message-id> origins are unchang
 5. Unknown outcomes reconcile by exact durable marker/profile, never names or empty channel listings.
    Multiple/hidden/missing candidates remain uncertain/manual; no blind repeat of the creation call.
 
+Prepared sharing UI expires atomically at5min during new-request/status/confirm/cancel/startup checks:
+clear only its matching pending slot, record one expired audit, leave grants/privacy unchanged. Never
+expire dispatched/uncertain or creation operations. Test the exact boundary and confirm/cleanup race.
 One pending access operation per space. Mark access_pending before remote grant/revoke; block financial
 disclosure while uncertain. Never dispatch an opposite/newer permission write over unresolved older
 writes. SDK success requires readback and durable current revision before reported success. CAS fences

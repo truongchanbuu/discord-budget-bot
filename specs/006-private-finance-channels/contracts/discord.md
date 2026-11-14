@@ -15,8 +15,9 @@ SDK IDs map to provider-neutral validated refs before application calls; never t
 | Designated onboarding text channel | empty, bắt đầu, bat dau | Reserve/recover/return requester's private space |
 | Any public/unrelated channel | financial text | No parsing/persistence/preview; generic private-entry guidance only |
 | Requester's ready personal channel | existing005 help/fund/finance/month grammar | Existing review/query semantics on that owner's journal |
-| Requester's ready personal channel | quyền, quyen | Owner access-management launcher |
-| Retired/suspended/unknown channel | any finance input/control | No financial payload/effect; safe recovery/error guidance |
+| Requester's authoritative personal channel | quyền, quyen | Owner management launcher; mutations obey state/serialization policy |
+| Retired/suspended/unknown channel | financial input/control | Denied; recovery starts from a fresh onboarding request |
+| Configured onboarding or authoritative space context | owner status/cancel/recovery controls | Management policy only; safe nonfinancial response, never a finance grant |
 | Guest or other owner in this channel | financial/access request or control | Ignore ordinary message; controls get generic ephemeral denial; no financial operation |
 | Existing configured-owner DM | existing005 input | Unchanged005 route and original DM origin/channel binding |
 | Other member DM | existing005 input | Existing denial; multi-user DM is not added in006 |
@@ -67,9 +68,12 @@ does not retry money with a new source. Privacy changes before output suppress f
 6. Pending/unknown results give owner generic recovery/status guidance. Do not expose member lists
    in public onboarding, trust cached success or permit conflicting late operations.
 
+Management UI uses authorize_owner_management; financial controls use authorize_finance. Grant/revoke
+still obey ready/known-binding and unresolved-write rules in security contract.
 Confirmation/session state is durable in the prepared operation. Before confirmation, no native
-access changes. Cancel/expiry marks that prepared operation failed/cancelled outcome and leaves access
-unchanged. Dispatch/timeout cannot be cancelled as if never sent; show uncertain instead. Owner cannot
+access changes. Cancel marks an undispatched prepared operation failed/cancelled. Automatic/opportunistic
+expiry follows the locked idempotent protocol in operations contract and frees the matching slot;
+neither changes native access. Dispatch/timeout cannot be cancelled as if never sent; show uncertain instead. Owner cannot
 remove their own/bot required visibility or grant editor/role/everyone access through this interface.
 
 ## Component references and output limits

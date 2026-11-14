@@ -11,7 +11,7 @@ Maintainer invoked speckit-plan, accepting006 spec review. Research/design are c
 [model](../../specs/006-private-finance-channels/data-model.md),
 [UI/security/operations contracts](../../specs/006-private-finance-channels/contracts/discord.md),
 [validation guide](../../specs/006-private-finance-channels/quickstart.md) and proposed ADR0008.
-Maintainer then invoked speckit-tasks, accepting plan review. [54 tasks](../../specs/006-private-finance-channels/tasks.md)
+Maintainer then invoked speckit-tasks, accepting plan review. [56 tasks](../../specs/006-private-finance-channels/tasks.md)
 are generated and ALL unchecked; that file owns the implementation checklist. Quality16/16 preserved;
 constitution checks passed. No006 product code exists; nothing implemented.
 
@@ -60,7 +60,7 @@ origin: https://github.com/truongchanbuu/discord-budget-bot.git . Branch main wa
 after destination was found empty. Do not assume new local work is pushed. Preserve unrelated work.
 Active selector is locally ignored; FEATURE_INDEX is tracked discovery. Generated skills unchanged.
 
-Next: speckit-analyze across006 spec/plan/tasks, then explicitly authorized implementation.
+Next: rerun speckit-analyze across the remediated006 artifacts, then explicitly authorized implementation.
 No unresolved product clarifications. Design decisions resolved in research; limits are explicit,
 including no exactly-once remote creation or atomic provider/database confidentiality. No real env,
 Discord/Supabase resources or running bot were touched by planning.
@@ -82,7 +82,7 @@ fixture-host guard and update migration-count expectations; do not silently test
 
 ## Task generation verification
 
-54 atomic tasks: Setup3, Foundational13, US1 seven, US4 eight, US2 seven, US3 eight, Polish8.
+56 atomic tasks: Setup3, Foundational13, US1 seven, US4 ten, US2 seven, US3 eight, Polish8.
 Execution: Setup → Foundational → US1 → US4 → US2 → US3 → Polish. US4 is the P1 safety prerequisite
 before guild finances; sharing is P2. Seven distinct-file parallel pairs are documented. Model field
 constraints are quoted in task continuations; corrected the model introduction to match its existing
@@ -90,3 +90,16 @@ UUID operation-ID table (no product-scope change). Each task states dependencies
 and FR support. All16 FR/AC and6 SC mapped; exact IDs/DAG/checklist format/doc links/sizes verified.
 MVP is controlled onboarding with US4 safety, not an automatic deployment. No tests, implementation,
 live services or credentials were used/changed during task generation; no task marked complete.
+
+## Authorized analysis remediation
+
+Maintainer approved editing planning artifacts for I1/C1/U1/D1. I1 separates onboarding/finance-ready/
+owner-management authority; recovery has no journal capability and remains owner-only. C1 adds
+T028/T029 full Spaces authorization tests/implementation before root and Ledger integration.
+U1 makes5min prepared grant/revoke expiry atomic/idempotent on new request/status/confirm/cancel/
+startup, clears only matching pending slot and audits once; no dispatched/uncertain cleanup or
+privacy promotion. Prepared UI stores operation intent only, not speculative viewer grants.
+D1 requires fully implemented port expansions/fakes; T020 SDK mutations now precede T021 workflow.
+Existing downstream IDs renumbered consistently: root T031, Ledger integration T036, expiry T041/
+T043/T045. All56 implementation tasks remain unchecked. No product code, real env, live resources,
+new dependencies or generated tooling changed. Verification is document/ID/DAG/coverage review only.

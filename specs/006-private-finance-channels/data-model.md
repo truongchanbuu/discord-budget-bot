@@ -30,7 +30,8 @@ or authorization credentials. Member incarnation is exact current joined_at; unk
 
 States other than ready deny guild financial requests. Ready requires channel, owner incarnation,
 matching generation and no unresolved dispatched access operation. Prepared unconfirmed sharing
-UI may coexist with ready because no remote write has occurred; it cannot grant access. No deletion cascade reaches ledger history.
+UI may coexist with ready because no remote write has occurred; it cannot grant access or change
+viewer rows before confirmed dispatch. No deletion cascade reaches ledger history.
 New refs are fresh owner rows; insertion collision fails. Legacy owner row may already exist and is
 reused only for the exact enabled configured identity. Conflicting existing association blocks setup;
 configuration changes never silently transfer old journal history. Enabled legacy conflicts fail
@@ -92,8 +93,11 @@ ChannelSnapshot: provider channel/guild/parent/type, expected marker, canonical 
 bot capabilities, observation time. Adapter derives facts from real SDK records; domain evaluates
 whether they satisfy the expected space policy. Unknown/obfuscated/missing fields are unsafe.
 MemberSnapshot: authenticated account/current membership/joined_at/screening and elevated flags.
-OwnerAccess: current binding/channel/generation/revision for one checked operation. It is not a
-long-lived permission credential; each financial request and later response rechecks current access.
+FinancialAccess: enabled journal binding/channel/generation/revision after authorize_finance; each
+financial request and later response rechecks current membership/privacy. Not a long-lived credential.
+OwnerManagementAccess: stored owner identity/space/generation/revision/incarnation for nonfinancial
+status/cancel/recovery; no journal binding, never accepted by Ledger. Recovery preparation persists
+fresh owner_joined_at and increments revision without ready status; confirmation rechecks both.
 
 ## Lifecycle transitions
 
@@ -104,7 +108,10 @@ operation/generation/channel under the SAME stable journal mapping. Never reacti
 Channel/role/gateway changes may send ready → verifying/suspended before further guild acceptance.
 
 Operation: prepared → dispatched → verifying → confirmed; dispatched uncertainty → uncertain.
-failed means a classified definite failure, not assumed failure from timeout. Late responses must
+failed means a classified definite failure, or expired/cancelled prepared sharing confirmation,
+never assumed failure from timeout. Expiry is only prepared grant/revoke with dispatched_at=NULL
+and now>=created_at+5min; atomically clear the matching pending pointer and audit once. Do not expire
+creation/dispatched/uncertain operations or promote space privacy state. Confirm/cleanup use CAS. Late responses must
 match current operation/generation; stale local completion never marks a space ready. Retiring a
 known channel binding may mark its operations retired (not remotely cancelled) so explicit recovery
 can use a fresh channel safely. Unsettled old-native access is retained as unknown, never revoked-success.

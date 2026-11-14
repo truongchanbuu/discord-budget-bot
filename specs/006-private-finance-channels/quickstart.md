@@ -90,3 +90,14 @@ financial notes or raw provider bodies in repository evidence. Stop/join owned t
 clean only explicitly authorized synthetic resources; do not delete private channels automatically.
 Hosted CI status, real owner/viewer/outsider visibility and actual modal/recovery checks require
 separate evidence. No verification was executed against a live provider by this planning step.
+
+## Remediation acceptance checks
+
+- Finance stays denied in suspended/retired state, while the current stored owner can request safe
+  status and explicit recovery from onboarding; guest/admin/old-channel controls cannot recover.
+- Full Spaces authorization precedes Ledger routing: changed incarnation, wrong channel/owner,
+  unsafe privacy and disabled legacy binding all deny financial calls/output.
+- Abandon prepared sharing for5min, then request a new operation: one expiry audit, freed slot,
+  old confirmation denied, no native write. Concurrent confirmation/expiry has one winner.
+- Dispatched/uncertain requests never expire into a free slot. Cleanup cannot promote unsafe privacy.
+- Each port-expansion checkpoint compiles with all declared methods implemented; no future stubs.

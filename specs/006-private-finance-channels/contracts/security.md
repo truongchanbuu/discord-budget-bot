@@ -35,14 +35,35 @@ read-only prevents all reactions/UI actions; it prevents messages and financial 
 
 ## Application authorization independent of visibility
 
-Every request/control requires authenticated current human actor, configured guild, authoritative
-active channel/space, ready privacy, enabled trusted journal association and owner equality. Guests
-cannot independently query finances or invoke edit/confirm/cancel/create-fund/access management.
-Server Administrators cannot bypass application ownership. List/select values and component refs
-never supply identity or permission. Cross-space denial is generic and returns no additional payload.
-Existing configured-owner disabled binding cannot be bypassed by self-registration. Conflicting
-operator remap of an established legacy owner association fails enabled connected startup before
-financial handling, instead of transferring history.
+Authorization has three explicit entry policies; there is no universal ready-state guard:
+
+- Onboarding requires a current authenticated human in the configured guild/onboarding channel.
+  Reserve ownership from that actor, never from an owner reference submitted in a message.
+- authorize_finance requires current membership/incarnation, authoritative active channel/space,
+  ready privacy, enabled trusted journal association and exact owner equality. Apply it to every
+  financial query/mutation/control and again before fresh guild financial output.
+- authorize_owner_management requires current human membership and stored owner equality, but may
+  return nonfinancial status/list/cancel/recovery context while the space is pending, suspended or
+  retired. It returns no journal binding and cannot authorize any Ledger call. Status/list responses
+  containing access metadata use owner-only interactions; public guidance stays generic.
+
+Recovery starts only in a configured onboarding channel with a fresh owner request. It may prepare
+recovery for a known retired/deleted binding, never treat lost visibility as deletion or reuse old
+channel controls. Preparation records the fresh owner incarnation and bumps space revision without
+making the space ready; confirmation must still match that incarnation/operation/generation/revision.
+A membership mismatch rejects the old confirmation; only a new explicit request can prepare again.
+Grant requires ready privacy/no unresolved operation. Revoke may reduce a stored viewer's access in
+ready/suspended/verifying state if the physical binding is known and no older write is unresolved;
+otherwise return pending/manual. Management authority never overrides access-write serialization or financial readiness.
+Trusted lifecycle reconciliation is an internal service entry, not user management authority; it may
+invalidate/reconcile access but never create financial entries or auto-approve an invitation.
+
+Guests/other owners cannot invoke finance, list another space's grants or manage its access. Server
+Administrators cannot bypass application ownership. Member selections/control refs never establish
+identity or permission. Reject foreign/stale controls uniformly; expired prepared cancellation/status
+cannot disclose financial payload. Existing configured-owner disabled binding denies both policies.
+Conflicting operator remap of an established legacy association fails enabled connected startup
+before financial handling. Existing authorized DM policy remains unchanged.
 
 JournalStore continues authoritative owner/source/channel checks and immutable atomic posting. No
 space operation writes financial entries. Recheck space/privacy before fresh guild financial output;

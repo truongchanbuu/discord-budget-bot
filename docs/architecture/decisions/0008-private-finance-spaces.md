@@ -8,7 +8,9 @@ Authority: maintainer requested private per-member channels and then invoked spe
 One finance_spaces feature owns self-service membership, channel lifecycle and read-only sharing.
 Dependencies remain acyclic: ledger → finance_spaces → identity/Financial Core. Spaces never imports
 ledger. Ledger application authorizes guild request context through the spaces application facade,
-then reuses current owner/channel-scoped journal mechanics. DM behavior stays compatible. No financial
+then reuses current owner/channel-scoped journal mechanics. Financial authorization requires ready
+privacy; separate owner-management authorization permits nonfinancial status/cancel/recovery without
+returning a journal binding. Onboarding validates current-member eligibility, not ready state. DM behavior stays compatible. No financial
 adapter directly reads another feature's tables and no generic tenant/ACL framework is introduced.
 
 Reuse locked dependencies and existing bot. Add only justified GUILDS/GUILD_MESSAGES/GUILD_MEMBERS
@@ -16,7 +18,9 @@ intents; retain DIRECT_MESSAGES, leave MESSAGE_CONTENT/PRESENCES off. Canonical 
 make ordinary outsiders invisible from creation; owner-approved guests receive native read-only
 posting limits and no financial application authority. Server Administrator visibility remains.
 
-Persist space/operation/viewer/audit state before external writes. Creation has no Discord idempotency
+Ports expand only with complete implementations/fakes; no future method stubs. Prepared grant/revoke
+confirmation expiry atomically frees the matching slot/audits once; dispatched uncertainty never
+expires into success or availability. Persist space/operation/viewer/audit state before external writes. Creation has no Discord idempotency
 key; mark dispatch durably and reconcile exact generation/privacy profile. One active binding is
 provable; exactly one physical channel is not. Unknown/multiple/hidden results remain quarantined.
 One unresolved sharing write blocks contradictory changes and fresh disclosure. DB CAS cannot fence

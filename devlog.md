@@ -3,6 +3,14 @@
 This log records feature milestones and links to authoritative specifications/tasks. It does not
 replace their requirements, implementation checklists, or verification evidence.
 
+## 2026-11-14 — 006 Analysis remediation
+
+Maintainer authorized planning fixes for I1/C1/U1/D1: distinct finance/management guards, explicit
+Spaces authorization work, atomic abandoned-prepared expiry and complete incremental port adapters.
+Task list now56 unchecked items with consistent renumbered dependencies and coverage; no new product
+scope. Plan/model/contracts/ADR/handoff reconciled. No implementation or live resources touched;
+only document validation performed. Reanalysis precedes implementation.
+
 ## 2026-11-14 — 006 Private Finance Channels specification
 
 Created [spec](specs/006-private-finance-channels/spec.md) and16/16 quality checklist for mention-based
