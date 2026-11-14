@@ -5,11 +5,14 @@ Updated: 2026-11-14. Active feature:
 
 ## Current phase and authority
 
-Specification drafted under maintainer request for per-member private server channels created by
-mentioning the bot. Two explicit decisions: invited members read-only; financial messages still
-mention this bot in the private channel. Quality checklist16/16; constitution review PASS.
-Specification needs review before planning per .specify/workflows/speckit/workflow.yml review-spec.
-No plan.md/tasks.md or006 product code exists; no implementation work is marked complete.
+Maintainer invoked speckit-plan, accepting006 spec review. Research/design are complete:
+[plan](../../specs/006-private-finance-channels/plan.md),
+[research](../../specs/006-private-finance-channels/research.md),
+[model](../../specs/006-private-finance-channels/data-model.md),
+[UI/security/operations contracts](../../specs/006-private-finance-channels/contracts/discord.md),
+[validation guide](../../specs/006-private-finance-channels/quickstart.md) and proposed ADR0008.
+Quality16/16 preserved; constitution checks PASS before/after design. Plan review is next, before
+speckit-tasks per workflow review-plan. No tasks.md or006 product code exists; nothing implemented.
 
 ## Scope and decisions
 
@@ -39,8 +42,9 @@ Do not change applied migrations or expose DB credentials/API roles. Preserve le
 
 ## Verification and live limits
 
-006: reviewed sixteen requirements, sixteen acceptance scenarios and six outcomes; links/diff/scope
-and quality checklist verified. No Rust changed, so no new Rust run claimed for this spec-only step.
+006: reviewed sixteen requirements/acceptance scenarios and six outcomes; design coverage matrix,
+links/diff/sizes and source-backed permission/recovery decisions verified. Two read-only research
+agents used as required by plan skill. No Rust changed; no new compilation/test/provider run claimed.
 Previous implementation/local gates: fmt/Clippy/test/check PASS,90 ordinary +10 isolated PostgreSQL
 cases passed; latest pre-push ordinary90 PASS,10 DB cases explicitly ignored in that command.
 Actual Supabase connection/client TLS, two migrations, five RLS tables and absent API-role grants
@@ -55,7 +59,22 @@ origin: https://github.com/truongchanbuu/discord-budget-bot.git . Branch main wa
 after destination was found empty. Do not assume new local work is pushed. Preserve unrelated work.
 Active selector is locally ignored; FEATURE_INDEX is tracked discovery. Generated skills unchanged.
 
-Next: review006 spec, then speckit-plan; review plan, then tasks/analyze/authorized implementation.
-Technical planning must resolve provider/DB provisioning reconciliation, membership/privacy proof,
-read-only channel permissions and legacy journal binding before implementing. No missing product
-clarifications remain; remaining technical choices belong in plan/research/ADRs, not guesses in code.
+Next: review006 plan, then speckit-tasks → speckit-analyze → explicitly authorized implementation.
+No unresolved product clarifications. Design decisions resolved in research; limits are explicit,
+including no exactly-once remote creation or atomic provider/database confidentiality. No real env,
+Discord/Supabase resources or running bot were touched by planning.
+
+## Implementation decisions to preserve
+
+Acyclic graph ledger → finance_spaces → identity/core; spaces imports no ledger. Journal application
+checks guild context via Spaces before existing owner/channel-scoped store; recheck privacy on output.
+No cross-feature SQL or financial engine rewrite. Four space/operation/viewer/audit tables via0003,
+backend-only RLS/revokes. Legacy mapping exact/enabled/collision-rejecting; never change old entries.
+Create has durable dispatch intent and opaque marker; unknown/multiple/hidden outcomes quarantine.
+Sharing serializes pending writes; CAS cannot fence late Discord writes. Retired bindings use fresh
+channel generations with no viewers carried over; old-native access uncertainty is stated honestly.
+GUILD_MEMBERS justified for remove/rejoin; Message Content stays off. Canonical unsynced overwrites,
+minimal management/send/thread bits; reject elevated viewers. Use existing shared SDK Http with one
+startup binding and bounded lifecycle worker. No new dependency/feature flag.
+Future tests must include both ledger and finance_spaces DB suites in script/CI, preserve private
+fixture-host guard and update migration-count expectations; do not silently test only005.

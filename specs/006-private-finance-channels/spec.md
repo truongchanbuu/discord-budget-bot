@@ -2,7 +2,8 @@
 
 **Feature Branch**: 006-private-finance-channels (selector; current Git branch main)
 **Created**: 2026-11-14
-**Status**: Specification ready for review; planning and implementation not started.
+**Status**: Specification accepted for planning by maintainer's speckit-plan request2026-11-14;
+research/design complete, plan review pending. No tasks or implementation generated.
 **Input**: Mention the bot to create a personal finance channel; other members can create their own.
 Each owner controls who can view their channel. Guests are read-only; finance input still mentions
 this bot. Optional password access is deferred in the first increment.

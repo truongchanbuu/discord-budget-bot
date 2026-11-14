@@ -148,3 +148,7 @@ Data API is disabled before first startup, with migration0002 adding API-role re
 See [ADR0007](decisions/0007-supabase-postgres.md) and the
 [setup guide](../../specs/005-conversational-finance/quickstart.md#supabase-setup).
 Disposable local PostgreSQL remains an isolated test fixture, not an application hosting requirement.
+
+Planned006 extension (not implemented): private per-member spaces with isolated journals and read-only
+sharing. Proposed [ADR0008](decisions/0008-private-finance-spaces.md) records the acyclic feature
+direction and provider-reconciliation/privacy limits; current runtime remains005 until authorized work.

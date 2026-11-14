@@ -9,8 +9,11 @@ Created [spec](specs/006-private-finance-channels/spec.md) and16/16 quality chec
 self-service private channels with per-member journals. Maintainer clarified read-only viewers and
 explicit bot mentions. Defined owner-only writes/access management, privacy/admin/history limits,
 legacy journal preservation, provisioning/retry/recovery and permission drift boundaries. Passwords
-are deferred. Constitution review passed; spec review pending before planning. No006 plan/tasks/code,
-runtime changes, live channel operations or deployment. Active index/handoff updated.
+are deferred. Maintainer invoked speckit-plan, accepting spec review. Plan/research/model/contracts/guide generated,
+ADR0008 proposed; pre/post constitution checks passed. Two read-only research agents resolved SDK
+permission/intents, durable recovery and legacy mapping. One active binding, not exactly-once physical
+channel creation; no cross-feature SQL/financial rewrite. Plan review pending before tasks. No006
+implementation, live resources/config changes, new dependencies or deployment. Index/handoff updated.
 
 ## 2026-11-14 — Repository publication
 

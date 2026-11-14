@@ -9,11 +9,11 @@
 
 | 005 Conversational Personal Finance | [Specification](../../specs/005-conversational-finance/spec.md) | [Plan](../../specs/005-conversational-finance/plan.md), [tasks](../../specs/005-conversational-finance/tasks.md): all 37 tasks verified including Supabase amendment; 90 ordinary +10 explicit PostgreSQL tests pass; Supabase/finance live/hosted CI unverified |
 
-| 006 Private Finance Channels | [Specification](../../specs/006-private-finance-channels/spec.md) | [Quality checklist](../../specs/006-private-finance-channels/checklists/requirements.md):16/16; specification ready for review, no plan/tasks/code yet |
+| 006 Private Finance Channels | [Specification](../../specs/006-private-finance-channels/spec.md) | [Plan](../../specs/006-private-finance-channels/plan.md), research/model/contracts/guide ready for plan review; quality16/16; no tasks/code yet |
 
-Active feature: 006 Private Finance Channels, specification review pending.
+Active feature: 006 Private Finance Channels, technical plan review pending.
 Feature005 remains delivered: manual private journal and optional managed PostgreSQL.006 proposes
 self-service private server channels, isolated per-member journals and read-only invited viewers;
 none of006 is implemented yet. Specifications own requirements, tasks own implementation progress,
 and [handoff](SESSION_HANDOFF.md) owns current state. Use these links if the local selector is absent.
-Constitution1.1.0 applies; no generated tooling or runtime configuration changed by006 specification.
+Constitution1.1.0 applies; no generated tooling or runtime configuration changed by006 planning.
