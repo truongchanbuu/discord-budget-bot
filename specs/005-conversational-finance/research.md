@@ -64,3 +64,15 @@ Actual DM/user and modal fixtures plus serialized SDK builders test privacy/limi
 keeps identity independent of ledger. Historical balance and monthly math are pure tests; real DB
 fixtures exercise concurrency, immutable entries, injected post-insert rollback and restart. Optional
 live finance and hosted CI remain unverified. No existing local secrets/data were used.
+
+## Supabase amendment — 2026-11-14
+
+Supabase is managed PostgreSQL, so retain existing SQLx transactions and minimal dependencies.
+Direct/session5432 supports prepared statements; session pooler is the IPv4 alternative. Transaction
+mode6543 is excluded because this backend also runs advisory-locked migrations. Remote TLS Require
+is the minimum; VerifyFull with supplied CA remains available. Tests preserve private local sockets.
+Disable Data API before creating schema. Defense in depth: additive migration0002 enables RLS and
+revokes PUBLIC/anon/authenticated/service_role object grants, including migration metadata; never
+alter applied0001. No RLS policies granted to API clients; trusted DB owner runs backend only.
+Sources: https://supabase.com/docs/guides/database/connecting-to-postgres and
+https://supabase.com/docs/guides/api/securing-your-api (checked2026-11-14).

@@ -128,6 +128,16 @@ background scheduler, complex generic unit of work or premature standalone funds
 
 ## Implementation refinements
 
+2026-11-14: Supabase-managed PostgreSQL replaces the self-hosted application setup. Keep SQLx,
+one backend pool and the existing URL setting; use direct5432 or Supavisor session5432 (IPv4).
+Reject Supabase transaction6543, which is incompatible with session migration locks/prepared queries.
+Parse PgConnectOptions before I/O, upgrade remote opportunistic TLS to Require, reject disabled TLS;
+preserve VerifyCa/VerifyFull when configured. Local disposable fixtures may use plain sockets.
+Add migration0002 (never edit applied0001): deny Data API roles and enable default-deny RLS on
+financial and SQLx metadata tables. Backend connects as migration/table owner; no user-facing SQL
+credential or Supabase Auth policy. Disable Data API before first start. See ADR0007 and guide.
+No cloud resources or real-data migration is performed; local upgrade/security tests remain required.
+
 Conservative UTF-16 UI bounds; unsupported message kinds/attachments ignored. Mixed income+allocation
 and explicit natural “từ … sang …” are not guessed. Posted kinds require cancel/resend to change kind.
 Readiness retains the same command/scope and updates owner capability text only when finance enabled.

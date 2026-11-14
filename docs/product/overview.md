@@ -5,7 +5,7 @@ should be clear before a future payment handoff; virtual balances must remain di
 Initial scope is single-owner personal use; other users never become trusted merely by messaging.
 
 Implemented: offline foundation, pure exact-VND Financial Core, configured owner policy and readiness;
-optional private finance journal with durable manual income/expenses, notes/categories, fund opening/
+optional Supabase-managed PostgreSQL finance journal with durable manual income/expenses, notes/categories, fund opening/
 transfers and monthly text totals. The owner reviews/edits/confirms every posting. Savings/investment
 allocation preserves principal and is separate from consumption; no market valuation or real transfer.
 Expected salary is not received income; carryover/initialization is not monthly salary.

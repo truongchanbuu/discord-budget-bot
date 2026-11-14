@@ -3,6 +3,16 @@
 This log records feature milestones and links to authoritative specifications/tasks. It does not
 replace their requirements, implementation checklists, or verification evidence.
 
+## 2026-11-14 — 005 Supabase storage amendment
+
+Maintainer requested managed Supabase instead of self-hosted application PostgreSQL. ADR0007 keeps
+SQLx/domain/atomic journal; remote TLS/session validation and additive backend-only RLS/grant migration
+implemented. Setup/example/security/feature artifacts reconciled. All five amendment tasks verified:
+four Cargo gates,90 ordinary tests and10 real disposable PostgreSQL tests pass, including API-role
+denial and lossless v1 upgrade/restart. No real .env.local read, live Supabase connection, existing-data
+migration, new dependencies or deployment. Next: configure dedicated Supabase project/Data API off/URL
+privately, then separately verify hosted connectivity. Detailed evidence remains in feature tasks.
+
 ## 2026-11-13 — 005 Conversational Personal Finance
 
 Maintainer authorized full Spec Kit workflow for private conversational income/expenses, categories,

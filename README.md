@@ -52,16 +52,13 @@ failures exit unsuccessfully. Local initialization is distinct from discord_read
 ## Private finance setup and use
 
 Finance is optional. Without FUNDGUARD_FINANCE_DATABASE_URL, the existing readiness-only bot works.
-Use a dedicated local PostgreSQL database (18 tested) with permission to create tables/functions for
-embedded versioned migrations. Never point automated tests at an existing financial database.
+Use a dedicated **Supabase development project** for managed PostgreSQL; no self-hosted database is
+required to run the bot. In Supabase, disable Data API before first startup, then copy a Direct or
+Session pooler connection string from **Connect** (port5432). Use Session mode on IPv4-only networks;
+Transaction pooler6543 is unsupported. Add `sslmode=require`; stronger certificate verification is
+available. See the [Supabase setup guide](specs/005-conversational-finance/quickstart.md#supabase-setup).
 
-For example, with an installed local PostgreSQL service and suitable development administrator:
-
-```bash
-createdb fundguard
-```
-
-Set FUNDGUARD_FINANCE_DATABASE_URL to that dedicated database's connection URL in your trusted local
+Set FUNDGUARD_FINANCE_DATABASE_URL to that project's PostgreSQL connection URL in your trusted local
 environment. Keep credentials in your ignored local configuration; never paste a real URL/token into
 chat or shell history. The application does not load .env.local automatically. In Bash/Zsh, load your
 own trusted file and start:
@@ -127,6 +124,7 @@ scripts/test-postgres.sh
 Requires PostgreSQL server tools plus createdb on PATH. If server tools are elsewhere, set
 FUNDGUARD_TEST_PG_BIN; the script creates/stops its own private socket-only cluster with synthetic
 fixtures, overwriting only its test URL. It never uses your application URL or existing database.
+Local PostgreSQL is needed only for this isolated DB test command, not ordinary bot use.
 CI has separate normal gates and a synthetic PostgreSQL integration job; hosted results unverified.
 CARGO_BUILD_JOBS=1 and CARGO_PROFILE_DEV_DEBUG=0/CARGO_PROFILE_TEST_DEBUG=0 reduce SDK build resources.
 

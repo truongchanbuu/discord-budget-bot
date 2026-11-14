@@ -73,4 +73,6 @@ mod commit_tests;
 #[cfg(test)]
 mod report_tests;
 #[cfg(test)]
+mod security_tests;
+#[cfg(test)]
 mod tests;

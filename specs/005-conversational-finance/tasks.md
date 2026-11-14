@@ -63,6 +63,14 @@ Independent check: month fixtures reconcile opening, actual income, expenses, al
 
 ## Dependencies and parallel work
 
+### Supabase storage amendment — 2026-11-14
+
+- [X] T033 Recording Supabase scope, connection/security design and ADR0007 in spec.md, plan.md, research.md and docs/architecture/decisions/0007-supabase-postgres.md; verify constitution and AC-15/16 coverage (after T032; FR-004/012/014).
+- [X] T034 Testing and implementing remote TLS/session endpoint validation in src/platform/database.rs and database/tests.rs; preserve local fixtures, safe errors and stronger TLS (after T033; FR-012; AC-15).
+- [X] T035 Adding migrations/0002_backend_only.sql and embedded migration registration; test API role grants/RLS, v1 upgrade and repeat startup in src/features/ledger/infrastructure/security_tests.rs against disposable PostgreSQL (after T034; FR-005/012; AC-16).
+- [X] T036 Updating README.md, .env.example, quickstart.md, contract, architecture/security docs and feature index with Supabase setup, secret handling, Data API off, compatible endpoints and unchanged test isolation (after T035; FR-014).
+- [X] T037 Running four Cargo gates and disposable DB suite; review diff and update tasks.md, SESSION_HANDOFF.md and devlog.md with evidence and live Supabase limits (after T036; FR-013/014).
+
 Setup → Foundational → US1 → US2 → US3 → Polish. Task IDs/after clauses define the critical path.
 Draft/commit/query tests share migration/port foundations. Do not parallel-edit shared model, root,
 query or message files. After T029, independent documentation/link review can accompany read-only
@@ -89,11 +97,11 @@ verification; task list deliberately marks no implementation task [P] to avoid u
 
 SC-001: T003/T004/T010–T015; SC-002: T016/T017/T026; SC-003: T005–T007/T016–T019;
 SC-004: T005/T006/T020–T022; SC-005: T009/T012/T015/T024/T027;
-SC-006: T025–T032. All fourteen AC mapped; real provider/hosted evidence remains separate.
+SC-006: T025–T032/T037. AC-15: T033/T034; AC-16: T033/T035–T037. All sixteen AC mapped; real provider/hosted evidence remains separate.
 
 ## Definition of Done
 
-All32 tasks backed by evidence, core/offline/readiness preserved, no raw financial/credential logging,
+All37 tasks (original32 plus storage amendment5) backed by evidence, core/offline/readiness preserved, no raw financial/credential logging,
 all four gates pass, local DB race/rollback/restart and whole-u64 constraints verified, UI builders
 and scope reviewed, documentation/handoff agree. No production deployment, bank transfer or AI.
 Ordinary cargo test may explicitly ignore DB suite only if separately executed and reported.
@@ -132,3 +140,19 @@ historical. Legacy ActionRow modals are supported by pinned SDK; no full custom 
 fabricated in offline tests. Finite Vietnamese parsing, virtual/manual evidence, immutable committed
 history, 12-fund/10-category display limits and fixed Vietnam calendar are documented. No unresolved
 implementation blocker, partial task, actual bank action, AI provider or production deployment.
+
+## Supabase amendment evidence — 2026-11-14
+
+T033: maintainer requested managed Supabase; AC-15/16 and ADR0007 align with constitution, no new
+SDK/business feature. T034: three provider-free connection tests PASS (TLS modes/redaction,
+shared/dedicated transaction endpoint rejection, session/local fixtures). Initial red compile lacked
+options(); implementation then passed. No real URL/token/environment file consumed.
+T035: migration0001 unchanged; actual isolated v1 DB with a synthetic row upgrades to v2 twice without
+loss. API-role grants simulated then revoked; RLS flags on five tables, owner continuation, denied
+API privileges and zero-row anon read after an explicit SELECT grant PASS. All10 real DB cases PASS.
+T036: README/example/guide/contract/docs/index reviewed against official Supabase docs. T037: fmt,
+Clippy -D warnings, cargo test (90 passed,10 explicitly ignored), cargo check and offline run PASS;
+separate scripts/test-postgres.sh10/10 PASS. One Cargo job, debug info off; server18.6/libraries
+extracted outside repository. Temporary socket cluster removed. No hosted Supabase/Discord/CI run,
+cloud provisioning, existing-data migration or deployment. No implementation blocker; operator must
+configure their project/URL before hosted connectivity can be verified.

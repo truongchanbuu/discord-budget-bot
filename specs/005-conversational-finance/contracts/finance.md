@@ -35,3 +35,12 @@ rolls back or repeats the financial effect.
 Monthly output labels: Đầu kỳ/khởi tạo, Thu đã nhận, Đã chi, Chuyển vào tiết kiệm/đầu tư, Tổng cuối kỳ,
 Còn ở quỹ chi tiêu, chi theo danh mục and chi/thu percentage (unavailable if thu=0). State virtual,
 manually reported, not bank verified. No image/report export or market valuation.
+
+## Supabase connection boundary (2026-11-14)
+
+FUNDGUARD_FINANCE_DATABASE_URL now targets Supabase-managed PostgreSQL (direct/session5432),
+not a Supabase HTTP URL or API token. Known transaction pooler6543 is rejected. Remote TLS cannot
+fall back to plaintext; VerifyCa/VerifyFull stay intact. Local fixture URLs remain supported only
+for development/test compatibility. Errors contain no URL, password, host or provider detail.
+Versioned migration0002 denies Data API roles and enables default-deny RLS; owner backend retains
+journal behavior. No new public application API, identity source or financial semantics.

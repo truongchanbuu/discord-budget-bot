@@ -65,6 +65,18 @@ opening/closing tracked balances and available spending money, including carryov
 14. **AC-14**: Given committed entries and pending drafts, when the process restarts, then committed
     balances/history and unexpired previews remain recoverable; financial values are never retained in logs.
 
+### Storage hosting amendment — 2026-11-14
+
+- **2026-11-14 storage amendment (maintainer authorized)**: Supabase-managed PostgreSQL is the
+  supported application setup; self-hosting is not required. Keep SQLx atomic transactions and
+  existing configuration name. Remote connections require encryption and a session-compatible
+  endpoint. No Supabase Auth, REST financial writes, API keys or new business capabilities.
+- **AC-15**: Given a Supabase connection string, configuration preserves credential redaction,
+  requires remote TLS and rejects the known transaction-pooler endpoint before network access.
+- **AC-16**: Given migrated financial tables, anonymous/authenticated/service API roles cannot
+  access their contents; the trusted backend retains journal behavior. Automated checks use only
+  disposable PostgreSQL; actual Supabase connectivity is reported separately.
+
 ## Edge Cases
 
 - All money is positive whole VND for mutations; no fractions, negative/zero changes or conversion.
@@ -114,7 +126,7 @@ opening/closing tracked balances and available spending money, including carryov
 - **FR-013**: Add only verified compatible persistence/date dependencies needed now. Use synthetic isolated
   tests, including real transaction/concurrency/restart coverage against disposable local storage, without
   production credentials/accounts. Existing credential-free fmt/Clippy/test/check and offline behavior remain intact.
-- **FR-014**: Document setup, local storage/migrations, phrase limits, dates, category/fund semantics, recovery,
+- **FR-014**: Document setup, managed PostgreSQL storage/migrations, phrase limits, dates, category/fund semantics, recovery,
   verification limits and session state. Preserve generated tooling and never read/alter existing real .env.local
   or real financial data for implementation tests. No production deployment or bank integration.
 
@@ -140,7 +152,7 @@ opening/closing tracked balances and available spending money, including carryov
   transfers excluded from income/spending and correct category totals/zero-denominator handling.
 - **SC-005**: Foreign/disabled/public-context attempts expose no private data; synthetic sensitive markers
   are absent from logs/errors; every UI action rechecks current ownership and authoritative draft state.
-- **SC-006**: All fourteen acceptance scenarios have test/review evidence, required Rust gates pass,
+- **SC-006**: All sixteen acceptance scenarios have test/review evidence, required Rust gates pass,
   durable restart/concurrency is verified locally, and optional live/hosted evidence is explicitly separated.
 
 ## Assumptions

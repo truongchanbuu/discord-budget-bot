@@ -28,7 +28,7 @@ main owns the current-thread runtime and process exit. Async start selects valid
 configuration, then calls existing offline run initialization before any provider access. Synchronous
 run/StartupError remain compatible and never connect. ApplicationError adds safe root reporting.
 Both primary and fallback diagnostics allow only application targets, suppressing SDK payloads even
-at trace/debug. No pools or persistent jobs run. See the
+at trace/debug. Offline creates no pools or persistent jobs; optional finance creates the bounded database pool. See the
 [runtime contract](../../specs/004-discord-owner-entry/contracts/runtime.md).
 
 ## Discord readiness adapter (implemented, live smoke unverified)
@@ -139,3 +139,12 @@ and immutable history guard race/retry/restart. All dated effects are replayed f
 validation. Opening in the month is included in “Đầu kỳ/khởi tạo”, not income; transfers are separate
 from consumption. See [ADR0006](decisions/0006-conversational-journal.md),
 [contract](../../specs/005-conversational-finance/contracts/finance.md) and task evidence.
+
+## Managed storage
+
+Supabase-managed PostgreSQL is the application setup; SQLx and journal transactions remain unchanged.
+Direct/session pooler connections require remote TLS; application/domain have no Supabase dependency.
+Data API is disabled before first startup, with migration0002 adding API-role revocation and RLS.
+See [ADR0007](decisions/0007-supabase-postgres.md) and the
+[setup guide](../../specs/005-conversational-finance/quickstart.md#supabase-setup).
+Disposable local PostgreSQL remains an isolated test fixture, not an application hosting requirement.

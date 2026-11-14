@@ -7,8 +7,8 @@ and [active feature index](../ai/FEATURE_INDEX.md) govern requirements.
 ## Assets, actors, and boundaries
 
 Current assets: source integrity, Cargo.lock, dependency provenance, local process configuration,
-structured diagnostic integrity, CI permissions, opt-in Discord tokens and operator owner bindings. Future assets:
-financial records, attachments, idempotency records, and audit trails. Do not create sample personal
+structured diagnostic integrity, CI permissions, opt-in Discord tokens and operator owner bindings. Current optional journal assets include financial records, idempotency records and audit trails;
+attachments remain future assets. Do not create sample personal
 financial records for foundation tests.
 
 Actors include the owner, future other users/untrusted Discord senders, malicious attachment or
@@ -24,9 +24,9 @@ identity-to-authorized use case, application-to-provider, and persistence-to-fin
 | --- | --- | --- | --- |
 | Token/secret exposure | Environment/repository/logs | No hardcoded secrets; ignore real .env; safe example only; no raw input retained in errors | Implemented for supported config. Opt-in token validation/redaction implemented; operator owns secure provisioning/rotation and process environment access |
 | Sensitive financial logging | Provider/application diagnostics | Structured events with safe categories; review Display and Debug; never dump config, requests, attachments, or amounts | Startup redaction tested. Every future feature must review its own diagnostic fields |
-| Malicious messages/images | Discord-to-presentation | Validate type, length, size, parsing limits and authorization before use cases; least privilege | No Discord/attachment processing yet. Future presentation/infrastructure must address denial of service and untrusted content |
+| Malicious messages/images | Discord-to-presentation | Validate type, length, size, parsing limits and authorization before use cases; least privilege | DM financial input is bounded/owner-only; attachment processing is deferred. Future presentation/infrastructure must address denial of service and untrusted content |
 | Wrong-owner access | Identity-to-application | Explicit owner binding and fail-closed authorization; do not trust all senders in personal-use mode | Pure policy and trusted-config Discord readiness adapter implemented; live smoke unverified and authoritative resource lookup absent. Future financial use cases must enforce every caller obligation below |
-| Forged or replayed completion | External/manual signal-to-ledger | Distinguish handoff/manual confirmation/bank verification; atomically persist idempotency and audit origin | No payments/ledger yet. Financial Core/payment specs own concurrency and verification semantics |
+| Forged or replayed completion | External/manual signal-to-ledger | Distinguish handoff/manual confirmation/bank verification; atomically persist idempotency and audit origin | Manual journal has atomic idempotency; payments/bank verification remain deferred |
 | Dependency compromise | Registry-to-build | Minimal dependencies/features, reviewed source/release metadata, committed lockfile, controlled upgrades | Lockfile/build reviewed. This is not a vulnerability audit; future upgrades require fresh review |
 | CI compromise | Contribution-to-runner/token | Read-only contents permission, full-SHA official checkout, no persisted credentials, no privileged PR events or deployment secrets | Workflow configured; hosted execution unverified until a real run. Untrusted code still executes in CI |
 | Malformed environment / diagnostic failure | Environment-to-startup | Typed validation; no raw values in errors; scoped ERROR fallback if global logging fails | Unit/integration/collision tests cover current paths; startup failure exits nonzero |
@@ -104,7 +104,7 @@ manual confirmation is not bank verification. Minimize and protect sensitive fin
 
 Retention/deletion, encryption at rest, in-flight revocation, persistent recovery, multi-user
 isolation, transaction concurrency, provider verification, and deployment hardening remain open
-for their owning future specifications. There is no financial persistence or bank connection now.
+for their owning future specifications. Optional journal persistence exists; no bank connection.
 Passing foundation tests proves neither financial correctness nor complete production security.
 
 ## Opt-in Discord controls and residual risk
@@ -143,8 +143,20 @@ Original actor/source and confirmation actor/time are retained for audit, outsid
 Clear OTP/password/CVV/PIN-label patterns are rejected from original/edited notes before storage;
 the UI never requests banking credentials. This is not universal secret recognition or a bank verifier.
 
-Local PostgreSQL setup grants dedicated migration/schema permissions. Operators own DB access control,
+Supabase setup uses a trusted backend migration/table-owner credential. Operators own DB access control,
 backups, encryption, statement/parameter logging policy and retention; production hardening is deferred.
 Default tests are provider-free; explicit disposable DB tests cover real locking/race/rollback/restart.
 Live financial Discord flow and hosted CI remain unverified. Do not confuse local evidence with a
 complete security audit or execute real-money transfers. No deployment was performed.
+
+## Supabase boundary
+
+Disable Data API before first initialization in the dedicated project. Migration0002 enables RLS
+and revokes PUBLIC plus existing API-role object grants on application tables/sequences/function and
+SQLx metadata. No user policies, API writes, Supabase Auth or service API keys are introduced. Table
+owner bypasses RLS; existing Discord owner checks remain mandatory. Backend DB password is privileged,
+server-only and redacted. Production migration/runtime-role separation remains deferred.
+Remote TLS is mandatory; Require encrypts, VerifyFull with project CA also verifies server identity.
+Use direct/session5432; known transaction6543 fails before network access. Never log provider
+SQL parameters or paste real URLs into chat. Local fixtures/CI use no Supabase secrets. Actual hosted
+connectivity, project settings and provider backup/privacy controls need separate verification.
